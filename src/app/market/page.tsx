@@ -253,17 +253,17 @@ function MarketContent() {
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-neutral-900 dark:text-white">US Ethane (C2H6)</div>
-                    <PriceInfoIcon commodityId="comm-ethane" currentPrice={145} unit="USD/t" size="xs" />
+                    <PriceInfoIcon commodityId="comm-ethane" currentPrice={157} unit="USD/t" size="xs" />
                   </div>
-                  <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold mt-0.5">$145/t (FOB)</div>
+                  <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold mt-0.5">$157/t (FOB)</div>
                   <div className="text-xs text-neutral-500 mt-0.5">~80% Ethylene Yield</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-neutral-900 dark:text-white">Naphtha (C5-C12)</div>
-                    <PriceInfoIcon commodityId="comm-naphtha" currentPrice={685} unit="USD/t" size="xs" />
+                    <PriceInfoIcon commodityId="comm-naphtha" currentPrice={816} unit="USD/t" size="xs" />
                   </div>
-                  <div className="text-xs text-rose-600 dark:text-rose-400 font-mono font-bold mt-0.5">$685/t (CFR)</div>
+                  <div className="text-xs text-rose-600 dark:text-rose-400 font-mono font-bold mt-0.5">$816/t (CFR)</div>
                   <div className="text-xs text-neutral-500 mt-0.5">~30% Ethylene Yield</div>
                 </div>
               </div>
@@ -293,16 +293,16 @@ function MarketContent() {
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-neutral-900 dark:text-white">Ethylene</div>
-                    <PriceInfoIcon commodityId="comm-ethylene" currentPrice={840} unit="USD/t" size="xs" />
+                    <PriceInfoIcon commodityId="comm-ethylene" currentPrice={886} unit="USD/t" size="xs" />
                   </div>
-                  <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">$840/t</div>
+                  <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">$886/t</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
                   <div className="flex items-center justify-between">
                     <div className="font-bold text-sm text-neutral-900 dark:text-white">Propylene</div>
-                    <PriceInfoIcon commodityId="comm-propylene" currentPrice={790} unit="USD/t" size="xs" />
+                    <PriceInfoIcon commodityId="comm-propylene" currentPrice={833} unit="USD/t" size="xs" />
                   </div>
-                  <div className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 mt-0.5">$790/t</div>
+                  <div className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 mt-0.5">$833/t</div>
                 </div>
               </div>
             </div>

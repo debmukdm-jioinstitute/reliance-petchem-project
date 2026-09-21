@@ -39,9 +39,9 @@ export default function ScadaSimulationPage() {
 
   // Dynamic real-time calculation of cracking margins given live market prices
   const ethanePrice = commodities.find(c => c.id === 'comm-ethane')?.currentPrice || 157; // $/t
-  const naphthaPrice = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 819; // $/t
-  const ethylenePrice = commodities.find(c => c.id === 'comm-ethylene')?.currentPrice || 887; // $/t
-  const propylenePrice = commodities.find(c => c.id === 'comm-propylene')?.currentPrice || 834; // $/t
+  const naphthaPrice = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 816; // $/t
+  const ethylenePrice = commodities.find(c => c.id === 'comm-ethylene')?.currentPrice || 886; // $/t
+  const propylenePrice = commodities.find(c => c.id === 'comm-propylene')?.currentPrice || 833; // $/t
 
   // Weighted feedstock cost ($/t)
   const weightedFeedCost = Number(((scadaState.ethaneRatio / 100) * ethanePrice + (scadaState.naphthaRatio / 100) * naphthaPrice).toFixed(1));

@@ -260,7 +260,7 @@ export default function OverviewPage() {
                   </div>
                   <div>
                     <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${ethylene?.currentPrice || 840}
+                      ${ethylene?.currentPrice || 886}
                       <span className="text-xs text-neutral-500 font-normal">/t</span>
                     </div>
                     <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
@@ -305,7 +305,7 @@ export default function OverviewPage() {
                   </div>
                   <div>
                     <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${ethane?.currentPrice || 145}
+                      ${ethane?.currentPrice || 157}
                       <span className="text-xs text-neutral-500 font-normal">/t</span>
                     </div>
                     <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
@@ -350,7 +350,7 @@ export default function OverviewPage() {
                   </div>
                   <div>
                     <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${naphtha?.currentPrice || 685}
+                      ${naphtha?.currentPrice || 816}
                       <span className="text-xs text-neutral-500 font-normal">/t</span>
                     </div>
                     <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">

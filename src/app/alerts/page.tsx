@@ -30,11 +30,11 @@ const ALERTS_DATA: MarketAlert[] = [
   {
     id: 'alert-01',
     timestamp: '2026-09-21 08:30 IST',
-    triggerEvent: 'Brent crude moved +8.2% over 5 sessions, reaching $82.40/bbl',
+    triggerEvent: 'Brent crude moved +8.2% over 5 sessions, reaching $97.42/bbl',
     severity: 'HIGH',
-    quantifiedImpact: 'Naphtha spot surged to $685/t (+3.1% today, +61% YoY). Ethylene-ethane gross margin delta expanded to +$695/t.',
+    quantifiedImpact: 'Naphtha spot surged to $816/t (-2.1% today, +26.5% YoY). Ethylene-ethane gross margin delta expanded to +$729/t.',
     affectedAssumptions: [
-      'Feedstock cost: Naphtha crack increases from $640/t baseline to $685/t',
+      'Feedstock cost: Naphtha crack increases from $648/t baseline to $816/t',
       'Cracker margin: Jamnagar and Dahej ethane cracking advantage widens by +$42/tonne'
     ],
     downstreamScenarioImpact: 'Upside Scenario probability increased from 20% to 35%; projected annual O2C EBITDA raised by +₹1,850 Cr.',
@@ -56,11 +56,11 @@ const ALERTS_DATA: MarketAlert[] = [
   {
     id: 'alert-03',
     timestamp: '2026-09-18 19:40 IST',
-    triggerEvent: 'US Mont Belvieu ethane spot softened to $145/t FOB (-11% YoY)',
+    triggerEvent: 'US Mont Belvieu ethane spot firmed to $157/t FOB (+3.1% YoY)',
     severity: 'CRITICAL',
-    quantifiedImpact: 'Delivered ethane landed at Dahej drops to $270/t ($145 FOB + $125 freight), sustaining gross ethylene cost gap of ~10x vs naphtha ($250/t vs $2,629/t).',
+    quantifiedImpact: 'Delivered ethane landed at Dahej is $282/t ($157 FOB + $125 freight), sustaining a gross ethylene cost gap of roughly 10x vs naphtha ($250/t vs $2,629/t).',
     affectedAssumptions: [
-      'Delivered ethane cost calibrated at $270/t',
+      'Delivered ethane cost calibrated at $282/t',
       'Operating cash margins protected against Asian cracker downcycle'
     ],
     downstreamScenarioImpact: 'Confirms RIL cost leadership in Asia; validates fast-track deployment of 3 new contracted VLECs.',

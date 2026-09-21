@@ -125,7 +125,7 @@ export default function ExecutiveIntelligencePage() {
                 Ethane Margin Widening
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                Naphtha spot price at $685/t (+3.1%) widens our cost advantage with US ethane at $145/t FOB.
+                Naphtha spot price at $816/t (-2.1%) widens our cost advantage with US ethane at $157/t FOB.
               </p>
               <div className="pt-2 text-xs font-mono text-emerald-700 dark:text-emerald-400 border-t border-neutral-100 dark:border-neutral-800">
                 Source: Group 9 Report / Q3 Results
@@ -144,7 +144,7 @@ export default function ExecutiveIntelligencePage() {
                 Ethylene Price Pressure
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                Asian ethylene benchmark is low at $840/t (-11% YoY) due to 40 Mt of new Chinese capacity.
+                Asian ethylene benchmark is at $886/t (+1.3% YoY) with 40 Mt of new Chinese capacity still weighing on the market.
               </p>
               <div className="pt-2 text-xs font-mono text-rose-700 dark:text-rose-400 border-t border-neutral-100 dark:border-neutral-800">
                 Source: S&P Commodity Insights

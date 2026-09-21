@@ -45,7 +45,7 @@ export default function PriceRiskSentinelPage() {
 
   const liveBrent = commodities.find(c => c.id === 'comm-brent')?.currentPrice || 97.9;
   const liveEthane = commodities.find(c => c.id === 'comm-ethane')?.currentPrice || 157;
-  const liveNaphtha = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 819;
+  const liveNaphtha = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 816;
 
   // Impact calculations
   const naphthaSpikeCost = Number((brentShockDelta * 7.5).toFixed(0)); // $/tonne

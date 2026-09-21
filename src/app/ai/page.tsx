@@ -477,19 +477,19 @@ function AICopilotContent() {
             <div className="space-y-1.5 font-mono text-xs">
               <div className="flex justify-between text-neutral-200">
                 <span>Ethylene (CFR):</span>
-                <span className="font-bold text-white">$840/t</span>
+                <span className="font-bold text-white">$886/t</span>
               </div>
               <div className="flex justify-between text-neutral-200">
                 <span>Ethane (FOB):</span>
-                <span className="font-bold text-emerald-300">$145/t</span>
+                <span className="font-bold text-emerald-300">$157/t</span>
               </div>
               <div className="flex justify-between text-neutral-200">
                 <span>Naphtha (CFR):</span>
-                <span className="font-bold text-amber-300">$685/t</span>
+                <span className="font-bold text-amber-300">$816/t</span>
               </div>
               <div className="flex justify-between text-neutral-200">
                 <span>Brent Crude:</span>
-                <span className="font-bold text-white">$82.40/bbl</span>
+                <span className="font-bold text-white">$97.42/bbl</span>
               </div>
             </div>
           </div>

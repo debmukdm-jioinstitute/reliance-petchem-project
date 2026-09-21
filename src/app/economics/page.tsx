@@ -29,9 +29,9 @@ export default function CrackerEconomicsPage() {
   // Baseline market quotes from context or defaults
   const liveBrent = commodities.find(c => c.id === 'comm-brent')?.currentPrice || 97.9;
   const liveEthane = commodities.find(c => c.id === 'comm-ethane')?.currentPrice || 157;
-  const liveNaphtha = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 819;
-  const liveEthylene = commodities.find(c => c.id === 'comm-ethylene')?.currentPrice || 887;
-  const livePropylene = commodities.find(c => c.id === 'comm-propylene')?.currentPrice || 834;
+  const liveNaphtha = commodities.find(c => c.id === 'comm-naphtha')?.currentPrice || 816;
+  const liveEthylene = commodities.find(c => c.id === 'comm-ethylene')?.currentPrice || 886;
+  const livePropylene = commodities.find(c => c.id === 'comm-propylene')?.currentPrice || 833;
   const liveUsdInr = commodities.find(c => c.id === 'comm-fx-usdinr')?.currentPrice || 84.0;
 
   // Interactive user simulation knobs

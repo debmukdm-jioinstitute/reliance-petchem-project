@@ -92,11 +92,11 @@ export async function GET() {
   ]);
 
   // Fallback defaults if quotes fail
-  const brentPrice = brentQuote?.price || 82.4;
-  const brentDelta = brentQuote?.change1D || 0.92;
+  const brentPrice = brentQuote?.price || 97.42;
+  const brentDelta = brentQuote?.change1D || 1.30;
 
-  const natGasPrice = natGasQuote?.price || 2.45;
-  const natGasDelta = natGasQuote?.change1D || -1.5;
+  const natGasPrice = natGasQuote?.price || 2.89;
+  const natGasDelta = natGasQuote?.change1D || -1.8;
 
   const inrPrice = inrQuote?.price || 83.95;
   const inrDelta = inrQuote?.change1D || 0.08;

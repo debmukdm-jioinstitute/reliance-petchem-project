@@ -26,8 +26,8 @@ interface MarketContextType {
 }
 
 const defaultSpreads: MarketSpreads = {
-  ethyleneEthane: 695,
-  ethyleneNaphtha: 155,
+  ethyleneEthane: 729,
+  ethyleneNaphtha: 70,
 };
 
 const MarketContext = createContext<MarketContextType | undefined>(undefined);

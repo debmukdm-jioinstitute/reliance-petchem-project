@@ -150,7 +150,7 @@ export function buildDefaultVariables(): SimulationInputs {
       group: 'Feedstock & Product Prices',
       unit: '$/bbl',
       description: 'Sets the global oil-linked market swing. Naphtha and olefin prices move partly with it.',
-      spec: { distribution: 'triangular', min: 60, mode: 82, max: 110, marketCorrelation: 1 }
+      spec: { distribution: 'triangular', min: 70, mode: 97, max: 130, marketCorrelation: 1 }
     },
     naphthaPrice: {
       id: 'naphthaPrice',
@@ -158,7 +158,7 @@ export function buildDefaultVariables(): SimulationInputs {
       group: 'Feedstock & Product Prices',
       unit: '$/t',
       description: 'Liquid feedstock cost, the alternative to ethane. Tracks Brent closely.',
-      spec: { distribution: 'triangular', min: 520, mode: 680, max: 860, marketCorrelation: 0.85 }
+      spec: { distribution: 'triangular', min: 625, mode: 816, max: 1030, marketCorrelation: 0.85 }
     },
     ethanePrice: {
       id: 'ethanePrice',
@@ -166,7 +166,7 @@ export function buildDefaultVariables(): SimulationInputs {
       group: 'Feedstock & Product Prices',
       unit: '$/t',
       description: 'Imported feedstock cost. Priced off US shale gas, so it mostly ignores Brent moves.',
-      spec: { distribution: 'triangular', min: 115, mode: 145, max: 190, marketCorrelation: 0.15 }
+      spec: { distribution: 'triangular', min: 125, mode: 157, max: 205, marketCorrelation: 0.15 }
     },
     ethylenePrice: {
       id: 'ethylenePrice',
@@ -174,7 +174,7 @@ export function buildDefaultVariables(): SimulationInputs {
       group: 'Feedstock & Product Prices',
       unit: '$/t',
       description: 'Main product sold from the cracker. Global supply and oil prices both move it.',
-      spec: { distribution: 'triangular', min: 720, mode: 887, max: 1050, marketCorrelation: 0.65 }
+      spec: { distribution: 'triangular', min: 720, mode: 886, max: 1050, marketCorrelation: 0.65 }
     },
     propylenePrice: {
       id: 'propylenePrice',
@@ -182,7 +182,7 @@ export function buildDefaultVariables(): SimulationInputs {
       group: 'Feedstock & Product Prices',
       unit: '$/t',
       description: 'Second product stream from the cracker, sold alongside ethylene.',
-      spec: { distribution: 'triangular', min: 680, mode: 834, max: 980, marketCorrelation: 0.55 }
+      spec: { distribution: 'triangular', min: 680, mode: 833, max: 980, marketCorrelation: 0.55 }
     },
     usdInrFx: {
       id: 'usdInrFx',

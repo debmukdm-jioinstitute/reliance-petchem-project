@@ -28,10 +28,10 @@ interface FinancialAssumption {
 }
 
 const INITIAL_ASSUMPTIONS: FinancialAssumption[] = [
-  { id: 'asm-eth-price', variable: 'Ethylene Realization (CFR India)', currentValue: 840, unit: 'USD/t', source: 'Platts Benchmark', date: '2026-09-21', confidence: 'HIGH' },
-  { id: 'asm-prp-price', variable: 'Propylene Realization (FOB)', currentValue: 790, unit: 'USD/t', source: 'ICIS Chemical Pricing', date: '2026-09-21', confidence: 'HIGH' },
-  { id: 'asm-ethane-cost', variable: 'US Ethane Delivered to Dahej', currentValue: 270, unit: 'USD/t', source: 'Mont Belvieu FOB ($145) + Freight ($125)', date: '2026-09-21', confidence: 'HIGH' },
-  { id: 'asm-naphtha-cost', variable: 'Naphtha Feedstock (CFR Asia)', currentValue: 685, unit: 'USD/t', source: 'Argus Media / S&P', date: '2026-09-21', confidence: 'HIGH' },
+  { id: 'asm-eth-price', variable: 'Ethylene Realization (CFR India)', currentValue: 886, unit: 'USD/t', source: 'Platts Benchmark', date: '2026-09-21', confidence: 'HIGH' },
+  { id: 'asm-prp-price', variable: 'Propylene Realization (FOB)', currentValue: 833, unit: 'USD/t', source: 'ICIS Chemical Pricing', date: '2026-09-21', confidence: 'HIGH' },
+  { id: 'asm-ethane-cost', variable: 'US Ethane Delivered to Dahej', currentValue: 282, unit: 'USD/t', source: 'Mont Belvieu FOB ($157) + Freight ($125)', date: '2026-09-21', confidence: 'HIGH' },
+  { id: 'asm-naphtha-cost', variable: 'Naphtha Feedstock (CFR Asia)', currentValue: 816, unit: 'USD/t', source: 'Argus Media / S&P', date: '2026-09-21', confidence: 'HIGH' },
   { id: 'asm-wacc', variable: 'Weighted Average Cost of Capital (WACC)', currentValue: 10.5, unit: '%', source: 'RIL Treasury Benchmark', date: '2026-07-15', confidence: 'HIGH' },
   { id: 'asm-tax', variable: 'Corporate Tax Rate', currentValue: 25.17, unit: '%', source: 'Indian Corporate Tax Code', date: '2026-04-01', confidence: 'HIGH' },
   { id: 'asm-fx', variable: 'USD / INR Foreign Exchange Rate', currentValue: 84.0, unit: 'INR/USD', source: 'RBI Reference Rate', date: '2026-09-21', confidence: 'HIGH' }
