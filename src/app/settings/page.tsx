@@ -176,7 +176,7 @@ export default function SettingsPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
-                  <span>Full traceability into meeting transcripts, decisions register, and assumption logs</span>
+                  <span>Full traceability into the document store, decisions register, and assumption logs</span>
                 </li>
               </ul>
             </div>

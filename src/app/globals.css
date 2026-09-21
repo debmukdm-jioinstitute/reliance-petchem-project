@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   
   --ril-gold: #BFA161;
   --ril-gold-light: #D4BA7B;
@@ -69,6 +69,16 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Site-wide minimum readable text size: nothing renders smaller than 14px,
+   regardless of which Tailwind size utility a component uses. */
+.text-xs,
+.text-\[9px\],
+.text-\[10px\],
+.text-\[11px\] {
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* Custom terminal monospaced & tabular figures */

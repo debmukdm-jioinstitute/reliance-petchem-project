@@ -9,7 +9,6 @@ import {
   X,
   Globe2
 } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 
 interface NavbarProps {
   onOpenCommandPalette: () => void;
@@ -23,7 +22,6 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
     { label: 'Ask', href: '/', isActive: pathname === '/' || pathname === '/ai' },
     { label: 'Markets', href: '/market', isActive: pathname.startsWith('/market') },
     { label: 'Research', href: '/documents', isActive: pathname.startsWith('/documents') },
-    { label: 'Meetings', href: '/meetings', isActive: pathname.startsWith('/meetings') },
     { label: 'Models', href: '/simulation', isActive: pathname === '/simulation' || pathname === '/scenarios' },
   ];
 
@@ -107,11 +105,6 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
           >
             <Search className="w-5 h-5" />
           </button>
-
-          {/* Theme Toggle */}
-          <div className="pl-1">
-            <ThemeToggle />
-          </div>
 
           {/* User Avatar Circle "DM" in warm cognac matching reference image */}
           <div 

@@ -71,7 +71,7 @@ function MarketContent() {
       trigger: 'axis',
       backgroundColor: '#18181B',
       borderColor: '#3F3F46',
-      textStyle: { color: '#FAFAFA', fontSize: 13 },
+      textStyle: { color: '#FAFAFA', fontSize: 14 },
       formatter: (params: any) => {
         const item = params[0];
         return `<div class="font-mono text-sm">
@@ -91,13 +91,13 @@ function MarketContent() {
       type: 'category',
       data: selectedCommodity.history.map((h) => h.date),
       axisLine: { lineStyle: { color: '#71717A' } },
-      axisLabel: { color: '#71717A', fontSize: 12, fontFamily: 'monospace' }
+      axisLabel: { color: '#71717A', fontSize: 14, fontFamily: 'monospace' }
     },
     yAxis: {
       type: 'value',
       scale: true,
       splitLine: { lineStyle: { color: 'rgba(113, 113, 122, 0.2)', type: 'dashed' } },
-      axisLabel: { color: '#71717A', fontSize: 12, fontFamily: 'monospace' }
+      axisLabel: { color: '#71717A', fontSize: 14, fontFamily: 'monospace' }
     },
     series: [
       {

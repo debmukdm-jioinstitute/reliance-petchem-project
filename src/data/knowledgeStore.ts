@@ -1,5 +1,4 @@
 import {
-  MeetingData,
   ChronologicalChange,
   MarketCommodity,
   CommodityForecast,
@@ -60,13 +59,12 @@ export const CHRONOLOGICAL_CHANGES: ChronologicalChange[] = [
     category: 'DECISION',
     whyItMatters: 'Eliminates redundant research into solved problems; focuses engineering resources on dynamic market-driven capital allocation.',
     source: {
-      id: 'cit-mom-1-dec1',
-      sourceTitle: 'Minutes of Meeting — RIL Meeting 1',
-      sourceType: 'MEETING',
-      date: '06 July 2026',
-      pageOrSection: 'Section 19 / Key Decisions',
-      exactQuote: 'The original idea of studying a NAFTA-to-ethane switch is not the right central framing because Reliance has already built this operational flexibility.',
-      speaker: 'Rajesh Rawal',
+      id: 'cit-ai-cracker-s2',
+      sourceTitle: 'AI Based Cracker Industry Analysis & Scenario Simulation',
+      sourceType: 'DOCUMENT',
+      date: 'Aug 2026',
+      pageOrSection: 'Section 2 & 3',
+      exactQuote: 'Since the naphtha to ethane shift is already an established, completed decision for RIL, the project became a decision support tool for ongoing and future scenarios.',
       confidence: 'HIGH'
     },
     confidence: 'HIGH',
@@ -76,18 +74,17 @@ export const CHRONOLOGICAL_CHANGES: ChronologicalChange[] = [
   {
     id: 'chg-04',
     date: '20 Jul 2026',
-    title: 'New Cracker Business Head Hanoz approved AI Live Dashboard & Dual Simulation',
-    summary: 'Hanoz mandated dual simulation: RIL-specific asset modeling and global cracker industry outlook, backed by AI price predictions.',
+    title: 'AI live dashboard scope approved: dual simulation architecture',
+    summary: 'Project scope approved for dual simulation: RIL-specific asset modeling and global cracker industry outlook, backed by AI price predictions.',
     category: 'DECISION',
     whyItMatters: 'Positions the platform as an institutional tool used by executive leadership rather than an isolated study.',
     source: {
-      id: 'cit-mom-2-hanoz',
-      sourceTitle: 'Meeting 2 Transcript with Hanoz & Adepu',
-      sourceType: 'MEETING',
-      date: '20 July 2026',
-      pageOrSection: 'Lines 104-106',
-      exactQuote: 'You could work on predicting the prices using AI... and basis that, do two studies: one simulation for RIL and one for global industry as a whole.',
-      speaker: 'Hanoz (Cracker Business Head)',
+      id: 'cit-ai-cracker-s4',
+      sourceTitle: 'AI Based Cracker Industry Analysis & Scenario Simulation',
+      sourceType: 'DOCUMENT',
+      date: 'Aug 2026',
+      pageOrSection: 'Section 3 & 4',
+      exactQuote: 'The analysis now has two parts: an RIL specific simulation, and a global industry simulation, using AI based price prediction as a core input.',
       confidence: 'HIGH'
     },
     confidence: 'HIGH',
@@ -96,381 +93,43 @@ export const CHRONOLOGICAL_CHANGES: ChronologicalChange[] = [
   }
 ];
 
-export const MEETINGS_DATA: MeetingData[] = [
+export interface KeyDecision {
+  id: string;
+  decision: string;
+  decisionMaker: string;
+  rationale: string;
+  impact: string;
+  status: 'ACTIVE' | 'SUPERSEDED' | 'PENDING';
+  sourceCitation: { sourceTitle: string };
+}
+
+export const KEY_DECISIONS: KeyDecision[] = [
   {
-    id: 'meeting-1',
-    title: 'RIL & Jio Institute Mentorship — Meeting 1',
-    date: '2026-07-06',
-    participants: [
-      { name: 'Rajesh Rawal', role: 'Business Head, Cracker & Poly Business', affiliation: 'Reliance Industries' },
-      { name: 'Debabrata Mukherjee', role: 'Student Researcher (Finance)', affiliation: 'Jio Institute' },
-      { name: 'Dhruv Choudhary', role: 'Student Researcher (Finance)', affiliation: 'Jio Institute' },
-      { name: 'Ishan Lath', role: 'Student Researcher', affiliation: 'Jio Institute' },
-      { name: 'Vishwas Mordani', role: 'Student Researcher', affiliation: 'Jio Institute' }
-    ],
-    topic: 'Introductory project alignment, scoping revision, and operational ground truth',
-    projectStage: 'Phase 1: Project Scoping & Problem Framing',
-    status: 'COMPLETED',
-    aiSummary: 'Rajesh Rawal clarified that Reliance Industries already executed the operational shift from naphtha to ethane a decade ago (2014-2017) and maintains an active linear programming optimizer that switches feedstocks within a fraction of a day. Therefore, studying feedstock switching as an unsolved problem is invalid. The project scope was redirected towards AI enhancement of existing optimization, dynamic market scenario simulation, multi-horizon price forecasting, dynamic financial modeling of the live capacity expansion project, and global chemical/O2C benchmarking.',
-    keyDiscussion: [
-      'Original proposal review: The team presented an initial concept around switching crackers from naphtha to ethane.',
-      'Operational reality check: Rajesh explained that RIL possesses extensive operational flexibility and an internal optimizer already handling day-to-day switching.',
-      'Revised project scope: Shift from basic operational switching to four new focus areas: AI optimization, scenario simulation, price forecasting, dynamic financial modeling of expansion projects.',
-      'Confidentiality & data access: Team must utilize public information and external tools during the initial phase; site access and confidential calibration will occur subsequently.',
-      'Review cadence: Periodic fortnightly review cycle established, targeting scoping document finalization by month-end.'
-    ],
-    decisions: [
-      {
-        id: 'dec-1-01',
-        decision: 'Pivot project away from NAFTA-to-ethane operational switching',
-        decisionMaker: 'Rajesh Rawal (Business Head, Cracker & Poly)',
-        rationale: 'Reliance already has operational flexibility and proprietary optimizer tools capable of switching feedstocks within hours.',
-        evidence: 'Meeting 1 Discussion Section 2, 4, 19.',
-        impact: 'Saved team 3+ months of investigating a problem RIL solved in 2017.',
-        status: 'ACTIVE',
-        sourceCitation: {
-          id: 'cit-m1-p1',
-          sourceTitle: 'MoM RIL 6 July 2026',
-          sourceType: 'MEETING',
-          date: '2026-07-06',
-          exactQuote: 'The original idea of studying a NAFTA-to-ethane switch is not the right central framing because Reliance has already built this operational flexibility.',
-          speaker: 'Rajesh Rawal',
-          confidence: 'HIGH'
-        }
-      },
-      {
-        id: 'dec-1-02',
-        decision: 'Focus on AI Enhancement, Scenario Simulation, Forecasting, and Financial Modeling of Expansion',
-        decisionMaker: 'Rajesh Rawal & Team 9',
-        rationale: 'High executive value in dynamic risk quantification, Monte Carlo capex simulation, and global market price forecasting.',
-        evidence: 'Meeting 1 Section 19.',
-        impact: 'Established 5 concrete workstreams for the project.',
-        status: 'ACTIVE',
-        sourceCitation: {
-          id: 'cit-m1-p2',
-          sourceTitle: 'MoM RIL 6 July 2026',
-          sourceType: 'MEETING',
-          date: '2026-07-06',
-          exactQuote: 'The project should instead focus on: enhancing existing optimization with AI, scenario simulation / forecasting, dynamic financial modeling of the live capacity expansion project, external benchmarking of AI use cases.',
-          speaker: 'Rajesh Rawal',
-          confidence: 'HIGH'
-        }
-      }
-    ],
-    actionItems: [
-      {
-        id: 'act-1-01',
-        action: 'Review current-year Reliance Industries Annual Report (O2C & Petrochemicals)',
-        owner: 'Debabrata Mukherjee & Team',
-        dueDate: '2026-07-14',
-        priority: 'HIGH',
-        status: 'COMPLETED',
-        evidence: 'Analyzed FY25 O2C revenue ₹6,26,921 Cr and EBITDA ₹54,988 Cr in Group 9 report.'
-      },
-      {
-        id: 'act-1-02',
-        action: 'Benchmark external AI use cases in chemicals/O2C (ExxonMobil, Shell, Dow, SABIC, BASF)',
-        owner: 'Dhruv Choudhary & Ishan Lath',
-        dueDate: '2026-07-20',
-        priority: 'HIGH',
-        status: 'COMPLETED',
-        evidence: 'Synthesized 8 global peer AI cases in competitive intelligence module.'
-      },
-      {
-        id: 'act-1-03',
-        action: 'Draft preliminary Project Scope Document defining AI dashboard and dual simulation',
-        owner: 'Debabrata Mukherjee',
-        dueDate: '2026-07-25',
-        priority: 'HIGH',
-        status: 'COMPLETED',
-        evidence: 'Produced AI Cracker Industry Project Document.'
-      }
-    ],
-    openQuestions: [
-      {
-        id: 'q-1-01',
-        question: 'What is RIL current plant-level feedstock mix between Jamnagar, Dahej, Hazira, and Nagothane?',
-        owner: 'Adepu & Reliance Business Team',
-        deadline: '2026-08-15',
-        currentAnswer: 'Public estimates indicate Jamnagar and Dahej are primary ethane consumers (>1.5 MMTPA each); plant-specific splits are confidential but guided within operational ranges.',
-        evidenceStatus: 'PRELIMINARY'
-      },
-      {
-        id: 'q-1-02',
-        question: 'How does RIL handle coproduct net-backs (mixed C4s, pygas, fuel gas) in its existing optimizer?',
-        owner: 'Team 9',
-        deadline: '2026-08-30',
-        currentAnswer: 'Existing optimizer uses linear programming with dynamic market netback pricing; AI layer can predict price movements 30-90 days forward.',
-        evidenceStatus: 'VERIFIED'
-      }
-    ],
-    assumptionsCreated: [
-      {
-        id: 'asm-1-01',
-        assumption: 'RIL already possesses operational infrastructure to switch cracker feedstocks in a fraction of a day.',
-        value: '< 24 hours switching flexibility',
-        confidence: 'HIGH',
-        status: 'ACTIVE'
-      },
-      {
-        id: 'asm-1-02',
-        assumption: 'External public data and AI price prediction can provide meaningful guidance for expansion project viability.',
-        value: 'True for market & scenario level',
-        confidence: 'HIGH',
-        status: 'ACTIVE'
-      }
-    ],
-    assumptionsInvalidated: [
-      {
-        id: 'asm-inv-01',
-        originalAssumption: 'RIL needs an engineering study on how to switch crackers from naphtha to ethane.',
-        invalidationReason: 'RIL completed this transition a decade ago (2014-2017) with $2B+ cryogenic terminal, VLECs, and automated LP optimizers.',
-        newEvidence: 'Rajesh Rawal oral testimony; RIL 2014 US ethane import contracts; 2017 Dahej terminal commissioning.',
-        updatedUnderstanding: 'The real opportunity is AI enhancement of optimization, multi-horizon price forecasting, and dynamic capital allocation under global oversupply.',
-        sourceCitation: {
-          id: 'cit-m1-inv1',
-          sourceTitle: 'MoM RIL 6 July 2026',
-          sourceType: 'MEETING',
-          date: '2026-07-06',
-          exactQuote: 'Many of the team’s assumptions would need correction once they had more context... RIL already switches in a fraction of a day.',
-          speaker: 'Rajesh Rawal',
-          confidence: 'HIGH'
-        }
-      }
-    ],
-    risksIdentified: [
-      {
-        id: 'rsk-1-01',
-        risk: 'Confidentiality constraints limiting access to exact internal unit costs and yields',
-        severity: 'MEDIUM',
-        probability: 'HIGH',
-        mitigation: 'Build modular architecture using calibrated public market proxies and public annual report disclosures.',
-        trend: 'STABLE'
-      },
-      {
-        id: 'rsk-1-02',
-        risk: 'Model divergence between public spot benchmarks and RIL confidential term contracts',
-        severity: 'MEDIUM',
-        probability: 'MEDIUM',
-        mitigation: 'Incorporate basis differential parameters and editable assumption registers.',
-        trend: 'DECREASING'
-      }
-    ],
-    marketSignals: [
-      {
-        commodity: 'Naphtha vs Ethane Spread',
-        signal: 'Historic divergence widening in favor of US ethane cracking',
-        direction: 'BULLISH',
-        impactOnRIL: 'Directly expands RIL O2C margins compared to Asian/European naphtha crackers.'
-      }
-    ],
-    projectImpact: 'Fundamental realignment of project objectives towards quantitative financial and scenario intelligence.',
-    numbersExtracted: [
-      {
-        metric: 'Switching time',
-        value: '< 1 day',
-        unit: 'hours',
-        context: 'Existing RIL optimizer capability to switch feedstock slate',
-        sourceCitation: {
-          id: 'cit-m1-num1',
-          sourceTitle: 'MoM RIL 6 July 2026',
-          sourceType: 'MEETING',
-          date: '2026-07-06',
-          exactQuote: 'Reliance already has flexibility to switch feedstock within a fraction of a day.',
-          confidence: 'HIGH'
-        }
-      },
-      {
-        metric: 'Student team weekly commitment',
-        value: '20',
-        unit: 'hours/week',
-        context: 'Expected weekly project commitment per student (~80 hrs/month)',
-        sourceCitation: {
-          id: 'cit-m1-num2',
-          sourceTitle: 'MoM RIL 6 July 2026',
-          sourceType: 'MEETING',
-          date: '2026-07-06',
-          exactQuote: 'The team explained that weekends and evenings were generally the most feasible times.',
-          confidence: 'HIGH'
-        }
-      }
-    ],
-    topics: ['Feedstock Optimization', 'Cracker Operations', 'Capacity Expansion', 'AI Enhancement', 'Financial Modeling', 'Confidentiality'],
-    entities: ['Rajesh Rawal', 'Reliance Industries', 'Jio Institute', 'Debabrata Mukherjee', 'Dhruv Choudhary', 'Ethane', 'Naphtha', 'Ethylene'],
-    rawTranscript: [
-      { lineIndex: 1, speaker: 'Rajesh Rawal', text: 'Rajesh Rawal introduced himself as the person leading the poly business, mainly the cracker business...' },
-      { lineIndex: 2, speaker: 'Debabrata / Dhruv', text: 'The team presented an initial concept around switching crackers from naphtha to ethane...' },
-      { lineIndex: 3, speaker: 'Rajesh Rawal', text: 'Rajesh explained that Reliance already has built this operational flexibility a decade ago and can switch within a fraction of a day. The team should refocus on AI optimization, forecasting, and dynamic financial modeling of the expansion project.', highlighted: true, annotation: 'Key pivot point of the entire project' }
-    ]
+    id: 'dec-01',
+    decision: 'Reframe the project away from "should RIL switch to ethane" toward AI-driven decision support',
+    decisionMaker: 'Project Team',
+    rationale: 'RIL already completed its naphtha-to-ethane transition between 2014 and 2017 and can rebalance feed within a fraction of a day using internal LP optimizers, so studying the switch itself was redundant.',
+    impact: 'Redirected engineering effort toward AI optimization, price forecasting, scenario simulation, and capital allocation modeling.',
+    status: 'ACTIVE',
+    sourceCitation: { sourceTitle: 'AI Based Cracker Industry Analysis and Scenario Simulation' }
   },
   {
-    id: 'meeting-2',
-    title: 'Cracker Leadership Scoping & AI Dashboard Alignment — Meeting 2',
-    date: '2026-07-20',
-    participants: [
-      { name: 'Hanoz', role: 'New Business Head of Cracker', affiliation: 'Reliance Industries' },
-      { name: 'Adepu', role: 'Mentor & Industry Expert', affiliation: 'Reliance Industries' },
-      { name: 'Garima', role: 'Mentor', affiliation: 'Reliance Industries' },
-      { name: 'Dhruv Choudhary', role: 'Student Researcher (Finance)', affiliation: 'Jio Institute' },
-      { name: 'Debabrata Mukherjee', role: 'Student Researcher (Finance)', affiliation: 'Jio Institute' },
-      { name: 'Ishan Lath', role: 'Student Researcher', affiliation: 'Jio Institute' }
-    ],
-    topic: 'Detailed cracker business model, dual simulation scope, feedstock breakdown, and public data strategy',
-    projectStage: 'Phase 1: Scope Formalization & Domain Immersion',
-    status: 'COMPLETED',
-    aiSummary: 'Hanoz, newly taking over as Business Head of Cracker, reviewed the project with the team. He endorsed the team’s proposal for an AI live dashboard and mandated two distinct simulation tiers: (1) an RIL-specific operational and expansion simulation, and (2) a global cracker industry simulation. He gave a technical overview of cracker feedstocks (gas feedstocks: ethane, propane, butane/LPG from drill wells and refinery off-gases; liquid feedstocks: naphtha) and main outputs (ethylene, propylene). He confirmed RIL imports 1.5 MMTPA of ethane from the US via Dahej on six VLECs with upgraded crackers at Dahej, Hazira, and Nagothane. He advised the team to utilize public data and AI prediction models first, with business team guidance provided on demand.',
-    keyDiscussion: [
-      'Leadership handover: Hanoz introduced as the new Business Head of Cracker taking over mentorship alignment.',
-      'Student background: Dhruv Choudhary (Nomura Holdings 4 yrs) and Debabrata Mukherjee (Finance) introduced the team.',
-      'AI price prediction & dual simulation: Hanoz approved using AI to predict major raw material and product prices and run dual simulations for RIL and the global industry.',
-      'Technical feedstock breakdown: Clarification between gas feedstocks (ethane, propane, butane/LPG) and liquid feedstocks (naphtha), and how outputs resolve into ethylene and propylene.',
-      'RIL public infrastructure verification: Hanoz confirmed April 2017 commissioning of 1.5 MMTPA US ethane imports, 6 VLECs, and upgraded crackers at Dahej, Hazira, and Nagothane.',
-      'Deliverable roadmap: Agreement on drafting an authoritative Scope Document, followed by an industry overview session and iterative dashboard previews.'
-    ],
-    decisions: [
-      {
-        id: 'dec-2-01',
-        decision: 'Implement Dual Simulation Architecture: RIL-specific and Global Cracker Industry',
-        decisionMaker: 'Hanoz (Business Head, Cracker)',
-        rationale: 'RIL cannot be viewed in isolation; global cracker oversupply and regional margin dynamics dictate RIL operational strategy.',
-        evidence: 'Meeting 2 Transcript Line 104-106.',
-        impact: 'Core architectural principle of RIL Intelligence OS.',
-        status: 'ACTIVE',
-        sourceCitation: {
-          id: 'cit-m2-hanoz-dual',
-          sourceTitle: 'MOM 2 Transcript',
-          sourceType: 'MEETING',
-          date: '2026-07-20',
-          exactQuote: 'You can do two studies: one simulation for RIL and one for, say, global—the industry as a whole. How it develops.',
-          speaker: 'Hanoz',
-          confidence: 'HIGH'
-        }
-      },
-      {
-        id: 'dec-2-02',
-        decision: 'Build AI Price Prediction Engine for Major Raw Materials and Products',
-        decisionMaker: 'Hanoz & Team',
-        rationale: 'Dynamic scenario simulation requires real-time forward-looking price trajectories rather than static trailing averages.',
-        evidence: 'Meeting 2 Transcript Line 104.',
-        impact: 'Formed the basis of the multi-model forecasting engine.',
-        status: 'ACTIVE',
-        sourceCitation: {
-          id: 'cit-m2-price-pred',
-          sourceTitle: 'MOM 2 Transcript',
-          sourceType: 'MEETING',
-          date: '2026-07-20',
-          exactQuote: 'You could work on predicting the prices with using AI. If you can predict the prices of our major raw materials and products.',
-          speaker: 'Hanoz',
-          confidence: 'HIGH'
-        }
-      }
-    ],
-    actionItems: [
-      {
-        id: 'act-2-01',
-        action: 'Draft comprehensive Project Scope Document incorporating dual simulations and AI forecasting',
-        owner: 'Debabrata Mukherjee & Dhruv Choudhary',
-        dueDate: '2026-08-01',
-        priority: 'HIGH',
-        status: 'COMPLETED',
-        evidence: 'AI Cracker Industry Project Document completed and circulated.'
-      },
-      {
-        id: 'act-2-02',
-        action: 'Establish Friday weekly scheduling cadence for next-week milestone alignment',
-        owner: 'Dhruv Choudhary',
-        dueDate: '2026-07-25',
-        priority: 'MEDIUM',
-        status: 'IN_PROGRESS',
-        evidence: 'Weekly update rhythm initiated.'
-      }
-    ],
-    openQuestions: [
-      {
-        id: 'q-2-01',
-        question: 'What is the precise shipping freight and liquefaction cost per tonne for US ethane to Dahej?',
-        owner: 'Reliance Supply Chain Team',
-        deadline: '2026-08-20',
-        currentAnswer: 'Estimated in Group 9 report at ~$120-$140/t including VLEC charter, fuel, and terminal handling.',
-        evidenceStatus: 'PRELIMINARY'
-      }
-    ],
-    assumptionsCreated: [
-      {
-        id: 'asm-2-01',
-        assumption: 'US ethane imports to Dahej run at approximately 1.5 MMTPA with 6 dedicated VLECs.',
-        value: '1.5 MMTPA, 6 VLECs',
-        confidence: 'HIGH',
-        status: 'ACTIVE'
-      },
-      {
-        id: 'asm-2-02',
-        assumption: 'Main cracker outputs can be abstracted as Ethylene and Propylene for high-level executive simulations.',
-        value: 'Ethylene (~80% ethane yield, ~30% naphtha yield)',
-        confidence: 'HIGH',
-        status: 'ACTIVE'
-      }
-    ],
-    assumptionsInvalidated: [],
-    risksIdentified: [
-      {
-        id: 'rsk-2-01',
-        risk: 'Global oversupply in ethylene driven by Chinese capacity additions depressing cracker margins through 2030',
-        severity: 'HIGH',
-        probability: 'HIGH',
-        mitigation: 'Position RIL as lowest-quartile cash cost producer using US ethane and dynamic switching.',
-        trend: 'INCREASING'
-      }
-    ],
-    marketSignals: [
-      {
-        commodity: 'US Mont Belvieu Ethane',
-        signal: 'Sustained discount against global naphtha benchmarks',
-        direction: 'BULLISH',
-        impactOnRIL: 'Supports multi-billion dollar capacity expansion at Jamnagar and Dahej.'
-      }
-    ],
-    projectImpact: 'Ratification of the AI live dashboard concept by Cracker Business Head; green light for dual-tier modeling.',
-    numbersExtracted: [
-      {
-        metric: 'US Ethane Import Volume',
-        value: '1.5',
-        unit: 'MMTPA',
-        context: 'RIL contract volume imported from the United States to Dahej',
-        sourceCitation: {
-          id: 'cit-m2-num1',
-          sourceTitle: 'Meeting 2 Transcript',
-          sourceType: 'MEETING',
-          date: '2026-07-20',
-          exactQuote: 'April 2017, 1.5 million tonnes of ethane from America, six VLECs. Upgraded cracker at Dahej, Hazira, Nagothane.',
-          speaker: 'Hanoz',
-          confidence: 'HIGH'
-        }
-      },
-      {
-        metric: 'VLEC Fleet Size',
-        value: '6',
-        unit: 'Vessels',
-        context: 'Very Large Ethane Carriers currently operating in RIL fleet (with 3 planned)',
-        sourceCitation: {
-          id: 'cit-m2-num2',
-          sourceTitle: 'Meeting 2 Transcript',
-          sourceType: 'MEETING',
-          date: '2026-07-20',
-          exactQuote: 'Six VLECs. Upgraded cracker at Dahej, Hazira, Nagothane.',
-          speaker: 'Hanoz',
-          confidence: 'HIGH'
-        }
-      }
-    ],
-    topics: ['Cracker Business Model', 'Dual Simulation', 'AI Price Forecasting', 'Gas vs Liquid Feedstocks', 'VLEC Logistics', 'Global Oversupply'],
-    entities: ['Hanoz', 'Adepu', 'Garima', 'Dhruv Choudhary', 'Debabrata Mukherjee', 'Ethane', 'Naphtha', 'LPG', 'Ethylene', 'Propylene', 'Dahej', 'Hazira', 'Nagothane'],
-    rawTranscript: [
-      { lineIndex: 98, speaker: 'Hanoz', text: 'So, you are doing this specifically for RIL or global?' },
-      { lineIndex: 99, speaker: 'Dhruv Choudhary', text: 'Specifically for RIL, we thought. For the petchem.' },
-      { lineIndex: 100, speaker: 'Hanoz', text: 'You can also look at it on a global basis. Like, globally how things will shift for all the industry as a whole. And you could work on predicting the prices with using AI... and basis that, do two studies: one simulation for RIL and one for global industry as a whole.', highlighted: true, annotation: 'Approval of dual-simulation architecture' },
-      { lineIndex: 171, speaker: 'Hanoz', text: 'April 2017, 1.5 million tonnes of ethane from America, six VLECs. Upgraded cracker at Dahej, Hazira, Nagothane.', highlighted: true, annotation: 'Verification of RIL historical infrastructure' }
-    ]
+    id: 'dec-02',
+    decision: 'Adopt a dual simulation architecture: RIL-specific and global industry',
+    decisionMaker: 'Project Team',
+    rationale: 'A single-asset view understates risk; global cracker oversupply (+40 Mt capacity vs +27 Mt demand) directly affects the pricing environment RIL sells into.',
+    impact: 'Dashboard models both RIL asset economics and global oversupply dynamics side by side.',
+    status: 'ACTIVE',
+    sourceCitation: { sourceTitle: 'AI Based Cracker Industry Analysis and Scenario Simulation' }
+  },
+  {
+    id: 'dec-03',
+    decision: 'Prioritize ethane feedstock share as the primary margin lever',
+    decisionMaker: 'Project Team',
+    rationale: 'Ethane cracking yields ~79.5% ethylene versus ~33.2% for naphtha, and ethane pricing is largely decoupled from Brent crude, creating a structural cost advantage of roughly $210-265 per tonne of ethylene.',
+    impact: 'Feedstock mix optimization treated as the highest-leverage lever in the financial model and Monte Carlo simulation.',
+    status: 'ACTIVE',
+    sourceCitation: { sourceTitle: 'Beyond Naphtha: Capital Allocation, Feedstock-Switching Economics & Forex-Risk Quantification' }
   }
 ];
 
@@ -1023,13 +682,11 @@ export const CRACKER_ASSETS: FinancialAssetCracker[] = [
 
 export const KNOWLEDGE_GRAPH_NODES: EntityNode[] = [
   { id: 'node-ril', name: 'Reliance Industries Limited', category: 'COMPANY', details: 'India largest private enterprise, O2C revenue ₹6,26,921 Cr (FY25)', connectionsCount: 12 },
-  { id: 'node-rajesh', name: 'Rajesh Rawal', category: 'PERSON', details: 'Business Head, Cracker & Poly Business, RIL (Meeting 1)', connectionsCount: 6 },
-  { id: 'node-hanoz', name: 'Hanoz', category: 'PERSON', details: 'New Business Head of Cracker, RIL (Meeting 2)', connectionsCount: 7 },
+  { id: 'node-rajesh', name: 'Rajesh Rawal', category: 'PERSON', details: 'Business Head, Cracker & Poly Business, RIL', connectionsCount: 5 },
+  { id: 'node-hanoz', name: 'Hanoz', category: 'PERSON', details: 'New Business Head of Cracker, RIL', connectionsCount: 6 },
   { id: 'node-adepu', name: 'Adepu', category: 'PERSON', details: 'Reliance Mentor & Cracker Domain Lead', connectionsCount: 5 },
   { id: 'node-debabrata', name: 'Debabrata Mukherjee', category: 'PERSON', details: 'Jio Institute Finance Lead (Roll 27GMT0008)', connectionsCount: 8 },
   { id: 'node-dhruv', name: 'Dhruv Choudhary', category: 'PERSON', details: 'Jio Institute Finance Researcher (ex-Nomura)', connectionsCount: 7 },
-  { id: 'node-m1', name: 'Meeting 1 (06 Jul 2026)', category: 'MEETING', details: 'Scoped AI optimization, scenario modeling, expansion viability', connectionsCount: 9 },
-  { id: 'node-m2', name: 'Meeting 2 (20 Jul 2026)', category: 'MEETING', details: 'Approved AI Live Dashboard and Dual Simulation architecture', connectionsCount: 9 },
   { id: 'node-ethane', name: 'Ethane (Feedstock)', category: 'COMMODITY', details: '1.5 MMTPA imported from US; ~80% ethylene yield; $250/t gross cost', connectionsCount: 10 },
   { id: 'node-naphtha', name: 'Naphtha (Feedstock)', category: 'COMMODITY', details: 'Liquid feedstock; ~30% ethylene yield; $2,629/t gross cost', connectionsCount: 8 },
   { id: 'node-ethylene', name: 'Ethylene (Product)', category: 'COMMODITY', details: 'Primary building block; $840/t; global market $459.7B', connectionsCount: 9 },
@@ -1043,13 +700,6 @@ export const KNOWLEDGE_GRAPH_NODES: EntityNode[] = [
 ];
 
 export const KNOWLEDGE_GRAPH_LINKS: EntityLink[] = [
-  { source: 'node-rajesh', target: 'node-m1', relationship: 'HOSTED_AND_SCOPED', weight: 3 },
-  { source: 'node-hanoz', target: 'node-m2', relationship: 'CHAIRED_AND_APPROVED', weight: 3 },
-  { source: 'node-debabrata', target: 'node-m1', relationship: 'PRESENTED_AT', weight: 2 },
-  { source: 'node-debabrata', target: 'node-m2', relationship: 'PARTICIPATED_IN', weight: 2 },
-  { source: 'node-dhruv', target: 'node-m2', relationship: 'REPRESENTED_TEAM', weight: 2 },
-  { source: 'node-m1', target: 'node-expansion', relationship: 'REDIRECTED_TOWARDS', weight: 3 },
-  { source: 'node-m2', target: 'node-ril', relationship: 'MANDATED_DASHBOARD', weight: 3 },
   { source: 'node-ril', target: 'node-jamnagar', relationship: 'OPERATES', weight: 2 },
   { source: 'node-ril', target: 'node-dahej', relationship: 'OPERATES_TERMINAL', weight: 3 },
   { source: 'node-dahej', target: 'node-vlec', relationship: 'RECEIVES_CARGOES_VIA', weight: 3 },
@@ -1067,17 +717,17 @@ export const AUDIT_RECORDS: Record<string, AuditRecord> = {
   'audit-01': {
     id: 'audit-01',
     question: 'Why did the AI say RIL already has feedstock switching flexibility and that the project should focus on AI optimization?',
-    answerSnippet: 'Reliance Industries completed its naphtha-to-ethane operational transition between 2014 and 2017. In Meeting 1 (06 July 2026), Business Head Rajesh Rawal explicitly corrected the initial team scope.',
+    answerSnippet: 'Reliance Industries completed its naphtha-to-ethane operational transition between 2014 and 2017, using internal linear programming optimizers that can rebalance feedstock within a fraction of a day.',
     category: 'FACT',
     model: 'RIL-Hybrid-RAG-Orchestrator v2.4 (BGE-M3 + BM25 + Qwen-72B-Instruct)',
     confidenceScore: 98,
     promptVersion: 'Executive-Institutional-v3.1',
     retrievedDocuments: [
       {
-        title: 'Minutes of Meeting — RIL Meeting 1 (06 July 2026)',
-        type: 'MEETING',
-        pageOrLine: 'Section 4 & 19',
-        snippet: 'The original idea of studying a NAFTA-to-ethane switch is not the right central framing because Reliance has already built this operational flexibility. Rajesh explained that RIL can switch within a fraction of a day using existing linear optimizers.'
+        title: 'AI Based Cracker Industry Analysis and Scenario Simulation',
+        type: 'INDUSTRY_ANALYSIS',
+        pageOrLine: 'Section 2',
+        snippet: 'The original idea of studying a naphtha-to-ethane switch is not the right central framing because Reliance has already built this operational flexibility, having completed the transition between 2014 and 2017.'
       },
       {
         title: 'Beyond Naphtha: Capital Allocation & Feedstock Economics (Group 9)',

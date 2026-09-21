@@ -3,11 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  Search, 
-  Sparkles, 
-  FileText, 
-  Users, 
-  TrendingUp, 
+  Search,
+  Sparkles,
+  FileText,
+  TrendingUp,
   SlidersHorizontal, 
   DollarSign, 
   X, 
@@ -70,14 +69,12 @@ export default function CommandPaletteModal({
 
   const handleSelectResult = (item: SearchResultItem) => {
     onClose();
-    if (item.type === 'MEETING') {
-      router.push(`/meetings/${item.id}`);
-    } else if (item.type === 'MARKET') {
+    if (item.type === 'MARKET') {
       router.push('/market');
     } else if (item.type === 'SCENARIO') {
       router.push('/scenarios');
     } else if (item.type === 'DECISION' || item.type === 'ASSUMPTION') {
-      router.push('/meetings/meeting-1');
+      router.push('/executive');
     } else {
       router.push(`/documents`);
     }
@@ -108,7 +105,7 @@ export default function CommandPaletteModal({
                 handleAskAI();
               }
             }}
-            placeholder="Ask AI, or search meetings, documents, feedstocks, plant assets..."
+            placeholder="Ask AI, or search documents, feedstocks, plant assets..."
             className="w-full h-14 bg-transparent text-sm text-[#F8FAFC] placeholder-[#64748B] focus:outline-none"
           />
           {query && (
@@ -155,7 +152,6 @@ export default function CommandPaletteModal({
                   className="p-2.5 rounded-lg hover:bg-[#151D2C] border border-transparent hover:border-[#1E2738] cursor-pointer transition-all flex items-start gap-3"
                 >
                   <div className="p-1.5 rounded bg-[#1E2738] text-[#94A3B8] shrink-0 mt-0.5">
-                    {hit.type === 'MEETING' && <Users className="w-3.5 h-3.5 text-[#38BDF8]" />}
                     {hit.type === 'MARKET' && <TrendingUp className="w-3.5 h-3.5 text-[#10B981]" />}
                     {hit.type === 'SCENARIO' && <SlidersHorizontal className="w-3.5 h-3.5 text-[#F59E0B]" />}
                     {hit.type === 'DECISION' && <FileText className="w-3.5 h-3.5 text-[#BFA161]" />}
@@ -195,8 +191,8 @@ export default function CommandPaletteModal({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {[
-                  { name: 'Meeting 1: Rajesh Rawal Scope Pivot', desc: '06 Jul 2026 MoM', href: '/meetings/meeting-1', icon: Users },
-                  { name: 'Meeting 2: Hanoz Cracker Alignment', desc: 'Dual simulation mandate', href: '/meetings/meeting-2', icon: Users },
+                  { name: 'AI Copilot', desc: 'Ask questions grounded in project data', href: '/ai', icon: Sparkles },
+                  { name: 'Executive Briefing', desc: '60-second briefing & decisions register', href: '/executive', icon: FileText },
                   { name: 'Cracker Value Chain & Spreads', desc: 'Ethane vs Naphtha Economics', href: '/market?tab=cracker', icon: TrendingUp },
                   { name: '10,000-Run Monte Carlo Simulation', desc: 'NPV / IRR probability curve', href: '/scenarios/monte-carlo', icon: SlidersHorizontal },
                   { name: 'RIL Asset DCF Valuation Model', desc: 'Jamnagar, Dahej, Hazira', href: '/financial', icon: DollarSign },

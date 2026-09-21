@@ -32,7 +32,7 @@ export default function ForecastsPage() {
       trigger: 'axis',
       backgroundColor: '#18181B',
       borderColor: '#3F3F46',
-      textStyle: { color: '#FAFAFA', fontSize: 13 },
+      textStyle: { color: '#FAFAFA', fontSize: 14 },
       formatter: (params: any) => {
         const date = params[0]?.name;
         const pt = forecast.points.find((p) => p.date === date);
@@ -53,7 +53,7 @@ export default function ForecastsPage() {
     },
     legend: {
       data: ['Historical Actual', 'Ensemble Consensus (P50)', 'P10 - P90 Confidence Band'],
-      textStyle: { color: '#A1A1AA', fontSize: 12 },
+      textStyle: { color: '#A1A1AA', fontSize: 14 },
       top: 0
     },
     grid: {
@@ -67,13 +67,13 @@ export default function ForecastsPage() {
       type: 'category',
       data: dates,
       axisLine: { lineStyle: { color: '#71717A' } },
-      axisLabel: { color: '#71717A', fontSize: 12, fontFamily: 'monospace' }
+      axisLabel: { color: '#71717A', fontSize: 14, fontFamily: 'monospace' }
     },
     yAxis: {
       type: 'value',
       scale: true,
       splitLine: { lineStyle: { color: 'rgba(113, 113, 122, 0.2)', type: 'dashed' } },
-      axisLabel: { color: '#71717A', fontSize: 12, fontFamily: 'monospace' }
+      axisLabel: { color: '#71717A', fontSize: 14, fontFamily: 'monospace' }
     },
     series: [
       {

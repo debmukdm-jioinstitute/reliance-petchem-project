@@ -44,7 +44,7 @@ export default function OperationsPage() {
           </div>
         </div>
 
-        {/* Operational Reality Banner (Meeting 1 Citation) */}
+        {/* Operational Reality Banner */}
         <div className="p-5 rounded-xl bg-[#0E1524] border border-[#BFA161]/30 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold uppercase text-[#D4BA7B] flex items-center gap-2">
@@ -52,11 +52,11 @@ export default function OperationsPage() {
               Verified Operational Capability
             </span>
             <span className="text-[10px] font-mono text-[#64748B]">
-              MoM Meeting 1 • Rajesh Rawal (Business Head, Cracker)
+              AI Cracker Industry Analysis, Section 2
             </span>
           </div>
           <p className="text-xs text-[#CBD5E1] leading-relaxed">
-            &quot;Reliance already has built operational flexibility to switch feedstocks within a fraction of a day... The original idea of studying a NAFTA-to-ethane switch is not the right framing because Reliance has already built this operational flexibility.&quot;
+            &quot;Reliance already has built operational flexibility to switch feedstocks within a fraction of a day... The naphtha-to-ethane shift is already an established, completed decision for RIL.&quot;
           </p>
         </div>
 

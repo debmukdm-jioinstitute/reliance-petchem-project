@@ -14,13 +14,12 @@ import {
   ShieldCheck,
   ChevronRight
 } from 'lucide-react';
-import { MEETINGS_DATA } from '@/data/knowledgeStore';
 
 interface ActionItem {
   id: string;
   action: string;
-  meetingTitle: string;
-  meetingDate: string;
+  sourceLabel: string;
+  sourceDate: string;
   owner: string;
   dueDate: string;
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
@@ -33,8 +32,8 @@ const ALL_ACTIONS: ActionItem[] = [
   {
     id: 'act-01',
     action: 'Review Reliance Industries FY25 Annual Report (O2C & Petrochemical segments)',
-    meetingTitle: 'Meeting 1 (06 Jul 2026)',
-    meetingDate: '2026-07-06',
+    sourceLabel: 'Project Kickoff (06 Jul 2026)',
+    sourceDate: '2026-07-06',
     owner: 'Debabrata Mukherjee & Team 9',
     dueDate: '2026-07-14',
     priority: 'HIGH',
@@ -44,8 +43,8 @@ const ALL_ACTIONS: ActionItem[] = [
   {
     id: 'act-02',
     action: 'Benchmark external AI use cases across global chemical majors (ExxonMobil, Dow, SABIC, BASF)',
-    meetingTitle: 'Meeting 1 (06 Jul 2026)',
-    meetingDate: '2026-07-06',
+    sourceLabel: 'Project Kickoff (06 Jul 2026)',
+    sourceDate: '2026-07-06',
     owner: 'Dhruv Choudhary & Ishan Lath',
     dueDate: '2026-07-20',
     priority: 'HIGH',
@@ -55,8 +54,8 @@ const ALL_ACTIONS: ActionItem[] = [
   {
     id: 'act-03',
     action: 'Formulate Project Scope Document defining Dual Simulation (RIL + Global Cracker)',
-    meetingTitle: 'Meeting 2 (20 Jul 2026)',
-    meetingDate: '2026-07-20',
+    sourceLabel: 'Scope Alignment (20 Jul 2026)',
+    sourceDate: '2026-07-20',
     owner: 'Debabrata Mukherjee & Dhruv Choudhary',
     dueDate: '2026-08-01',
     priority: 'HIGH',
@@ -66,8 +65,8 @@ const ALL_ACTIONS: ActionItem[] = [
   {
     id: 'act-04',
     action: 'Establish recurring Friday weekly schedule cadence for mentorship updates',
-    meetingTitle: 'Meeting 2 (20 Jul 2026)',
-    meetingDate: '2026-07-20',
+    sourceLabel: 'Scope Alignment (20 Jul 2026)',
+    sourceDate: '2026-07-20',
     owner: 'Dhruv Choudhary',
     dueDate: '2026-07-25',
     priority: 'MEDIUM',
@@ -77,8 +76,8 @@ const ALL_ACTIONS: ActionItem[] = [
   {
     id: 'act-05',
     action: 'Calibrate asset-level feedstock throughput parameters with Reliance Cracker business team',
-    meetingTitle: 'Scope Document Milestone',
-    meetingDate: '2026-08-15',
+    sourceLabel: 'Scope Document Milestone',
+    sourceDate: '2026-08-15',
     owner: 'Debabrata Mukherjee',
     dueDate: '2026-09-30',
     priority: 'HIGH',
@@ -108,13 +107,13 @@ export default function ActionCenterPage() {
                 Execution Tracking & Governance
               </span>
               <span className="text-[#64748B]">•</span>
-              <span className="text-[11px] text-[#94A3B8]">Extracted Directly from Meeting Transcripts</span>
+              <span className="text-[11px] text-[#94A3B8]">Extracted Directly from Project Records</span>
             </div>
             <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-[#F8FAFC]">
               ACTION CENTER
             </h1>
             <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              Every action item is generated automatically from verified meeting records with explicit ownership, due dates, status, and supporting evidence.
+              Every action item is tracked with explicit ownership, due dates, status, and supporting evidence.
             </p>
           </div>
 
@@ -164,7 +163,7 @@ export default function ActionCenterPage() {
                     Priority: {item.priority}
                   </span>
                   <span className="text-[10px] font-mono text-[#D4BA7B]">
-                    Source: {item.meetingTitle}
+                    Source: {item.sourceLabel}
                   </span>
                 </div>
 

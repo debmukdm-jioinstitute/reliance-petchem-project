@@ -41,7 +41,7 @@ export default function OverviewPage() {
   const [naturalQuery, setNaturalQuery] = useState('');
   const [isSolvingInline, setIsSolvingInline] = useState(false);
   const [inlineResult, setInlineResult] = useState<SynthesizedAnswer | null>(null);
-  const [inlineProvider, setInlineProvider] = useState<string>('Free LLM Engine');
+  const [inlineProvider, setInlineProvider] = useState<string>('Local LLM (Ollama)');
 
   // Active deep dive view toggle (SCADA, Economics, or Hidden)
   const [activeDeepDive, setActiveDeepDive] = useState<'none' | 'scada' | 'economics'>('none');
@@ -77,7 +77,7 @@ export default function OverviewPage() {
       const data = await res.json();
       if (data && data.answer) {
         setInlineResult(data.answer);
-        setInlineProvider(data.provider || 'Free LLM Engine');
+        setInlineProvider(data.provider || 'Local LLM (Ollama)');
       } else {
         router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
       }
@@ -98,8 +98,8 @@ export default function OverviewPage() {
   const quickQuestions = [
     { label: 'Brent +20% impact', query: 'How does a +20% Brent crude oil spike impact RIL cracker EBITDA and margins?' },
     { label: 'RIL cracks vs peers', query: 'How do Reliance dual-feed cracker economics compare against Asian naphtha peers?' },
-    { label: 'What did Rajesh say?', query: 'What key assumptions did Rajesh Rawal mention in the RIL 6 July 2026 MoM?' },
-    { label: 'Hanoz Meeting 2', query: 'What simulation requirements and guidelines were established by Hanoz in Meeting 2?' }
+    { label: 'Ethane vs naphtha margin', query: 'What is the EBITDA margin advantage of ethane cracking over naphtha cracking?' },
+    { label: 'Dahej capacity limits', query: 'What is the throughput capacity of the Dahej ethane terminal and pipeline?' }
   ];
 
   return (
@@ -120,7 +120,7 @@ export default function OverviewPage() {
                     Ask Intelligence
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-snug">
-                    Get quick answers from meetings, market data and research.
+                    Get quick answers from market data, cracker asset records, and project research.
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export default function OverviewPage() {
                   />
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[11px] font-mono text-neutral-400">
-                      {isSolvingInline ? 'Querying Free LLM...' : 'Press Enter or Arrow'}
+                      {isSolvingInline ? 'Querying local model...' : 'Press Enter or Arrow'}
                     </span>
                     <button
                       type="submit"
@@ -439,7 +439,7 @@ export default function OverviewPage() {
               <div className="space-y-2.5">
                 {/* Highlight Item 1 */}
                 <Link
-                  href="/meetings/meet-01"
+                  href="/documents"
                   className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -448,20 +448,20 @@ export default function OverviewPage() {
                     </div>
                     <div className="min-w-0">
                       <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
-                        MoM RIL 6 July 2026
+                        AI Cracker Industry Analysis
                       </h4>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
-                        &ldquo;Many assumptions need correction...&rdquo;
+                        &ldquo;Ethane route: ~$250/t vs naphtha: ~$2,629/t...&rdquo;
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0 text-right">
                     <div>
                       <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
-                        Rajesh Rawal
+                        Industry Analysis
                       </span>
                       <span className="text-[11px] text-neutral-400 block font-mono">
-                        6 Jul 2026
+                        Aug 2026
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
@@ -470,7 +470,7 @@ export default function OverviewPage() {
 
                 {/* Highlight Item 2 */}
                 <Link
-                  href="/meetings/meet-02"
+                  href="/documents"
                   className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -479,20 +479,20 @@ export default function OverviewPage() {
                     </div>
                     <div className="min-w-0">
                       <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
-                        Meeting 2 Transcript
+                        Beyond Naphtha: Capital Allocation
                       </h4>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
-                        &ldquo;Two simulations: RIL and global...&rdquo;
+                        &ldquo;The pivot is being built right now...&rdquo;
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0 text-right">
                     <div>
                       <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
-                        Hanoz
+                        Project Report
                       </span>
                       <span className="text-[11px] text-neutral-400 block font-mono">
-                        Meeting 2
+                        Jul 2026
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
@@ -533,7 +533,7 @@ export default function OverviewPage() {
 
             </div>
 
-            {/* Bottom Floating Bar: Ask about markets, meetings... */}
+            {/* Bottom Floating Bar: Ask about markets, scenarios, models */}
             <form
               onSubmit={handlePromptSubmit}
               className="p-2 pl-5 rounded-full bg-white/95 dark:bg-[#121218]/95 border border-black/[0.06] dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-2xl flex items-center justify-between gap-3"
@@ -544,7 +544,7 @@ export default function OverviewPage() {
                   type="text"
                   value={naturalQuery}
                   onChange={(e) => setNaturalQuery(e.target.value)}
-                  placeholder="Ask about markets, meetings, scenarios or models..."
+                  placeholder="Ask about markets, assets, scenarios or models..."
                   className="w-full bg-transparent text-xs sm:text-sm text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none truncate font-sans"
                 />
               </div>
@@ -581,10 +581,10 @@ export default function OverviewPage() {
 
               <div className="space-y-2">
                 {[
-                  { name: 'MoM RIL 6 July 2026', href: '/meetings/meet-01' },
-                  { name: 'Meeting 2 Transcript', href: '/meetings/meet-02' },
-                  { name: 'Group 9 Live Proposal', href: '/documents/doc-proposal' },
-                  { name: 'AI Cracker Industry Doc', href: '/documents' }
+                  { name: 'AI Cracker Industry Doc', href: '/documents' },
+                  { name: 'Group 9 Live Proposal', href: '/documents' },
+                  { name: 'Market Data Feed', href: '/market' },
+                  { name: 'Cracker Asset Register', href: '/project' }
                 ].map((item, idx) => (
                   <Link
                     key={idx}

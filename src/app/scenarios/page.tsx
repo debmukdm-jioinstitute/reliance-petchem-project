@@ -76,7 +76,7 @@ export default function ScenarioEnginePage() {
       axisPointer: { type: 'shadow' },
       backgroundColor: '#18181B',
       borderColor: '#3F3F46',
-      textStyle: { color: '#FAFAFA', fontSize: 13 },
+      textStyle: { color: '#FAFAFA', fontSize: 14 },
       formatter: (params: any) => {
         const p = params[0];
         const val = waterfallData[p.dataIndex];
@@ -99,7 +99,7 @@ export default function ScenarioEnginePage() {
       axisLine: { lineStyle: { color: '#71717A' } },
       axisLabel: {
         color: '#71717A',
-        fontSize: 11,
+        fontSize: 14,
         fontFamily: 'monospace',
         interval: 0,
         rotate: 15
@@ -109,7 +109,7 @@ export default function ScenarioEnginePage() {
       type: 'value',
       scale: true,
       splitLine: { lineStyle: { color: 'rgba(113, 113, 122, 0.2)', type: 'dashed' } },
-      axisLabel: { color: '#71717A', fontSize: 12, fontFamily: 'monospace' }
+      axisLabel: { color: '#71717A', fontSize: 14, fontFamily: 'monospace' }
     },
     series: [
       {

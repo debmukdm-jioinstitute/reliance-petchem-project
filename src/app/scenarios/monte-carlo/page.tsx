@@ -267,14 +267,14 @@ function histogramOption(bins: { rangeLabel: string; count: number; cumulativePc
       type: 'category',
       data: bins.map((b) => b.rangeLabel),
       axisLine: { lineStyle: { color: GRID_LINE } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 11, rotate: 45, interval: Math.ceil(bins.length / 9) }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14, rotate: 45, interval: Math.ceil(bins.length / 9) }
     },
     yAxis: {
       type: 'value',
       name: 'Simulations',
-      nameTextStyle: { color: AXIS_LABEL, fontSize: 12 },
+      nameTextStyle: { color: AXIS_LABEL, fontSize: 14 },
       splitLine: { lineStyle: { color: GRID_LINE, type: 'dashed' } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 12 }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14 }
     },
     series: [
       {
@@ -305,15 +305,15 @@ function sCurveOption(bins: { rangeLabel: string; cumulativePct: number }[]) {
       type: 'category',
       data: bins.map((b) => b.rangeLabel),
       axisLine: { lineStyle: { color: GRID_LINE } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 11, rotate: 45, interval: Math.ceil(bins.length / 9) }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14, rotate: 45, interval: Math.ceil(bins.length / 9) }
     },
     yAxis: {
       type: 'value',
       max: 100,
       name: 'Cumulative %',
-      nameTextStyle: { color: AXIS_LABEL, fontSize: 12 },
+      nameTextStyle: { color: AXIS_LABEL, fontSize: 14 },
       splitLine: { lineStyle: { color: GRID_LINE, type: 'dashed' } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 12, formatter: '{value}%' }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14, formatter: '{value}%' }
     },
     series: [
       {
@@ -350,15 +350,15 @@ function tornadoOption(drivers: { label: string; npvSwingUSD_Mn: number; correla
     xAxis: {
       type: 'value',
       name: 'NPV Swing ($M)',
-      nameTextStyle: { color: AXIS_LABEL, fontSize: 12 },
+      nameTextStyle: { color: AXIS_LABEL, fontSize: 14 },
       splitLine: { lineStyle: { color: GRID_LINE, type: 'dashed' } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 12 }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14 }
     },
     yAxis: {
       type: 'category',
       data: top.map((d) => d.label).reverse(),
       axisLine: { lineStyle: { color: GRID_LINE } },
-      axisLabel: { color: '#27272A', fontSize: 13, fontWeight: 600 }
+      axisLabel: { color: '#27272A', fontSize: 14, fontWeight: 600 }
     },
     series: [
       {
@@ -386,14 +386,14 @@ function convergenceOption(points: { atIteration: number; runningMeanNpv: number
       type: 'category',
       data: points.map((p) => p.atIteration.toLocaleString()),
       axisLine: { lineStyle: { color: GRID_LINE } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 11, interval: Math.ceil(points.length / 6) }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14, interval: Math.ceil(points.length / 6) }
     },
     yAxis: {
       type: 'value',
       name: 'Running Avg NPV ($M)',
-      nameTextStyle: { color: AXIS_LABEL, fontSize: 12 },
+      nameTextStyle: { color: AXIS_LABEL, fontSize: 14 },
       splitLine: { lineStyle: { color: GRID_LINE, type: 'dashed' } },
-      axisLabel: { color: AXIS_LABEL, fontSize: 12 }
+      axisLabel: { color: AXIS_LABEL, fontSize: 14 }
     },
     series: [
       {

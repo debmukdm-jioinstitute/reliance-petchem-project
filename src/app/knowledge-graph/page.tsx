@@ -25,7 +25,6 @@ export default function KnowledgeGraphPage() {
   const categoryColors: Record<string, string> = {
     COMPANY: '#BFA161',
     PERSON: '#38BDF8',
-    MEETING: '#10B981',
     COMMODITY: '#F59E0B',
     PLANT: '#818CF8',
     PROJECT: '#EC4899',
@@ -37,7 +36,7 @@ export default function KnowledgeGraphPage() {
     tooltip: {
       backgroundColor: '#0E1420',
       borderColor: '#242F44',
-      textStyle: { color: '#F8FAFC', fontSize: 12 },
+      textStyle: { color: '#F8FAFC', fontSize: 14 },
       formatter: (params: any) => {
         if (params.dataType === 'node') {
           return `<div class="font-mono text-xs">
@@ -70,14 +69,14 @@ export default function KnowledgeGraphPage() {
           position: 'right',
           formatter: '{b}',
           color: '#CBD5E1',
-          fontSize: 11,
+          fontSize: 14,
           fontFamily: 'Inter, sans-serif'
         },
         edgeLabel: {
           show: true,
           formatter: '{c}',
           color: '#64748B',
-          fontSize: 9,
+          fontSize: 14,
           fontFamily: 'monospace'
         },
         edgeSymbol: ['none', 'arrow'],
@@ -87,7 +86,7 @@ export default function KnowledgeGraphPage() {
           name: n.name,
           category: n.category,
           details: n.details,
-          symbolSize: n.category === 'COMPANY' ? 36 : n.category === 'MEETING' ? 28 : 22,
+          symbolSize: n.category === 'COMPANY' ? 36 : 22,
           itemStyle: {
             color: categoryColors[n.category] || '#94A3B8',
             borderColor: selectedNodeId === n.id ? '#FFFFFF' : '#1E2738',
@@ -135,7 +134,7 @@ export default function KnowledgeGraphPage() {
               KNOWLEDGE GRAPH & ONTOLOGY
             </h1>
             <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              Relational mapping across leadership, meetings, decisions, feedstock commodities, refinery plants, and financial scenarios. Drag or zoom to explore connections.
+              Relational mapping across leadership, decisions, feedstock commodities, refinery plants, and financial scenarios. Drag or zoom to explore connections.
             </p>
           </div>
 

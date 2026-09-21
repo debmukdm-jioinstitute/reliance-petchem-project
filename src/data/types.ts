@@ -16,7 +16,7 @@ export type InformationCategory =
 export interface SourceCitation {
   id: string;
   sourceTitle: string;
-  sourceType: 'MEETING' | 'DOCUMENT' | 'MARKET_DATA' | 'ANNUAL_REPORT' | 'RESEARCH';
+  sourceType: 'DOCUMENT' | 'MARKET_DATA' | 'ANNUAL_REPORT' | 'RESEARCH';
   date: string;
   pageOrSection?: string;
   exactQuote?: string;
@@ -35,97 +35,6 @@ export interface ChronologicalChange {
   confidence: ConfidenceLevel;
   potentialImpact: string;
   deltaType: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL' | 'CRITICAL';
-}
-
-export interface MeetingData {
-  id: string;
-  title: string;
-  date: string;
-  participants: {
-    name: string;
-    role: string;
-    affiliation: 'Reliance Industries' | 'Jio Institute' | 'External';
-  }[];
-  topic: string;
-  projectStage: string;
-  status: 'COMPLETED' | 'SCHEDULED';
-  aiSummary: string;
-  keyDiscussion: string[];
-  decisions: {
-    id: string;
-    decision: string;
-    decisionMaker: string;
-    rationale: string;
-    evidence: string;
-    impact: string;
-    status: 'ACTIVE' | 'SUPERSEDED' | 'PENDING';
-    sourceCitation: SourceCitation;
-  }[];
-  actionItems: {
-    id: string;
-    action: string;
-    owner: string;
-    dueDate: string;
-    priority: 'HIGH' | 'MEDIUM' | 'LOW';
-    status: 'NOT_STARTED' | 'IN_PROGRESS' | 'BLOCKED' | 'COMPLETED';
-    dependencies?: string;
-    evidence: string;
-  }[];
-  openQuestions: {
-    id: string;
-    question: string;
-    owner: string;
-    deadline: string;
-    currentAnswer: string;
-    evidenceStatus: 'VERIFIED' | 'PRELIMINARY' | 'UNRESOLVED';
-  }[];
-  assumptionsCreated: {
-    id: string;
-    assumption: string;
-    value: string;
-    confidence: ConfidenceLevel;
-    status: 'ACTIVE' | 'UNVERIFIED';
-  }[];
-  assumptionsInvalidated: {
-    id: string;
-    originalAssumption: string;
-    invalidationReason: string;
-    newEvidence: string;
-    updatedUnderstanding: string;
-    sourceCitation: SourceCitation;
-  }[];
-  risksIdentified: {
-    id: string;
-    risk: string;
-    severity: 'HIGH' | 'MEDIUM' | 'LOW';
-    probability: 'HIGH' | 'MEDIUM' | 'LOW';
-    mitigation: string;
-    trend: 'INCREASING' | 'STABLE' | 'DECREASING';
-  }[];
-  marketSignals: {
-    commodity: string;
-    signal: string;
-    direction: 'BULLISH' | 'BEARISH' | 'NEUTRAL';
-    impactOnRIL: string;
-  }[];
-  projectImpact: string;
-  numbersExtracted: {
-    metric: string;
-    value: string;
-    unit: string;
-    context: string;
-    sourceCitation: SourceCitation;
-  }[];
-  topics: string[];
-  entities: string[];
-  rawTranscript: {
-    lineIndex: number;
-    speaker: string;
-    timestamp?: string;
-    text: string;
-    highlighted?: boolean;
-    annotation?: string;
-  }[];
 }
 
 export interface MarketCommodity {
@@ -280,7 +189,7 @@ export interface FinancialAssetCracker {
 export interface EntityNode {
   id: string;
   name: string;
-  category: 'PERSON' | 'MEETING' | 'DECISION' | 'COMMODITY' | 'PLANT' | 'RISK' | 'ASSUMPTION' | 'PROJECT' | 'COMPANY';
+  category: 'PERSON' | 'DECISION' | 'COMMODITY' | 'PLANT' | 'RISK' | 'ASSUMPTION' | 'PROJECT' | 'COMPANY';
   details: string;
   connectionsCount: number;
 }

@@ -23,7 +23,7 @@ import {
   RefreshCw,
   FileText
 } from 'lucide-react';
-import { synthesizeAgentResponse, SynthesizedAnswer } from '@/lib/searchEngine';
+import { SynthesizedAnswer } from '@/lib/searchEngine';
 import { MARKET_COMMODITIES } from '@/data/knowledgeStore';
 
 interface ConversationItem {
@@ -40,19 +40,19 @@ function AICopilotContent() {
   const [inputQuery, setInputQuery] = useState(initialQuery);
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<SynthesizedAnswer | null>(null);
-  const [currentProvider, setCurrentProvider] = useState<string>('Free LLM Engine');
+  const [currentProvider, setCurrentProvider] = useState<string>('Local LLM (Ollama)');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loadingStage, setLoadingStage] = useState<string>('Initializing Free LLM...');
+  const [loadingStage, setLoadingStage] = useState<string>('Connecting to local model...');
 
   const handleRunQuery = async (q: string) => {
     if (!q.trim() || isLoading) return;
     const queryText = q.trim();
     setIsLoading(true);
-    setLoadingStage('Querying Free LLM & Searching Petrochemical Knowledge Graph...');
+    setLoadingStage('Querying local Ollama model & searching document store...');
 
     try {
       const stageTimer = setTimeout(() => {
-        setLoadingStage('Cross-referencing Macro Spreads, Cracker Kinetics & References...');
+        setLoadingStage('Cross-referencing market data and cracker asset records...');
       }, 1500);
 
       const res = await fetch('/api/ai/copilot', {
@@ -73,25 +73,36 @@ function AICopilotContent() {
         const item: ConversationItem = {
           query: queryText,
           answer: data.answer,
-          provider: data.provider || 'Free LLM Engine (Pollinations OpenAI)'
+          provider: data.provider || 'Local LLM (Ollama)'
         };
         setConversations((prev) => [item, ...prev]);
         setSelectedAnswer(data.answer);
-        setCurrentProvider(data.provider || 'Free LLM Engine (Pollinations OpenAI)');
+        setCurrentProvider(data.provider || 'Local LLM (Ollama)');
       } else {
         throw new Error('Invalid answer format');
       }
     } catch (err) {
-      console.warn('Network call failed, synthesizing via high-fidelity local RAG:', err);
-      const fallback = synthesizeAgentResponse(queryText);
+      console.warn('AI copilot request failed:', err);
+      const fallback: SynthesizedAnswer = {
+        question: queryText,
+        answer: 'Could not reach the AI engine. Check that Ollama is running locally (`ollama serve`) and try again.',
+        keyTakeaway: 'AI engine unavailable.',
+        category: 'FACT',
+        evidence: [],
+        numericalData: [],
+        assumptions: [],
+        uncertainty: 'No model output to assess.',
+        relatedAnalysis: [],
+        requiredAgents: []
+      };
       const item: ConversationItem = {
         query: queryText,
         answer: fallback,
-        provider: 'Reliance Digital Twin Local RAG Engine'
+        provider: 'None (engine unavailable)'
       };
       setConversations((prev) => [item, ...prev]);
       setSelectedAnswer(fallback);
-      setCurrentProvider('Reliance Digital Twin Local RAG Engine');
+      setCurrentProvider('None (engine unavailable)');
     } finally {
       setIsLoading(false);
       setInputQuery('');
@@ -123,7 +134,7 @@ function AICopilotContent() {
             <span className="text-[#64748B]">•</span>
             <span className="text-xs text-emerald-400 font-mono flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              Free LLM Tool Online
+              Local LLM Active
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white font-mono tracking-tight">
@@ -173,7 +184,7 @@ function AICopilotContent() {
                 <div className="font-medium line-clamp-2 leading-snug">{c.query}</div>
                 <div className="flex items-center justify-between text-[10px] font-mono text-amber-400 mt-1.5">
                   <span>[{c.answer.category}]</span>
-                  <span className="text-neutral-400 truncate max-w-[120px]">{c.provider || 'Free LLM'}</span>
+                  <span className="text-neutral-400 truncate max-w-[120px]">{c.provider || 'Local LLM'}</span>
                 </div>
               </div>
             ))}
@@ -213,7 +224,7 @@ function AICopilotContent() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white font-mono">
-                      Free LLM Synthesizing Response...
+                      Local Model Synthesizing Response...
                     </h3>
                     <p className="text-xs text-cyan-300 mt-0.5 font-mono">
                       {loadingStage}
@@ -239,7 +250,7 @@ function AICopilotContent() {
                   Reliance O2C Digital Twin Copilot Ready
                 </div>
                 <p className="max-w-md text-sm text-neutral-300 leading-relaxed">
-                  Ask any question about Reliance business, macroeconomic trends, microeconomic spreads, cracker kinetics, or site-wide data. All answers are generated via Free LLM with mandatory, verified references.
+                  Ask any question about Reliance business, macroeconomic trends, microeconomic spreads, cracker kinetics, or site-wide data. Answers are generated by a local LLM (Ollama) grounded in this project&apos;s market data, cracker asset records, and document store.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 max-w-lg pt-2">
                   <button
@@ -448,14 +459,6 @@ function AICopilotContent() {
             </span>
             <div className="space-y-2 text-xs">
               <div className="p-2.5 rounded-xl bg-[#0E1422] border border-neutral-800 text-neutral-200">
-                <div className="font-semibold text-white">MoM RIL 6 July 2026</div>
-                <div className="text-[11px] text-neutral-400 mt-0.5">Rajesh Rawal (Feedstock Transition & LP Model)</div>
-              </div>
-              <div className="p-2.5 rounded-xl bg-[#0E1422] border border-neutral-800 text-neutral-200">
-                <div className="font-semibold text-white">Meeting 2 Transcript (20 July 2026)</div>
-                <div className="text-[11px] text-neutral-400 mt-0.5">Hanoz (Dual Simulation & AI Forecasting Mandate)</div>
-              </div>
-              <div className="p-2.5 rounded-xl bg-[#0E1422] border border-neutral-800 text-neutral-200">
                 <div className="font-semibold text-white">Group 9 Petchem Project Proposal</div>
                 <div className="text-[11px] text-neutral-400 mt-0.5">Beyond Naphtha: Capital Allocation & Feeds</div>
               </div>
@@ -499,7 +502,7 @@ function AICopilotContent() {
             <div className="space-y-1.5 text-xs text-neutral-300">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Free LLM Engine: Active</span>
+                <span>Local LLM Engine: Active</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />

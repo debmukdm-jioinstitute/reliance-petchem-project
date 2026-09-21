@@ -38,7 +38,6 @@ const PATH_TITLES: Record<string, string> = {
   '/alerts': 'Active System Alerts',
   '/financial': 'Financial Realization',
   '/documents': 'Institutional Knowledge Base',
-  '/meetings': 'Executive Committee Transcripts',
   '/competitive-intelligence': 'Peer & Competitive Radar',
 };
 

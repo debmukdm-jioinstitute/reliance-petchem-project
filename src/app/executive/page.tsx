@@ -17,7 +17,7 @@ import {
   HelpCircle,
   Clock
 } from 'lucide-react';
-import { MEETINGS_DATA } from '@/data/knowledgeStore';
+import { KEY_DECISIONS } from '@/data/knowledgeStore';
 import { CardSpotlight, DottedGrid } from '@/components/obsidian';
 
 export default function ExecutiveIntelligencePage() {
@@ -83,16 +83,16 @@ export default function ExecutiveIntelligencePage() {
               </span>
             </div>
             <span className="text-xs font-mono text-neutral-500">
-              Verified from Meetings 1 & 2
+              Verified from project records
             </span>
           </div>
 
           <div className="mt-5 space-y-4 text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
             <p>
-              <strong className="text-neutral-900 dark:text-white">1. Switching is Already Solved:</strong> Meeting 1 with Rajesh Rawal (Business Head, Cracker & Poly) confirmed Reliance already switched from naphtha to ethane in 2017. Internal linear programs can switch feeds within hours. We do not need to study how to switch.
+              <strong className="text-neutral-900 dark:text-white">1. Switching is Already Solved:</strong> Reliance already switched from naphtha to ethane in 2017. Internal linear programs can switch feeds within hours. We do not need to study how to switch.
             </p>
             <p>
-              <strong className="text-neutral-900 dark:text-white">2. Dual Simulation Model Approved:</strong> In Meeting 2, Hanoz (New Cracker Head) approved the AI Live Dashboard and requested two simulation models: (A) RIL asset-specific expansion economics, and (B) global cracker industry oversupply (+40 Mt capacity vs +27 Mt demand).
+              <strong className="text-neutral-900 dark:text-white">2. Dual Simulation Model Approved:</strong> The project scope covers two simulation models: (A) RIL asset-specific expansion economics, and (B) global cracker industry oversupply (+40 Mt capacity vs +27 Mt demand).
             </p>
             <p>
               <strong className="text-neutral-900 dark:text-white">3. Huge Ethane Feedstock Advantage:</strong> Naphtha costs surged 61% YoY while US ethane fell 11%. Feedstock cost to make 1 tonne of ethylene is ~$250 using ethane vs ~$2,629 using naphtha (~10x cost difference). This protects RIL&apos;s O2C margins (+₹1,850 Cr annual impact).
@@ -191,14 +191,14 @@ export default function ExecutiveIntelligencePage() {
           </div>
         </div>
 
-        {/* 3. KEY DECISIONS FROM MEETINGS */}
+        {/* 3. KEY DECISIONS REGISTER */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-            Key Decisions from Leadership Meetings
+            Key Decisions Register
           </h2>
 
           <div className="space-y-4">
-            {MEETINGS_DATA.flatMap((m) => m.decisions).map((d) => (
+            {KEY_DECISIONS.map((d) => (
               <CardSpotlight key={d.id} className="p-6">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                   <div className="space-y-2 flex-1">

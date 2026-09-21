@@ -18,7 +18,7 @@ import {
 import { ALL_RAW_DOCUMENTS } from '@/data/rawDocuments';
 
 export default function DocumentsPage() {
-  const [selectedDocId, setSelectedDocId] = useState<string>('doc-mom-1');
+  const [selectedDocId, setSelectedDocId] = useState<string>('doc-ai-cracker');
   const [searchChunk, setSearchChunk] = useState<string>('');
 
   const selectedDoc =
@@ -48,13 +48,13 @@ export default function DocumentsPage() {
               DOCUMENT INTELLIGENCE & INGESTION
             </h1>
             <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              Original meeting transcripts, research studies, and live project reports ingested into vector store with paragraph-level chunking and metadata tags.
+              Original research studies and live project reports ingested into vector store with paragraph-level chunking and metadata tags.
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono text-[#38BDF8] bg-[#0E1420] px-3.5 py-2 rounded-lg border border-[#1E2738]">
             <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
-            <span>5 Grounded Documents Active</span>
+            <span>{ALL_RAW_DOCUMENTS.length} Grounded Documents Active</span>
           </div>
         </div>
 
