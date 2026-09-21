@@ -22,6 +22,7 @@ import {
   Share2,
   Sparkles,
   Settings,
+  Activity,
 } from 'lucide-react';
 
 interface NavItem {
@@ -36,48 +37,58 @@ interface NavItem {
 
 const PRIMARY_NAVIGATION: NavItem[] = [
   {
-    id: 'overview',
+    id: 'simulation',
     code: '01',
-    name: 'Overview',
-    href: '/',
-    icon: LayoutDashboard,
-    badge: 'LIVE',
+    name: 'SCADA Simulation',
+    href: '/simulation',
+    icon: Activity,
+    badge: 'DCS MIMIC',
+    subItems: [
+      { name: 'Cracker Digital Twin', href: '/simulation' },
+      { name: 'Radiant Coils & Furnace', href: '/simulation#furnace' },
+      { name: 'Fractionation Train', href: '/simulation#splitters' }
+    ]
   },
   {
-    id: 'executive',
+    id: 'economics',
     code: '02',
-    name: 'Executive Briefing',
-    href: '/executive',
-    icon: Crown,
-    badge: '60s',
+    name: 'Cracker Economics',
+    href: '/economics',
+    icon: DollarSign,
+    badge: 'Waterfall',
     subItems: [
-      { name: 'Executive Summary', href: '/executive#brief' },
-      { name: 'Today\'s Signals', href: '/executive#signals' },
-      { name: 'Leadership Priority', href: '/executive#attention' }
+      { name: 'Input Import Costs', href: '/economics#inputs' },
+      { name: 'Processing & Fuel OPEX', href: '/economics#processing' },
+      { name: 'Product Realization', href: '/economics#outputs' },
+      { name: 'Net EBITDA Estimation', href: '/economics#profit' }
     ]
   },
   {
-    id: 'meetings',
+    id: 'optimization',
     code: '03',
-    name: 'Meeting Minutes',
-    href: '/meetings',
-    icon: Users,
-    badge: '2 Notes',
+    name: 'LP Feedstock Optimizer',
+    href: '/optimization',
+    icon: Cpu,
+    badge: '5 Complexes',
     subItems: [
-      { name: 'Rajesh Rawal (Meeting 1)', href: '/meetings/meeting-1' },
-      { name: 'Hanoz & Adepu (Meeting 2)', href: '/meetings/meeting-2' }
+      { name: 'Jamnagar ROGC (1.4 MT)', href: '/optimization#jamnagar' },
+      { name: 'Dahej Dual Feed (1.1 MT)', href: '/optimization#dahej' },
+      { name: 'Hazira & Nagothane', href: '/optimization#hazira' },
+      { name: 'Sub-Day Switch Timeline', href: '/optimization#switching' }
     ]
   },
   {
-    id: 'project',
+    id: 'risk-sentinel',
     code: '04',
-    name: 'Project Roadmap',
-    href: '/project',
-    icon: Briefcase,
+    name: 'Price Risk Sentinel',
+    href: '/risk-sentinel',
+    icon: AlertTriangle,
+    badge: 'AI Radar',
     subItems: [
-      { name: '5 Core Workstreams', href: '/project#workstreams' },
-      { name: 'Dahej Expansion Capex', href: '/project/capex' },
-      { name: 'Key Milestones', href: '/project#timeline' }
+      { name: 'Oil Spike Threat', href: '/risk-sentinel#oil' },
+      { name: 'US Ethane Disruption', href: '/risk-sentinel#ethane' },
+      { name: 'Shipping Surcharges', href: '/risk-sentinel#freight' },
+      { name: 'Live Chemical News Wire', href: '/risk-sentinel#news' }
     ]
   },
   {
@@ -88,21 +99,21 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     icon: TrendingUp,
     badge: 'Real-time',
     subItems: [
-      { name: 'Cracker Value Chain', href: '/market?tab=cracker' },
-      { name: 'Ethane & Naphtha Spreads', href: '/market?tab=feedstocks' },
-      { name: 'Ethylene & Propylene Prices', href: '/market?tab=products' },
+      { name: 'Ethylene Real-Time Price', href: '/market?tab=products&item=ethylene' },
+      { name: 'Feedstock Spreads', href: '/market?tab=feedstocks' },
+      { name: 'Cracker Value Chain', href: '/market?tab=cracker' }
     ]
   },
   {
-    id: 'forecasts',
+    id: 'operations',
     code: '06',
-    name: 'Price Forecasts',
-    href: '/forecasts',
-    icon: LineChart,
-    badge: '4 Models',
+    name: 'Cracker Logistics',
+    href: '/operations',
+    icon: Briefcase,
+    badge: 'VLEC Fleet',
     subItems: [
-      { name: 'Feedstock Price Paths', href: '/forecasts?asset=ethane' },
-      { name: 'Model Accuracy (MAE/MAPE)', href: '/forecasts?tab=accuracy' }
+      { name: 'Feedstock Switching', href: '/operations#switching' },
+      { name: 'VLEC Ships & Dahej Pipe', href: '/operations#logistics' }
     ]
   },
   {
@@ -114,95 +125,28 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     badge: '10k Runs',
     subItems: [
       { name: 'Interactive Scenarios', href: '/scenarios' },
-      { name: '10,000-Run Monte Carlo', href: '/scenarios/monte-carlo' },
+      { name: '10,000-Run Monte Carlo', href: '/scenarios/monte-carlo' }
     ]
   },
   {
-    id: 'financial',
+    id: 'forecasts',
     code: '08',
-    name: 'Financial Model',
-    href: '/financial',
-    icon: DollarSign,
-    subItems: [
-      { name: 'RIL Asset DCF Valuation', href: '/financial#valuation' },
-      { name: 'Dahej Expansion ROI', href: '/financial#expansion' }
-    ]
+    name: 'Price Forecasts',
+    href: '/forecasts',
+    icon: LineChart,
+    badge: '4 Models'
   },
   {
-    id: 'operations',
+    id: 'executive',
     code: '09',
-    name: 'Cracker Operations',
-    href: '/operations',
-    icon: Cpu,
-    badge: 'Flexible',
-    subItems: [
-      { name: 'Feedstock Switching', href: '/operations#switching' },
-      { name: 'VLEC Ships & Dahej Pipe', href: '/operations#logistics' }
-    ]
-  },
-  {
-    id: 'competitive-intelligence',
-    code: '10',
-    name: 'Competitor Benchmark',
-    href: '/competitive-intelligence',
-    icon: Globe2,
-    subItems: [
-      { name: 'Global Cracker Peers', href: '/competitive-intelligence#matrix' },
-      { name: 'Global Oversupply Risk', href: '/competitive-intelligence#oversupply' }
-    ]
-  },
-  {
-    id: 'ai-research',
-    code: '11',
-    name: 'Industry Research',
-    href: '/ai-research',
-    icon: BookOpen,
-  },
-  {
-    id: 'documents',
-    code: '12',
-    name: 'Source Documents',
-    href: '/documents',
-    icon: FileText,
-  },
-  {
-    id: 'data',
-    code: '13',
-    name: 'Data Center',
-    href: '/data',
-    icon: Database,
-  },
-  {
-    id: 'alerts',
-    code: '14',
-    name: 'Alerts & Shocks',
-    href: '/alerts',
-    icon: AlertTriangle,
-  },
-  {
-    id: 'actions',
-    code: '15',
-    name: 'Action Items',
-    href: '/actions',
-    icon: CheckSquare
-  },
-  {
-    id: 'knowledge-graph',
-    code: '16',
-    name: 'Knowledge Graph',
-    href: '/knowledge-graph',
-    icon: Share2,
-  },
-  {
-    id: 'ai',
-    code: '17',
-    name: 'AI Copilot',
-    href: '/ai',
-    icon: Sparkles,
+    name: 'Executive Briefing',
+    href: '/executive',
+    icon: Crown,
+    badge: '60s'
   },
   {
     id: 'settings',
-    code: '18',
+    code: '10',
     name: 'Settings',
     href: '/settings',
     icon: Settings
