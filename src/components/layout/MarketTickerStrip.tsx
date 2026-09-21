@@ -2,21 +2,31 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, ArrowDownRight, Minus, Activity } from 'lucide-react';
-import { MARKET_COMMODITIES } from '@/data/knowledgeStore';
+import { ArrowUpRight, ArrowDownRight, Minus, Activity, RefreshCw } from 'lucide-react';
+import { useMarket } from '@/context/MarketContext';
 
 export default function MarketTickerStrip() {
+  const { commodities, spreads, lastSyncTime, isSyncing, refreshPrices } = useMarket();
+
   return (
     <div className="w-full bg-white dark:bg-[#0D0D11] border-b border-neutral-200 dark:border-neutral-800 py-2.5 px-4 lg:px-8 flex items-center overflow-x-auto no-scrollbar select-none transition-colors duration-200">
       <div className="flex items-center gap-2 mr-6 pr-4 border-r border-neutral-200 dark:border-neutral-800 shrink-0">
-        <span className="live-indicator live-pulse-anim" />
+        <span className={`live-indicator ${isSyncing ? 'animate-spin' : 'live-pulse-anim'}`} />
         <span className="text-xs font-bold tracking-wider text-neutral-800 dark:text-[#D4BA7B] uppercase flex items-center gap-1.5">
           <Activity className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Live Feed
         </span>
+        <button
+          onClick={() => refreshPrices()}
+          disabled={isSyncing}
+          title="Refresh real-time prices"
+          className="p-1 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+        >
+          <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin text-[#BFA161]' : ''}`} />
+        </button>
       </div>
 
       <div className="flex items-center gap-7 text-sm whitespace-nowrap">
-        {MARKET_COMMODITIES.map((c) => {
+        {commodities.map((c) => {
           const isUp = c.change1D > 0;
           const isDown = c.change1D < 0;
           const targetHref = c.id === 'comm-ethylene' 
@@ -69,15 +79,22 @@ export default function MarketTickerStrip() {
           );
         })}
 
-        {/* Integrated Gross Delta Spreads */}
+        {/* Integrated Gross Delta Spreads (Dynamic) */}
         <div className="flex items-center gap-5 pl-5 border-l border-neutral-200 dark:border-neutral-800">
           <div className="flex items-center gap-2 text-xs">
             <span className="font-semibold text-neutral-500 dark:text-neutral-400">Ethylene-Naphtha:</span>
-            <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">+$155/t</span>
+            <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+              {spreads.ethyleneNaphtha >= 0 ? '+' : ''}${spreads.ethyleneNaphtha}/t
+            </span>
           </div>
           <div className="flex items-center gap-2 text-xs">
             <span className="font-semibold text-neutral-500 dark:text-neutral-400">Ethylene-Ethane:</span>
-            <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] font-extrabold">+$695/t</span>
+            <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] font-extrabold">
+              {spreads.ethyleneEthane >= 0 ? '+' : ''}${spreads.ethyleneEthane}/t
+            </span>
+          </div>
+          <div className="text-[11px] font-mono text-neutral-400">
+            {lastSyncTime}
           </div>
         </div>
       </div>

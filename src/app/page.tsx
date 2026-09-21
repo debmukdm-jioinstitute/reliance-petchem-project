@@ -16,11 +16,19 @@ import {
 import { CHRONOLOGICAL_CHANGES } from '@/data/knowledgeStore';
 import { DottedGrid, ArrowFillButton } from '@/components/obsidian';
 import { GlassCard3D, GlassMetricBox } from '@/components/glass';
+import { useMarket } from '@/context/MarketContext';
 
 export default function OverviewPage() {
   const router = useRouter();
   const { openAuditModal } = useIntelligence();
+  const { getCommodity, lastSyncTime, isSyncing, refreshPrices } = useMarket();
   const [naturalQuery, setNaturalQuery] = useState('');
+
+  const ethylene = getCommodity('comm-ethylene');
+  const propylene = getCommodity('comm-propylene');
+  const naphtha = getCommodity('comm-naphtha');
+  const ethane = getCommodity('comm-ethane');
+  const brent = getCommodity('comm-brent');
 
   const handleAskNaturalQuery = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,54 +124,54 @@ export default function OverviewPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             <GlassMetricBox
               title="Ethylene Spot"
-              value="$840"
+              value={`$${ethylene?.currentPrice || 840}`}
               unit="/t"
               subtitle="CFR SE Asia / India"
               badgeText="Product"
-              trend="up"
-              trendValue="+1.82%"
+              trend={(ethylene?.change1D || 0) >= 0 ? 'up' : 'down'}
+              trendValue={`${(ethylene?.change1D || 0) >= 0 ? '+' : ''}${(ethylene?.change1D || 1.82).toFixed(2)}%`}
               href="/market?tab=products&item=ethylene"
               highlight
             />
             <GlassMetricBox
               title="Propylene Spot"
-              value="$790"
+              value={`$${propylene?.currentPrice || 790}`}
               unit="/t"
               subtitle="FOB Korea / Domestic"
               badgeText="Product"
-              trend="down"
-              trendValue="-0.63%"
+              trend={(propylene?.change1D || 0) >= 0 ? 'up' : 'down'}
+              trendValue={`${(propylene?.change1D || 0) >= 0 ? '+' : ''}${(propylene?.change1D || -0.63).toFixed(2)}%`}
               href="/market?tab=products&item=propylene"
             />
             <GlassMetricBox
               title="Naphtha Feedstock"
-              value="$685"
+              value={`$${naphtha?.currentPrice || 685}`}
               unit="/t"
               subtitle="+61% YoY cost spike"
               badgeText="Feedstock"
-              trend="up"
-              trendValue="+3.16%"
+              trend={(naphtha?.change1D || 0) >= 0 ? 'up' : 'down'}
+              trendValue={`${(naphtha?.change1D || 0) >= 0 ? '+' : ''}${(naphtha?.change1D || 3.16).toFixed(2)}%`}
               href="/market?tab=feedstocks&item=naphtha"
             />
             <GlassMetricBox
               title="US Ethane FOB"
-              value="$145"
+              value={`$${ethane?.currentPrice || 145}`}
               unit="/t"
               subtitle="Mont Belvieu deep discount"
               badgeText="Feedstock"
-              trend="down"
-              trendValue="-1.36%"
+              trend={(ethane?.change1D || 0) >= 0 ? 'up' : 'down'}
+              trendValue={`${(ethane?.change1D || 0) >= 0 ? '+' : ''}${(ethane?.change1D || -1.36).toFixed(2)}%`}
               href="/market?tab=feedstocks&item=ethane"
               highlight
             />
             <GlassMetricBox
               title="Brent Crude"
-              value="$82.40"
+              value={`$${brent?.currentPrice || 82.40}`}
               unit="/bbl"
               subtitle="ICE London Futures"
               badgeText="Energy"
-              trend="up"
-              trendValue="+0.92%"
+              trend={(brent?.change1D || 0) >= 0 ? 'up' : 'down'}
+              trendValue={`${(brent?.change1D || 0) >= 0 ? '+' : ''}${(brent?.change1D || 0.92).toFixed(2)}%`}
               href="/market?tab=energy&item=brent"
             />
             <GlassMetricBox
