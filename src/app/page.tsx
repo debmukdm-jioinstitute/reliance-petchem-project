@@ -2,34 +2,51 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AppShell from '@/components/layout/AppShell';
 import {
-  TrendingUp,
-  Sparkles,
   Search,
   ArrowRight,
   Activity,
   DollarSign,
   Cpu,
-  AlertTriangle,
+  FileText,
+  ChevronRight,
+  Sparkles,
+  BarChart2,
+  RefreshCw,
+  X,
+  Droplets,
+  Box,
+  Factory,
   Flame,
-  Ship,
-  Zap,
   CheckCircle2,
-  Sliders,
-  Scale
+  ExternalLink,
+  BookOpen
 } from 'lucide-react';
-import { GlassCard3D, GlassMetricBox } from '@/components/glass';
-import { ArrowFillButton, DottedGrid } from '@/components/obsidian';
 import { useMarket } from '@/context/MarketContext';
 import ScadaDiagram, { ScadaState } from '@/components/scada/ScadaDiagram';
-import RelianceLogo from '@/components/common/RelianceLogo';
+import PriceInfoIcon from '@/components/common/PriceInfoIcon';
+import { SynthesizedAnswer } from '@/lib/searchEngine';
 
 export default function OverviewPage() {
   const router = useRouter();
   const { getCommodity, commodities, refreshPrices, isSyncing } = useMarket();
+
+  // Active time filter for benchmarks
+  const [timeFilter, setTimeFilter] = useState<'Live' | '1D' | '1W' | '1M'>('Live');
+
+  // Query state for AI Copilot
   const [naturalQuery, setNaturalQuery] = useState('');
+  const [isSolvingInline, setIsSolvingInline] = useState(false);
+  const [inlineResult, setInlineResult] = useState<SynthesizedAnswer | null>(null);
+  const [inlineProvider, setInlineProvider] = useState<string>('Free LLM Engine');
+
+  // Active deep dive view toggle (SCADA, Economics, or Hidden)
+  const [activeDeepDive, setActiveDeepDive] = useState<'none' | 'scada' | 'economics'>('none');
+
+  // SCADA state for cracker simulation
   const [scadaState, setScadaState] = useState<ScadaState>({
     ethaneRatio: 75,
     naphthaRatio: 25,
@@ -45,363 +62,734 @@ export default function OverviewPage() {
   const ethane = getCommodity('comm-ethane');
   const brent = getCommodity('comm-brent');
 
-  // Dynamic economics calculations
-  const ethanePrice = ethane?.currentPrice || 157;
-  const naphthaPrice = naphtha?.currentPrice || 819;
-  const ethylenePrice = ethylene?.currentPrice || 887;
-  const propylenePrice = propylene?.currentPrice || 834;
+  const runInlineSolve = async (queryToRun: string) => {
+    if (!queryToRun.trim() || isSolvingInline) return;
+    setIsSolvingInline(true);
+    setInlineResult(null);
 
-  const weightedFeedCost = Number(((scadaState.ethaneRatio / 100) * ethanePrice + (scadaState.naphthaRatio / 100) * naphthaPrice).toFixed(1));
-  const processingCost = Number(((scadaState.ethaneRatio / 100) * 85 + (scadaState.naphthaRatio / 100) * 165).toFixed(1));
-  const ethyleneYield = (scadaState.ethaneRatio / 100) * 0.795 + (scadaState.naphthaRatio / 100) * 0.332;
-  const propyleneYield = (scadaState.ethaneRatio / 100) * 0.024 + (scadaState.naphthaRatio / 100) * 0.168;
-  const byproductsYield = 1 - ethyleneYield - propyleneYield;
+    try {
+      const res = await fetch('/api/ai/copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: queryToRun.trim() })
+      });
+      if (!res.ok) throw new Error('API Error');
+      const data = await res.json();
+      if (data && data.answer) {
+        setInlineResult(data.answer);
+        setInlineProvider(data.provider || 'Free LLM Engine');
+      } else {
+        router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
+      }
+    } catch (err) {
+      console.warn('Inline solve fallback:', err);
+      router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
+    } finally {
+      setIsSolvingInline(false);
+    }
+  };
 
-  const grossBasketRevenue = Number((ethyleneYield * ethylenePrice + propyleneYield * propylenePrice + byproductsYield * 420).toFixed(1));
-  const netEbitdaPerTonne = Number((grossBasketRevenue - weightedFeedCost - processingCost + 135).toFixed(1)); // with polymer uplift
-  const annualEbitdaCr = Number((((netEbitdaPerTonne * scadaState.throughputKtpa * 1000) / 1_000_000) * 84 / 10).toFixed(0));
-
-  const handleAskNaturalQuery = (e: React.FormEvent) => {
+  const handlePromptSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!naturalQuery.trim()) return;
-    router.push(`/ai?q=${encodeURIComponent(naturalQuery)}`);
+    runInlineSolve(naturalQuery);
   };
+
+  const quickQuestions = [
+    { label: 'Brent +20% impact', query: 'How does a +20% Brent crude oil spike impact RIL cracker EBITDA and margins?' },
+    { label: 'RIL cracks vs peers', query: 'How do Reliance dual-feed cracker economics compare against Asian naphtha peers?' },
+    { label: 'What did Rajesh say?', query: 'What key assumptions did Rajesh Rawal mention in the RIL 6 July 2026 MoM?' },
+    { label: 'Hanoz Meeting 2', query: 'What simulation requirements and guidelines were established by Hanoz in Meeting 2?' }
+  ];
 
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto space-y-8 pb-12">
+      <div className="max-w-[1680px] mx-auto space-y-6 animate-fadeIn pb-12">
         
-        {/* Hero Section with Official Reliance Logo */}
-        <GlassCard3D className="p-6 sm:p-10">
-          <DottedGrid>
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-4 max-w-3xl">
-                <div className="flex items-center gap-4">
-                  <RelianceLogo size="md" variant="badge" />
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-500/30 font-mono">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        SCADA Digital Twin Live
-                      </span>
-                      <span className="text-xs font-serif italic text-[#8F7640] dark:text-[#D4BA7B] font-bold">
-                        Growth is Life
+        {/* MAIN BENTO GRID (MATCHING REFERENCE UI) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          {/* ================= LEFT BENTO COLUMN: ASK INTELLIGENCE ================= */}
+          <div className="lg:col-span-3">
+            <div className="rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative min-h-[640px] transition-all hover:shadow-[0_16px_48px_rgba(0,0,0,0.05)]">
+              
+              {/* Upper Section */}
+              <div className="p-6 sm:p-7 space-y-6 relative z-10">
+                <div className="space-y-1.5">
+                  <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
+                    Ask Intelligence
+                  </h2>
+                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-snug">
+                    Get quick answers from meetings, market data and research.
+                  </p>
+                </div>
+
+                {/* Prompt Box with Circular Black Arrow Button */}
+                <form 
+                  onSubmit={handlePromptSubmit}
+                  className="p-3.5 sm:p-4 rounded-2xl bg-[#F6F4EF]/80 dark:bg-neutral-900/80 border border-black/[0.04] dark:border-white/10 shadow-2xs space-y-3"
+                >
+                  <textarea
+                    rows={3}
+                    value={naturalQuery}
+                    onChange={(e) => setNaturalQuery(e.target.value)}
+                    placeholder="How does a +$10/bbl Brent spike impact RIL cracker EBITDA?"
+                    className="w-full bg-transparent text-xs sm:text-sm text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none resize-none font-medium leading-relaxed"
+                  />
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] font-mono text-neutral-400">
+                      {isSolvingInline ? 'Querying Free LLM...' : 'Press Enter or Arrow'}
+                    </span>
+                    <button
+                      type="submit"
+                      disabled={isSolvingInline || !naturalQuery.trim()}
+                      className="w-8 h-8 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 cursor-pointer shadow-sm"
+                      title="Run Intelligence Query"
+                    >
+                      {isSolvingInline ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <ArrowRight className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                {/* 4 Quick Pills Grid */}
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  {quickQuestions.map((q, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setNaturalQuery(q.query);
+                        runInlineSolve(q.query);
+                      }}
+                      disabled={isSolvingInline}
+                      className="px-3 py-2.5 rounded-full bg-[#EFECE6]/70 hover:bg-[#EAE6DF] dark:bg-neutral-900 dark:hover:bg-neutral-800 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 border border-black/[0.03] dark:border-white/5 transition-all text-center truncate disabled:opacity-50 cursor-pointer"
+                      title={q.query}
+                    >
+                      {q.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Lower Section: Golden Silk Ribbon Wave Graphic */}
+              <div className="relative w-full h-52 sm:h-56 mt-auto overflow-hidden pointer-events-none select-none">
+                <Image
+                  src="/images/golden_silk_ribbon.jpg"
+                  alt="Liquid gold fluid ribbon wave"
+                  fill
+                  className="object-cover object-bottom opacity-90 transition-opacity"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/90 dark:via-[#121218]/10 dark:to-[#121218]/90" />
+                
+                {/* Bottom tracked branding text */}
+                <div className="absolute bottom-5 left-6 z-10">
+                  <span className="text-[10px] tracking-[0.25em] font-mono font-bold text-neutral-500/80 dark:text-neutral-400 uppercase block">
+                    TURN DATA
+                  </span>
+                  <span className="text-[10px] tracking-[0.25em] font-mono font-bold text-neutral-500/80 dark:text-neutral-400 uppercase block">
+                    INTO CLARITY
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          {/* ================= CENTER BENTO COLUMN: BENCHMARKS & GROUND TRUTH ================= */}
+          <div className="lg:col-span-6 space-y-5">
+            
+            {/* Top Center Card: Key Market Benchmarks */}
+            <div className="p-6 sm:p-7 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-5">
+              
+              {/* Header with Title & Time Range Filter */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
+                    Key Market Benchmarks
+                  </h3>
+                </div>
+
+                {/* Filter Pills matching reference UI */}
+                <div className="flex items-center gap-1 text-xs">
+                  <button
+                    onClick={() => setTimeFilter('Live')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold transition-all ${
+                      timeFilter === 'Live'
+                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-xs'
+                        : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Live</span>
+                  </button>
+                  {(['1D', '1W', '1M'] as const).map((tf) => (
+                    <button
+                      key={tf}
+                      onClick={() => setTimeFilter(tf)}
+                      className={`px-2.5 py-1 rounded-full font-medium transition-all ${
+                        timeFilter === tf
+                          ? 'bg-black dark:bg-white text-white dark:text-black font-semibold'
+                          : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+                      }`}
+                    >
+                      {tf}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 4 Benchmarks Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                
+                {/* 1. Ethylene (CFR) */}
+                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Droplets className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
+                        Ethylene (CFR)
                       </span>
                     </div>
-                    <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 font-mono block mt-0.5">
-                      Reliance Industries Limited • O2C Petrochemicals Business
-                    </span>
+                    <PriceInfoIcon commodityId="comm-ethylene" size="xs" />
+                  </div>
+                  <div>
+                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
+                      ${ethylene?.currentPrice || 840}
+                      <span className="text-xs text-neutral-500 font-normal">/t</span>
+                    </div>
+                    <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
+                      <span>▲</span>
+                      <span>+2.4%</span>
+                    </div>
+                  </div>
+                  {/* Green Smooth Sparkline Curve */}
+                  <div className="w-full h-9 mt-2 relative">
+                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#16A34A" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#16A34A" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0,22 Q 25,28 50,16 T 75,20 T 100,8 L 100,35 L 0,35 Z"
+                        fill="url(#greenGrad)"
+                      />
+                      <path
+                        d="M 0,22 Q 25,28 50,16 T 75,20 T 100,8"
+                        fill="none"
+                        stroke="#16A34A"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
                   </div>
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white font-mono">
-                  Petchem SCADA & Optimization OS
-                </h1>
-                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 font-normal leading-relaxed">
-                  End-to-end value chain operating system: real-time feedstock import costs, furnace conversion OPEX, 
-                  hydrodynamic cracking simulations, product price realizations, and AI-powered geopolitical price risk sentinels.
-                </p>
-              </div>
 
-              <div className="flex flex-wrap items-center gap-3 shrink-0">
-                <Link href="/simulation">
-                  <ArrowFillButton variant="primary">
-                    Full SCADA Mimic
-                  </ArrowFillButton>
+                {/* 2. Ethane (FOB) */}
+                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Box className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
+                        Ethane (FOB)
+                      </span>
+                    </div>
+                    <PriceInfoIcon commodityId="comm-ethane" size="xs" />
+                  </div>
+                  <div>
+                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
+                      ${ethane?.currentPrice || 145}
+                      <span className="text-xs text-neutral-500 font-normal">/t</span>
+                    </div>
+                    <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
+                      <span>▼</span>
+                      <span>-1.8%</span>
+                    </div>
+                  </div>
+                  {/* Red Smooth Sparkline Curve */}
+                  <div className="w-full h-9 mt-2 relative">
+                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="redGrad1" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#DC2626" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#DC2626" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0,10 Q 30,8 55,20 T 80,18 T 100,26 L 100,35 L 0,35 Z"
+                        fill="url(#redGrad1)"
+                      />
+                      <path
+                        d="M 0,10 Q 30,8 55,20 T 80,18 T 100,26"
+                        fill="none"
+                        stroke="#DC2626"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* 3. Naphtha (CFR) */}
+                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Factory className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
+                        Naphtha (CFR)
+                      </span>
+                    </div>
+                    <PriceInfoIcon commodityId="comm-naphtha" size="xs" />
+                  </div>
+                  <div>
+                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
+                      ${naphtha?.currentPrice || 685}
+                      <span className="text-xs text-neutral-500 font-normal">/t</span>
+                    </div>
+                    <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
+                      <span>▼</span>
+                      <span>-2.1%</span>
+                    </div>
+                  </div>
+                  {/* Red Smooth Sparkline Curve */}
+                  <div className="w-full h-9 mt-2 relative">
+                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="redGrad2" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#DC2626" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#DC2626" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0,14 Q 25,12 50,24 T 80,18 T 100,28 L 100,35 L 0,35 Z"
+                        fill="url(#redGrad2)"
+                      />
+                      <path
+                        d="M 0,14 Q 25,12 50,24 T 80,18 T 100,28"
+                        fill="none"
+                        stroke="#DC2626"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* 4. Brent Crude */}
+                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Flame className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
+                        Brent Crude
+                      </span>
+                    </div>
+                    <PriceInfoIcon commodityId="comm-brent" size="xs" />
+                  </div>
+                  <div>
+                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
+                      ${brent?.currentPrice ? brent.currentPrice.toFixed(2) : '82.40'}
+                      <span className="text-xs text-neutral-500 font-normal">/bbl</span>
+                    </div>
+                    <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
+                      <span>▲</span>
+                      <span>+1.3%</span>
+                    </div>
+                  </div>
+                  {/* Green Smooth Sparkline Curve */}
+                  <div className="w-full h-9 mt-2 relative">
+                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="greenGrad2" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#16A34A" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#16A34A" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0,26 Q 20,24 45,18 T 75,12 T 100,6 L 100,35 L 0,35 Z"
+                        fill="url(#greenGrad2)"
+                      />
+                      <path
+                        d="M 0,26 Q 20,24 45,18 T 75,12 T 100,6"
+                        fill="none"
+                        stroke="#16A34A"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Bottom Center Card: Ground Truth Highlights */}
+            <div className="p-6 sm:p-7 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-4">
+              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
+                Ground Truth Highlights
+              </h3>
+
+              <div className="space-y-2.5">
+                {/* Highlight Item 1 */}
+                <Link
+                  href="/meetings/meet-01"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
+                        MoM RIL 6 July 2026
+                      </h4>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
+                        &ldquo;Many assumptions need correction...&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0 text-right">
+                    <div>
+                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
+                        Rajesh Rawal
+                      </span>
+                      <span className="text-[11px] text-neutral-400 block font-mono">
+                        6 Jul 2026
+                      </span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  </div>
                 </Link>
-                <Link href="/economics">
-                  <ArrowFillButton variant="secondary">
-                    Economics Waterfall
-                  </ArrowFillButton>
+
+                {/* Highlight Item 2 */}
+                <Link
+                  href="/meetings/meet-02"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
+                        Meeting 2 Transcript
+                      </h4>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
+                        &ldquo;Two simulations: RIL and global...&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0 text-right">
+                    <div>
+                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
+                        Hanoz
+                      </span>
+                      <span className="text-[11px] text-neutral-400 block font-mono">
+                        Meeting 2
+                      </span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                </Link>
+
+                {/* Highlight Item 3 */}
+                <Link
+                  href="/documents/doc-proposal"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
+                        Group 9 Project Proposal
+                      </h4>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
+                        &ldquo;AI live dashboard and two simulation tiers...&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0 text-right">
+                    <div>
+                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
+                        Team
+                      </span>
+                      <span className="text-[11px] text-neutral-400 block font-mono">
+                        Project Doc
+                      </span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  </div>
                 </Link>
               </div>
-            </div>
-          </DottedGrid>
-        </GlassCard3D>
 
-        {/* AI GEOPOLITICAL & PRICE RISK ALERT SENTINEL BANNER */}
-        <div className="p-5 rounded-2xl bg-gradient-to-r from-red-950/40 via-neutral-900/80 to-neutral-900/60 border border-red-800/60 backdrop-blur-md shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-red-950/80 border border-red-800 text-red-400 shrink-0">
-              <AlertTriangle className="w-5 h-5 animate-pulse" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-red-950 text-red-400 font-bold border border-red-800/60">
-                  AI RISK SENTINEL ALERT
-                </span>
-                <span className="text-xs font-mono text-neutral-400">
-                  Middle East Shipping & Brent Crude Volatility
-                </span>
-              </div>
-              <p className="text-sm text-neutral-200 font-semibold mt-1">
-                Crude benchmark elevated at ${brent?.currentPrice || 97.9}/bbl. Naphtha crack spread under pressure (+$65/t penalty).
-              </p>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                AI Prescribed Action: Maximize Dahej Cryogenic Ethane intake to 100%; swing Hazira away from imported Naphtha.
-              </p>
-            </div>
-          </div>
 
-          <Link
-            href="/risk-sentinel"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-950/80 hover:bg-red-900/80 border border-red-700 text-xs font-mono font-bold text-red-300 transition-all shrink-0 self-start md:self-auto"
-          >
-            <span>VIEW THREAT RADAR</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        {/* 4-STEP END-TO-END VALUE CHAIN SUMMARY */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Step 1 */}
-          <GlassCard3D className="p-5 flex flex-col justify-between" maxTilt={6}>
-            <div className="flex items-center justify-between text-xs font-mono mb-2">
-              <span className="text-cyan-400 font-bold flex items-center gap-1.5">
-                <Ship className="w-4 h-4" />
-                1. INPUT COSTS
-              </span>
-              <span className="text-neutral-500 text-[10px]">LANDED</span>
-            </div>
-            <div className="text-2xl font-bold font-mono text-white">
-              ${weightedFeedCost}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/t</span>
-            </div>
-            <p className="text-xs text-neutral-400 mt-1">
-              Ethane (${ethanePrice}) & Naphtha (${naphthaPrice}) blend
-            </p>
-          </GlassCard3D>
-
-          {/* Step 2 */}
-          <GlassCard3D className="p-5 flex flex-col justify-between" maxTilt={6}>
-            <div className="flex items-center justify-between text-xs font-mono mb-2">
-              <span className="text-orange-400 font-bold flex items-center gap-1.5">
-                <Flame className="w-4 h-4" />
-                2. PROCESSING OPEX
-              </span>
-              <span className="text-neutral-500 text-[10px]">CONVERSION</span>
-            </div>
-            <div className="text-2xl font-bold font-mono text-white">
-              ${processingCost}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/t</span>
-            </div>
-            <p className="text-xs text-neutral-400 mt-1">
-              Thermal cracking fuel gas, steam & compressor drives
-            </p>
-          </GlassCard3D>
-
-          {/* Step 3 */}
-          <GlassCard3D className="p-5 flex flex-col justify-between" maxTilt={6}>
-            <div className="flex items-center justify-between text-xs font-mono mb-2">
-              <span className="text-purple-400 font-bold flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4" />
-                3. OUTPUT BASKET
-              </span>
-              <span className="text-neutral-500 text-[10px]">REALIZATION</span>
-            </div>
-            <div className="text-2xl font-bold font-mono text-white">
-              ${grossBasketRevenue}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/t</span>
-            </div>
-            <p className="text-xs text-neutral-400 mt-1">
-              Ethylene (${ethylenePrice}), Propylene (${propylenePrice}), PyGas
-            </p>
-          </GlassCard3D>
-
-          {/* Step 4 */}
-          <GlassCard3D className="p-5 flex flex-col justify-between bg-gradient-to-br from-emerald-950/40 via-neutral-900 to-neutral-900" maxTilt={6}>
-            <div className="flex items-center justify-between text-xs font-mono mb-2">
-              <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                <Zap className="w-4 h-4" />
-                4. NET EBITDA
-              </span>
-              <span className="text-emerald-400 text-[10px] font-bold">INTEGRATED</span>
-            </div>
-            <div className="text-2xl font-bold font-mono text-emerald-300">
-              +${netEbitdaPerTonne}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/t</span>
-            </div>
-            <p className="text-xs text-amber-400 font-mono mt-1 font-semibold">
-              ₹{annualEbitdaCr.toLocaleString()} Cr Annualized Run-Rate
-            </p>
-          </GlassCard3D>
-        </div>
-
-        {/* EMBEDDED SCADA DIGITAL TWIN MIMIC (INTERACTIVE HERO) */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 font-mono">
-              <Activity className="w-5 h-5 text-cyan-400" />
-              Live Cracker Hydrodynamic SCADA Mimic
-            </h2>
-            <Link
-              href="/simulation"
-              className="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1"
+            {/* Bottom Floating Bar: Ask about markets, meetings... */}
+            <form
+              onSubmit={handlePromptSubmit}
+              className="p-2 pl-5 rounded-full bg-white/95 dark:bg-[#121218]/95 border border-black/[0.06] dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-2xl flex items-center justify-between gap-3"
             >
-              <span>Expand Full Control Room</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <ScadaDiagram onStateChange={setScadaState} initialEthaneRatio={scadaState.ethaneRatio} />
-        </div>
-
-        {/* REAL-TIME MARKET PRICES & METRIC BOXES */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 font-mono">
-              <TrendingUp className="w-5 h-5 text-amber-400" />
-              Real-Time Feedstock & Product Spot Prices
-            </h2>
-            <Link
-              href="/market?tab=products&item=ethylene"
-              className="text-xs font-mono text-amber-400 hover:underline flex items-center gap-1"
-            >
-              <span>Deep-Link Commodity Terminal</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <GlassMetricBox
-              title="Ethylene Spot"
-              value={`$${ethylene?.currentPrice || 887}`}
-              unit="/t"
-              subtitle="CFR SE Asia / India Benchmark"
-              badgeText="Product"
-              trend={(ethylene?.change1D || 0) >= 0 ? 'up' : 'down'}
-              trendValue={`${(ethylene?.change1D || 0) >= 0 ? '+' : ''}${(ethylene?.change1D || -0.9).toFixed(2)}%`}
-              href="/market?tab=products&item=ethylene"
-              highlight
-            />
-            <GlassMetricBox
-              title="Propylene Spot"
-              value={`$${propylene?.currentPrice || 834}`}
-              unit="/t"
-              subtitle="FOB Korea / India Domestic"
-              badgeText="Product"
-              trend={(propylene?.change1D || 0) >= 0 ? 'up' : 'down'}
-              trendValue={`${(propylene?.change1D || 0) >= 0 ? '+' : ''}${(propylene?.change1D || -0.77).toFixed(2)}%`}
-              href="/market?tab=products&item=propylene"
-            />
-            <GlassMetricBox
-              title="Naphtha Landed"
-              value={`$${naphtha?.currentPrice || 819}`}
-              unit="/t"
-              subtitle="CFR Japan / Singapore / Jamnagar"
-              badgeText="Feedstock"
-              trend={(naphtha?.change1D || 0) >= 0 ? 'up' : 'down'}
-              trendValue={`${(naphtha?.change1D || 0) >= 0 ? '+' : ''}${(naphtha?.change1D || -1.26).toFixed(2)}%`}
-              href="/market?tab=feedstocks&item=naphtha"
-            />
-            <GlassMetricBox
-              title="US Ethane FOB"
-              value={`$${ethane?.currentPrice || 157}`}
-              unit="/t"
-              subtitle="Mont Belvieu (VLEC Pipeline)"
-              badgeText="Feedstock"
-              trend={(ethane?.change1D || 0) >= 0 ? 'up' : 'down'}
-              trendValue={`${(ethane?.change1D || 0) >= 0 ? '+' : ''}${(ethane?.change1D || -0.7).toFixed(2)}%`}
-              href="/market?tab=feedstocks&item=ethane"
-              highlight
-            />
-            <GlassMetricBox
-              title="Brent Crude"
-              value={`$${brent?.currentPrice || 97.9}`}
-              unit="/bbl"
-              subtitle="ICE London Futures Spot"
-              badgeText="Energy"
-              trend={(brent?.change1D || 0) >= 0 ? 'up' : 'down'}
-              trendValue={`${(brent?.change1D || 0) >= 0 ? '+' : ''}${(brent?.change1D || -1.4).toFixed(2)}%`}
-              href="/market?tab=energy&item=brent"
-            />
-            <GlassMetricBox
-              title="Ethane Advantage"
-              value={`+$${(naphthaPrice - (ethanePrice + 145)).toFixed(0)}`}
-              unit="/t"
-              subtitle="Spread over Landed Naphtha"
-              badgeText="Cost Delta"
-              trend="up"
-              trendValue="High Margin"
-              href="/economics"
-              highlight
-            />
-            <GlassMetricBox
-              title="Cracker Capacity"
-              value="4,200"
-              unit="KTPA"
-              subtitle="5 Complexes Across India"
-              badgeText="Operations"
-              trend="neutral"
-              trendValue="Optimal"
-              href="/optimization"
-            />
-            <GlassMetricBox
-              title="Consolidated EBITDA"
-              value="₹54,988"
-              unit="Cr"
-              subtitle="RIL O2C Segment (FY25)"
-              badgeText="Financial"
-              trend="up"
-              trendValue="+14% YoY"
-              href="/financial"
-              highlight
-            />
-          </div>
-        </div>
-
-        {/* NATURAL LANGUAGE DIGITAL TWIN QUERY BOX */}
-        <GlassCard3D className="p-8">
-          <div className="space-y-4 max-w-4xl">
-            <div className="flex items-center gap-2 text-sm font-bold text-amber-500 dark:text-[#D4BA7B] uppercase tracking-wide font-mono">
-              <Sparkles className="w-4 h-4" />
-              Petchem Digital Twin & Optimization Query
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white font-mono">
-              Ask about cracker yields, input costs, or LP allocations in plain English
-            </h3>
-            <p className="text-sm text-neutral-600 dark:text-neutral-300">
-              Query real-time mass balances, furnace cracking kinetics, Dahej pipeline throughput limits, or EBITDA profit sensitivities.
-            </p>
-
-            <form onSubmit={handleAskNaturalQuery} className="flex items-center gap-3 pt-2">
-              <div className="relative flex-1">
-                <Search className="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <Sparkles className="w-4 h-4 text-[#BFA161] shrink-0" />
                 <input
                   type="text"
                   value={naturalQuery}
                   onChange={(e) => setNaturalQuery(e.target.value)}
-                  placeholder="e.g. What is the EBITDA difference between 100% Ethane and 100% Naphtha cracking?"
-                  className="w-full h-14 pl-12 pr-4 rounded-xl bg-white/70 dark:bg-black/30 border border-neutral-300 dark:border-white/15 text-sm sm:text-base text-neutral-900 dark:text-white placeholder-neutral-500 focus:border-[#BFA161] focus:ring-2 focus:ring-[#BFA161]/20 focus:outline-none transition-all shadow-inner font-mono"
+                  placeholder="Ask about markets, meetings, scenarios or models..."
+                  className="w-full bg-transparent text-xs sm:text-sm text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none truncate font-sans"
                 />
               </div>
-              <ArrowFillButton type="submit" variant="primary" className="h-14 font-mono">
-                Solve
-              </ArrowFillButton>
+              <button
+                type="submit"
+                disabled={isSolvingInline || !naturalQuery.trim()}
+                className="w-10 h-10 rounded-full bg-[#E5DFD5] dark:bg-neutral-800 hover:bg-[#DED7CB] text-neutral-800 dark:text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 disabled:opacity-50 cursor-pointer shadow-2xs"
+                title="Submit Query"
+              >
+                {isSolvingInline ? (
+                  <RefreshCw className="w-4 h-4 animate-spin text-neutral-600" />
+                ) : (
+                  <ArrowRight className="w-4 h-4 text-neutral-700 dark:text-neutral-200" />
+                )}
+              </button>
             </form>
 
-            <div className="flex flex-wrap items-center gap-2 pt-2 text-xs font-mono">
-              <span className="font-semibold text-neutral-500">Quick simulations:</span>
-              {[
-                'How does a +$10/bbl Brent spike impact RIL cracker EBITDA?',
-                'What is the mass yield of Ethylene at 852°C furnace COT?',
-                'What is the capacity limit of the Dahej-Hazira ethane pipeline?',
-                'Show side-by-side economics for Jamnagar ROGC vs Dahej'
-              ].map((prompt, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => {
-                    setNaturalQuery(prompt);
-                    router.push(`/ai?q=${encodeURIComponent(prompt)}`);
-                  }}
-                  className="px-3 py-1.5 rounded-lg bg-white/60 hover:bg-white dark:bg-white/5 dark:hover:bg-white/15 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/10 transition-all cursor-pointer"
+          </div>
+
+
+          {/* ================= RIGHT BENTO COLUMN: CONTEXT, QUANT & AI ================= */}
+          <div className="lg:col-span-3 space-y-5">
+            
+            {/* Context Sources Card */}
+            <div className="p-6 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-3.5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-neutral-900 dark:text-white font-sans">
+                  Context Sources
+                </h3>
+                <span className="w-6 h-6 rounded-full bg-[#FAF8F5] dark:bg-neutral-800 border border-black/[0.04] dark:border-white/10 text-[11px] font-bold text-neutral-600 dark:text-neutral-400 flex items-center justify-center font-mono shadow-2xs">
+                  4
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {[
+                  { name: 'MoM RIL 6 July 2026', href: '/meetings/meet-01' },
+                  { name: 'Meeting 2 Transcript', href: '/meetings/meet-02' },
+                  { name: 'Group 9 Live Proposal', href: '/documents/doc-proposal' },
+                  { name: 'AI Cracker Industry Doc', href: '/documents' }
+                ].map((item, idx) => (
+                  <Link
+                    key={idx}
+                    href={item.href}
+                    className="p-3 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-2 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all group shadow-2xs"
+                  >
+                    <div className="flex items-center gap-2.5 truncate">
+                      <FileText className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
+                      <span className="truncate">{item.name}</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Quantitative Model Card */}
+            <div className="p-6 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-3.5">
+              <div className="flex items-center gap-2.5">
+                <BarChart2 className="w-4 h-4 text-neutral-800 dark:text-neutral-200" />
+                <h3 className="text-base font-bold text-neutral-900 dark:text-white font-sans">
+                  Quantitative Model
+                </h3>
+              </div>
+
+              <div className="space-y-2.5 pt-1">
+                {[
+                  'Google TimesFM',
+                  'LightGBM + AutoARIMA',
+                  'BAAI/bge-m3 (Embeddings)',
+                  '10,000-Run Monte Carlo'
+                ].map((spec, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+                    <span className="text-neutral-400 text-sm leading-none">✦</span>
+                    <span>{spec}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AI for Better Decisions Card */}
+            <div className="relative rounded-[28px] overflow-hidden p-6 sm:p-7 min-h-[140px] flex flex-col justify-between shadow-xl group border border-neutral-800 select-none">
+              {/* Luxury Carbon Texture Background */}
+              <Image
+                src="/images/luxury_dark_texture.jpg"
+                alt="Luxury dark leather texture"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              
+              <div className="relative z-10 flex items-center justify-between gap-3">
+                <div className="max-w-[170px]">
+                  <span className="text-base sm:text-lg font-bold text-white font-sans block leading-tight">
+                    AI for<br />Better Decisions
+                  </span>
+                </div>
+                <Link
+                  href="/ai"
+                  className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg cursor-pointer shrink-0"
+                  title="Launch AI Decision Engine"
                 >
-                  &quot;{prompt}&quot;
-                </button>
-              ))}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="relative z-10 pt-4 flex justify-end">
+                <span className="text-[9px] tracking-[0.2em] font-mono text-neutral-400 uppercase">
+                  SMARTER TOMORROW
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* INLINE AI SOLVED RESULT ACCORDION (WHEN SOLVING QUERY) */}
+        {inlineResult && (
+          <div className="p-6 sm:p-8 rounded-[28px] bg-white dark:bg-[#121218] border border-black/[0.08] dark:border-white/15 shadow-[0_16px_50px_rgba(0,0,0,0.06)] space-y-5 animate-fadeIn text-left">
+            <div className="flex items-center justify-between pb-3 border-b border-black/[0.05] dark:border-white/10">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="px-3 py-1 text-xs font-mono font-bold rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                  {inlineResult.category}
+                </span>
+                <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  {inlineProvider} (Online)
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInlineResult(null)}
+                className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                title="Dismiss result"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Key Takeaway */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#FBF9F5] dark:bg-[#1A1A22] border border-black/[0.05] dark:border-white/10">
+              <span className="text-xs font-mono font-bold text-[#8F7640] dark:text-[#D4BA7B] uppercase block mb-1 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                Executive Synthesis
+              </span>
+              <p className="text-sm font-semibold text-neutral-900 dark:text-white leading-relaxed">
+                {inlineResult.keyTakeaway}
+              </p>
+            </div>
+
+            {/* Answer Body */}
+            <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line p-5 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/60 border border-black/[0.04] dark:border-white/5 font-sans">
+              {inlineResult.answer}
+            </div>
+
+            {/* Mandatory Evidence Citations */}
+            {inlineResult.evidence && inlineResult.evidence.length > 0 && (
+              <div className="space-y-2 pt-2 border-t border-black/[0.05] dark:border-white/10">
+                <span className="text-xs font-mono uppercase text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  Verified Citations & Audited Evidence ({inlineResult.evidence.length})
+                </span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                  {inlineResult.evidence.map((ev, i) => (
+                    <div key={i} className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-black/[0.06] dark:border-white/10 text-xs space-y-1 shadow-2xs">
+                      <div className="flex justify-between font-mono text-neutral-800 dark:text-neutral-200 font-bold">
+                        <span>{ev.sourceTitle}</span>
+                        <span className="text-neutral-400 font-normal">{ev.pageOrLine}</span>
+                      </div>
+                      <p className="text-neutral-600 dark:text-neutral-400 italic font-sans">&ldquo;{ev.quote}&rdquo;</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+
+        {/* DEEP DIVE INTERACTIVE MODULE DRAWER TOGGLE (SCADA, ECONOMICS, ALLOCATION) */}
+        <div className="pt-4 border-t border-black/[0.05] dark:border-white/10 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 font-mono">
+                Advanced Engineering & Cracker Telemetry
+              </h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">
+                Deep dive into hydrodynamic cracking coils, waterfall cost stacks, or feedstock LP allocations
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveDeepDive(activeDeepDive === 'scada' ? 'none' : 'scada')}
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                  activeDeepDive === 'scada'
+                    ? 'bg-neutral-900 text-white border-neutral-900 dark:bg-white dark:text-neutral-900'
+                    : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-black/[0.06] dark:border-white/10 hover:bg-neutral-100'
+                }`}
+              >
+                <Activity className="w-3.5 h-3.5 text-cyan-500" />
+                <span>SCADA Twin Mimic</span>
+              </button>
+
+              <Link
+                href="/economics"
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-black/[0.06] dark:border-white/10 hover:bg-neutral-100 transition-all"
+              >
+                <DollarSign className="w-3.5 h-3.5 text-amber-500" />
+                <span>Economics Waterfall</span>
+              </Link>
+
+              <Link
+                href="/optimization"
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-black/[0.06] dark:border-white/10 hover:bg-neutral-100 transition-all"
+              >
+                <Cpu className="w-3.5 h-3.5 text-indigo-500" />
+                <span>LP Optimizer</span>
+              </Link>
             </div>
           </div>
-        </GlassCard3D>
+
+          {/* Expandable SCADA Twin View */}
+          {activeDeepDive === 'scada' && (
+            <div className="p-6 rounded-[28px] bg-white dark:bg-[#121218] border border-black/[0.06] dark:border-white/10 shadow-lg space-y-4 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping" />
+                  <span>Cracker Hydrodynamic SCADA MIMIC (Live Telemetry)</span>
+                </div>
+                <Link
+                  href="/simulation"
+                  className="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
+                >
+                  <span>Open Full Screen Studio</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+              <ScadaDiagram onStateChange={setScadaState} initialEthaneRatio={scadaState.ethaneRatio} />
+            </div>
+          )}
+        </div>
 
       </div>
     </AppShell>

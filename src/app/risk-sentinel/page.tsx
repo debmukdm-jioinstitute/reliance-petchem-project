@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import RelianceLogo from '@/components/common/RelianceLogo';
+import AppShell from '@/components/layout/AppShell';
 
 interface RiskScenario {
   id: string;
@@ -101,8 +102,9 @@ export default function PriceRiskSentinelPage() {
   const activeRisk = riskCatalog.find(r => r.id === selectedRiskId) || riskCatalog[0];
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-12">
-      {/* Top Banner with Reliance Logo */}
+    <AppShell>
+      <div className="space-y-8 animate-fadeIn pb-12 max-w-[1600px] mx-auto">
+        {/* Top Banner with Reliance Logo */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-6 rounded-2xl bg-[#0B0F19] border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex items-center gap-4">
@@ -317,5 +319,6 @@ export default function PriceRiskSentinelPage() {
         </div>
       </div>
     </div>
-  );
+  </AppShell>
+);
 }

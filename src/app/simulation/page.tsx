@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import RelianceLogo from '@/components/common/RelianceLogo';
 import PriceInfoIcon from '@/components/common/PriceInfoIcon';
+import AppShell from '@/components/layout/AppShell';
 
 export default function ScadaSimulationPage() {
   const { commodities, spreads, lastSyncTime, isSyncing, refreshPrices } = useMarket();
@@ -77,8 +78,9 @@ export default function ScadaSimulationPage() {
   ];
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Top Banner with SCADA Status & Actions */}
+    <AppShell>
+      <div className="space-y-8 animate-fadeIn max-w-[1600px] mx-auto">
+        {/* Top Banner with SCADA Status & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-[#0B0F19] border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex items-center gap-4">
@@ -130,9 +132,9 @@ export default function ScadaSimulationPage() {
 
       {/* Real-Time Telemetry & Economic Response Panel */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Metric 1: Weighted Feedstock Cost */}
-        <div className="p-5 rounded-2xl bg-neutral-900/60 border border-neutral-800 relative overflow-hidden backdrop-blur-md">
-          <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
+        {/* Metric 1: Blended Feedstock Cost */}
+        <div className="p-5 rounded-2xl bg-[#0D121F] border border-cyan-800/50 relative overflow-hidden backdrop-blur-md shadow-lg shadow-cyan-950/20">
+          <div className="flex items-center justify-between text-xs font-mono text-cyan-300 mb-2 font-bold tracking-wide">
             <div className="flex items-center gap-1.5">
               <span>INPUT FEEDSTOCK COST</span>
               <PriceInfoIcon commodityId="comm-ethane" size="xs" />
@@ -142,17 +144,17 @@ export default function ScadaSimulationPage() {
           <div className="flex items-center gap-2">
             <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
               ${weightedFeedCost}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+              <span className="text-sm font-medium text-neutral-300 ml-1">/tonne</span>
             </div>
             <PriceInfoIcon commodityId="comm-ethane" currentPrice={weightedFeedCost} unit="USD/t" size="xs" />
           </div>
-          <div className="mt-2 text-xs font-mono text-neutral-400 flex items-center justify-between">
+          <div className="mt-2.5 text-xs sm:text-sm font-mono text-neutral-200 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <span>Ethane: ${ethanePrice}</span>
+              <span className="text-cyan-300 font-medium">Ethane: ${ethanePrice}</span>
               <PriceInfoIcon commodityId="comm-ethane" currentPrice={ethanePrice} unit="USD/t" size="xs" />
             </div>
             <div className="flex items-center gap-1">
-              <span>Naphtha: ${naphthaPrice}</span>
+              <span className="text-amber-300 font-medium">Naphtha: ${naphthaPrice}</span>
               <PriceInfoIcon commodityId="comm-naphtha" currentPrice={naphthaPrice} unit="USD/t" size="xs" />
             </div>
           </div>
@@ -163,8 +165,8 @@ export default function ScadaSimulationPage() {
         </div>
 
         {/* Metric 2: Gross Basket Realization */}
-        <div className="p-5 rounded-2xl bg-neutral-900/60 border border-neutral-800 relative overflow-hidden backdrop-blur-md">
-          <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
+        <div className="p-5 rounded-2xl bg-[#0D121F] border border-purple-800/50 relative overflow-hidden backdrop-blur-md shadow-lg shadow-purple-950/20">
+          <div className="flex items-center justify-between text-xs font-mono text-purple-300 mb-2 font-bold tracking-wide">
             <div className="flex items-center gap-1.5">
               <span>GROSS OUTPUT BASKET</span>
               <PriceInfoIcon commodityId="comm-ethylene" size="xs" />
@@ -174,26 +176,26 @@ export default function ScadaSimulationPage() {
           <div className="flex items-center gap-2">
             <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
               ${basketRevenue}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+              <span className="text-sm font-medium text-neutral-300 ml-1">/tonne</span>
             </div>
             <PriceInfoIcon commodityId="comm-ethylene" currentPrice={basketRevenue} unit="USD/t" size="xs" />
           </div>
-          <div className="mt-2 text-xs font-mono text-neutral-400 flex items-center justify-between">
-            <span>Ethylene: ${(ethyleneYield * 100).toFixed(0)}% yield</span>
+          <div className="mt-2.5 text-xs sm:text-sm font-mono text-neutral-200 flex items-center justify-between">
+            <span className="text-neutral-200">Ethylene: {(ethyleneYield * 100).toFixed(0)}% yield</span>
             <div className="flex items-center gap-1">
-              <span>Spot: ${ethylenePrice}</span>
+              <span className="text-emerald-300 font-medium">Spot: ${ethylenePrice}</span>
               <PriceInfoIcon commodityId="comm-ethylene" currentPrice={ethylenePrice} unit="USD/t" size="xs" />
             </div>
           </div>
-          <div className="mt-3 text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" />
+          <div className="mt-3 text-xs font-mono text-emerald-300 flex items-center gap-1 font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             High purity polymer premium applied
           </div>
         </div>
 
         {/* Metric 3: Processing OPEX */}
-        <div className="p-5 rounded-2xl bg-neutral-900/60 border border-neutral-800 relative overflow-hidden backdrop-blur-md">
-          <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
+        <div className="p-5 rounded-2xl bg-[#0D121F] border border-orange-800/50 relative overflow-hidden backdrop-blur-md shadow-lg shadow-orange-950/20">
+          <div className="flex items-center justify-between text-xs font-mono text-orange-300 mb-2 font-bold tracking-wide">
             <div className="flex items-center gap-1.5">
               <span>CONVERSION & HEAT OPEX</span>
               <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
@@ -203,22 +205,22 @@ export default function ScadaSimulationPage() {
           <div className="flex items-center gap-2">
             <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
               ${processingCost}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+              <span className="text-sm font-medium text-neutral-300 ml-1">/tonne</span>
             </div>
             <PriceInfoIcon commodityId="comm-o2c-margin" currentPrice={processingCost} unit="USD/t" size="xs" />
           </div>
-          <div className="mt-2 text-xs font-mono text-neutral-400 flex items-center justify-between">
-            <span>Steam/Oil Ratio: {scadaState.sorRatio}</span>
+          <div className="mt-2.5 text-xs sm:text-sm font-mono text-neutral-200 flex items-center justify-between">
+            <span>Steam/Oil: {scadaState.sorRatio}</span>
             <span>Furnace: {scadaState.furnaceCot}°C</span>
           </div>
-          <div className="mt-3 text-[11px] font-mono text-cyan-400">
+          <div className="mt-3 text-xs font-mono text-cyan-300 font-medium">
             {scadaState.ethaneRatio > 60 ? '⚡ Lower heat duty (Ethane lean route)' : '⚠️ Higher fuel duty (Naphtha heavy)'}
           </div>
         </div>
 
         {/* Metric 4: Integrated EBITDA */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-neutral-900/80 to-neutral-900/60 border border-emerald-800/60 relative overflow-hidden backdrop-blur-md shadow-lg shadow-emerald-950/20">
-          <div className="flex items-center justify-between text-xs font-mono text-emerald-400 mb-2 font-semibold">
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/50 via-neutral-900 to-[#0A141A] border border-emerald-700/60 relative overflow-hidden backdrop-blur-md shadow-lg shadow-emerald-950/30">
+          <div className="flex items-center justify-between text-xs font-mono text-emerald-300 mb-2 font-bold tracking-wide">
             <div className="flex items-center gap-1.5">
               <span>NET EBITDA SPREAD</span>
               <PriceInfoIcon commodityId="comm-spread-ee" size="xs" />
@@ -228,18 +230,18 @@ export default function ScadaSimulationPage() {
           <div className="flex items-center gap-2">
             <div className="text-2xl lg:text-3xl font-bold font-mono text-emerald-300">
               +${netMargin}
-              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+              <span className="text-sm font-medium text-neutral-300 ml-1">/tonne</span>
             </div>
             <PriceInfoIcon commodityId="comm-spread-ee" currentPrice={netMargin} unit="USD/t" size="xs" />
           </div>
-          <div className="mt-2 text-xs font-mono text-white font-bold flex items-center justify-between">
-            <span>Annual Run-Rate:</span>
-            <div className="flex items-center gap-1 text-amber-400">
+          <div className="mt-2.5 text-xs sm:text-sm font-mono text-white font-bold flex items-center justify-between">
+            <span className="text-neutral-200">Annual Run-Rate:</span>
+            <div className="flex items-center gap-1 text-amber-300">
               <span>₹{annualEbitdaInrCr.toLocaleString()} Cr/yr</span>
               <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
             </div>
           </div>
-          <div className="mt-3 text-[11px] font-mono text-neutral-400">
+          <div className="mt-3 text-xs font-mono text-neutral-300">
             Based on {scadaState.throughputKtpa.toLocaleString()} KTPA asset throughput
           </div>
         </div>
@@ -284,5 +286,6 @@ export default function ScadaSimulationPage() {
         </div>
       </div>
     </div>
-  );
+  </AppShell>
+);
 }

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import RelianceLogo from '@/components/common/RelianceLogo';
+import AppShell from '@/components/layout/AppShell';
 
 interface PlantAsset {
   id: string;
@@ -113,8 +114,9 @@ export default function FeedstockOptimizationPage() {
   const ebitdaUpliftInrCr = Number(((ebitdaUplift * 84) / 10).toFixed(0));
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-12">
-      {/* Top Banner with Reliance Logo */}
+    <AppShell>
+      <div className="space-y-8 animate-fadeIn pb-12 max-w-[1600px] mx-auto">
+        {/* Top Banner with Reliance Logo */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-6 rounded-2xl bg-[#090D17] border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex items-center gap-4">
@@ -259,5 +261,6 @@ export default function FeedstockOptimizationPage() {
         </div>
       </div>
     </div>
-  );
+  </AppShell>
+);
 }

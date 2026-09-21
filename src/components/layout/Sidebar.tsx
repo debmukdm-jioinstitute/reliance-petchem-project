@@ -38,6 +38,14 @@ interface NavItem {
 
 const PRIMARY_NAVIGATION: NavItem[] = [
   {
+    id: 'home',
+    code: '00',
+    name: 'Home Dashboard',
+    href: '/',
+    icon: LayoutDashboard,
+    badge: 'Overview',
+  },
+  {
     id: 'simulation',
     code: '01',
     name: 'SCADA Simulation',
@@ -158,9 +166,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-68 h-[calc(100vh-4rem)] bg-neutral-50 dark:bg-[#0D0D11] border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 overflow-y-auto select-none transition-colors duration-200">
+    <aside className="w-68 h-[calc(100vh-4.5rem)] bg-[#FAF8F5]/95 dark:bg-[#0D0D11] border-r border-black/[0.05] dark:border-neutral-800 flex flex-col shrink-0 overflow-y-auto select-none transition-colors duration-200">
       {/* Reliance Brand Header */}
-      <div className="p-3.5 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#09090B]">
+      <div className="p-3.5 border-b border-black/[0.05] dark:border-neutral-800 bg-white/80 dark:bg-[#09090B] backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <RelianceLogo size="xs" variant="badge" />
           <div className="min-w-0">
@@ -174,10 +182,10 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="px-4 py-2 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-100/50 dark:bg-neutral-900/40">
+      <div className="px-4 py-2 border-b border-black/[0.04] dark:border-neutral-800/80 bg-[#EFECE6]/40 dark:bg-neutral-900/40">
         <div className="text-[11px] uppercase tracking-wider font-bold text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
           <span>Control Modules</span>
-          <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] text-[10px] font-semibold">10 Units</span>
+          <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] text-[10px] font-semibold">11 Units</span>
         </div>
       </div>
 
@@ -196,8 +204,8 @@ export default function Sidebar() {
                 href={item.href}
                 className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   isActive
-                    ? 'bg-neutral-200/80 dark:bg-neutral-800 text-neutral-900 dark:text-white border-l-4 border-[#BFA161] shadow-xs'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-900'
+                    ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border border-black/[0.05] dark:border-white/10 shadow-xs'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-neutral-900'
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">

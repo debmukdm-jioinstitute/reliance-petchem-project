@@ -8,6 +8,9 @@ export type InformationCategory =
   | 'INFERENCE' 
   | 'SCENARIO' 
   | 'FORECAST' 
+  | 'OPTIMIZATION'
+  | 'MACRO'
+  | 'MICRO'
   | 'UNKNOWN';
 
 export interface SourceCitation {

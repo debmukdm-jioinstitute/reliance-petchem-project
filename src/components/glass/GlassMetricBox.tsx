@@ -46,7 +46,7 @@ export default function GlassMetricBox({
       <div className="flex items-start justify-between gap-3 mb-4">
         {/* Title and small i information icon */}
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-neutral-600 dark:text-neutral-400 truncate">
+          <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-neutral-700 dark:text-neutral-200 truncate">
             {title}
           </span>
           {showInfoIcon && (
@@ -62,7 +62,7 @@ export default function GlassMetricBox({
 
         {/* Badge */}
         {badgeText && (
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-100/90 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/15 backdrop-blur-md shadow-xs shrink-0">
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-100/90 dark:bg-white/15 text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-white/20 backdrop-blur-md shadow-xs shrink-0">
             {badgeText}
           </span>
         )}
@@ -74,16 +74,16 @@ export default function GlassMetricBox({
           {value}
         </span>
         {unit && (
-          <span className="text-base sm:text-lg font-bold text-neutral-500 dark:text-neutral-400">
+          <span className="text-base sm:text-lg font-bold text-neutral-600 dark:text-neutral-300">
             {unit}
           </span>
         )}
       </div>
 
       {/* Footer / Trend */}
-      <div className="flex items-center justify-between text-sm pt-3 border-t border-neutral-200/60 dark:border-white/10">
+      <div className="flex items-center justify-between text-sm pt-3 border-t border-neutral-200/60 dark:border-white/15">
         {subtitle && (
-          <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 font-medium line-clamp-1">
+          <span className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-200 font-medium line-clamp-1">
             {subtitle}
           </span>
         )}
@@ -92,10 +92,10 @@ export default function GlassMetricBox({
           <div
             className={`flex items-center gap-1 font-mono text-xs font-extrabold px-2.5 py-1 rounded-lg backdrop-blur-md border ${
               trend === 'up'
-                ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 border-emerald-500/40'
                 : trend === 'down'
-                ? 'text-rose-700 dark:text-rose-400 bg-rose-500/10 border-rose-500/30'
-                : 'text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-white/10 border-neutral-200 dark:border-white/15'
+                ? 'text-rose-700 dark:text-rose-300 bg-rose-500/15 border-rose-500/40'
+                : 'text-neutral-800 dark:text-neutral-100 bg-neutral-100 dark:bg-white/15 border-neutral-200 dark:border-white/20'
             }`}
           >
             {trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5" />}
