@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus, Activity, RefreshCw } from 'lucide-react';
 import { useMarket } from '@/context/MarketContext';
 
+import PriceInfoIcon from '@/components/common/PriceInfoIcon';
+
 export default function MarketTickerStrip() {
   const { commodities, spreads, lastSyncTime, isSyncing, refreshPrices } = useMarket();
 
@@ -44,38 +46,46 @@ export default function MarketTickerStrip() {
             : '/market';
 
           return (
-            <Link
-              key={c.id}
-              href={targetHref}
-              className="flex items-center gap-2 group hover:text-[#BFA161] transition-colors"
-            >
-              <span className="text-neutral-500 dark:text-neutral-400 font-semibold group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
-                {c.symbol}
-              </span>
-              <span className="font-mono font-bold text-neutral-900 dark:text-neutral-100">
-                {c.currency === 'USD' ? '$' : '₹'}
-                {c.currentPrice.toLocaleString(undefined, { minimumFractionDigits: c.currentPrice < 100 ? 2 : 0 })}
-              </span>
-              <span
-                className={`flex items-center text-xs font-mono font-semibold px-1.5 py-0.5 rounded ${
-                  isUp
-                    ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40'
-                    : isDown
-                    ? 'text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40'
-                    : 'text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800'
-                }`}
+            <div key={c.id} className="flex items-center gap-1.5">
+              <Link
+                href={targetHref}
+                className="flex items-center gap-2 group hover:text-[#BFA161] transition-colors"
               >
-                {isUp ? (
-                  <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
-                ) : isDown ? (
-                  <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />
-                ) : (
-                  <Minus className="w-3.5 h-3.5 mr-0.5" />
-                )}
-                {isUp ? '+' : ''}
-                {c.change1D.toFixed(2)}%
-              </span>
-            </Link>
+                <span className="text-neutral-500 dark:text-neutral-400 font-semibold group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
+                  {c.symbol}
+                </span>
+                <span className="font-mono font-bold text-neutral-900 dark:text-neutral-100">
+                  {c.currency === 'USD' ? '$' : '₹'}
+                  {c.currentPrice.toLocaleString(undefined, { minimumFractionDigits: c.currentPrice < 100 ? 2 : 0 })}
+                </span>
+                <span
+                  className={`flex items-center text-xs font-mono font-semibold px-1.5 py-0.5 rounded ${
+                    isUp
+                      ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40'
+                      : isDown
+                      ? 'text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40'
+                      : 'text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800'
+                  }`}
+                >
+                  {isUp ? (
+                    <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
+                  ) : isDown ? (
+                    <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />
+                  ) : (
+                    <Minus className="w-3.5 h-3.5 mr-0.5" />
+                  )}
+                  {isUp ? '+' : ''}
+                  {c.change1D.toFixed(2)}%
+                </span>
+              </Link>
+              <PriceInfoIcon
+                commodityId={c.id}
+                currentPrice={c.currentPrice}
+                unit={c.unit}
+                change1D={c.change1D}
+                size="xs"
+              />
+            </div>
           );
         })}
 
@@ -86,12 +96,24 @@ export default function MarketTickerStrip() {
             <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
               {spreads.ethyleneNaphtha >= 0 ? '+' : ''}${spreads.ethyleneNaphtha}/t
             </span>
+            <PriceInfoIcon
+              commodityId="comm-spread-en"
+              currentPrice={spreads.ethyleneNaphtha}
+              unit="USD/t"
+              size="xs"
+            />
           </div>
           <div className="flex items-center gap-2 text-xs">
             <span className="font-semibold text-neutral-500 dark:text-neutral-400">Ethylene-Ethane:</span>
             <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] font-extrabold">
               {spreads.ethyleneEthane >= 0 ? '+' : ''}${spreads.ethyleneEthane}/t
             </span>
+            <PriceInfoIcon
+              commodityId="comm-spread-ee"
+              currentPrice={spreads.ethyleneEthane}
+              unit="USD/t"
+              size="xs"
+            />
           </div>
           <div className="text-[11px] font-mono text-neutral-400">
             {lastSyncTime}

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import RelianceLogo from '@/components/common/RelianceLogo';
+import PriceInfoIcon from '@/components/common/PriceInfoIcon';
 
 export default function CrackerEconomicsPage() {
   const { commodities, refreshPrices, isSyncing } = useMarket();
@@ -164,24 +165,36 @@ export default function CrackerEconomicsPage() {
         {/* Step 1: Input Costs */}
         <div className="p-5 rounded-2xl bg-neutral-900/70 border border-cyan-800/40 relative overflow-hidden backdrop-blur-md">
           <div className="flex items-center justify-between text-xs font-mono text-cyan-400 mb-2 font-semibold">
-            <span>STEP 1: INPUT COSTS</span>
+            <div className="flex items-center gap-1.5">
+              <span>STEP 1: INPUT COSTS</span>
+              <PriceInfoIcon commodityId="comm-ethane" size="xs" />
+            </div>
             <Ship className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
-            ${blendedFeedCost}
-            <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+          <div className="flex items-center gap-2">
+            <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
+              ${blendedFeedCost}
+              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+            </div>
+            <PriceInfoIcon commodityId="comm-ethane" currentPrice={blendedFeedCost} unit="USD/t" size="xs" />
           </div>
           <p className="text-xs text-neutral-400 mt-1">Weighted Landed Feedstock</p>
           <div className="mt-4 pt-3 border-t border-neutral-800 text-xs font-mono space-y-1.5 text-neutral-300">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-neutral-400">US Ethane Delivered:</span>
-              <span className="text-cyan-400 font-bold">${totalDeliveredEthane}/t</span>
+              <div className="flex items-center gap-1 text-cyan-400 font-bold">
+                <span>${totalDeliveredEthane}/t</span>
+                <PriceInfoIcon commodityId="comm-ethane" currentPrice={totalDeliveredEthane} unit="USD/t" size="xs" />
+              </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-neutral-400">Naphtha Landed:</span>
-              <span className="text-amber-400 font-bold">${deliveredNaphtha}/t</span>
+              <div className="flex items-center gap-1 text-amber-400 font-bold">
+                <span>${deliveredNaphtha}/t</span>
+                <PriceInfoIcon commodityId="comm-naphtha" currentPrice={deliveredNaphtha} unit="USD/t" size="xs" />
+              </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-neutral-400">VLEC Shipping:</span>
               <span>${vlecFreight}/t</span>
             </div>
@@ -191,12 +204,18 @@ export default function CrackerEconomicsPage() {
         {/* Step 2: Processing Cost */}
         <div className="p-5 rounded-2xl bg-neutral-900/70 border border-orange-800/40 relative overflow-hidden backdrop-blur-md">
           <div className="flex items-center justify-between text-xs font-mono text-orange-400 mb-2 font-semibold">
-            <span>STEP 2: PROCESSING OPEX</span>
+            <div className="flex items-center gap-1.5">
+              <span>STEP 2: PROCESSING OPEX</span>
+              <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
+            </div>
             <Flame className="w-4 h-4 text-orange-400" />
           </div>
-          <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
-            ${blendedConversionCost}
-            <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+          <div className="flex items-center gap-2">
+            <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
+              ${blendedConversionCost}
+              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+            </div>
+            <PriceInfoIcon commodityId="comm-o2c-margin" currentPrice={blendedConversionCost} unit="USD/t" size="xs" />
           </div>
           <p className="text-xs text-neutral-400 mt-1">Thermal Cracking & Separation</p>
           <div className="mt-4 pt-3 border-t border-neutral-800 text-xs font-mono space-y-1.5 text-neutral-300">
@@ -218,22 +237,34 @@ export default function CrackerEconomicsPage() {
         {/* Step 3: Gross Basket Realization */}
         <div className="p-5 rounded-2xl bg-neutral-900/70 border border-purple-800/40 relative overflow-hidden backdrop-blur-md">
           <div className="flex items-center justify-between text-xs font-mono text-purple-400 mb-2 font-semibold">
-            <span>STEP 3: OUTPUT VALUE</span>
+            <div className="flex items-center gap-1.5">
+              <span>STEP 3: OUTPUT VALUE</span>
+              <PriceInfoIcon commodityId="comm-ethylene" size="xs" />
+            </div>
             <TrendingUp className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
-            ${grossBasketRevenue}
-            <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+          <div className="flex items-center gap-2">
+            <div className="text-2xl lg:text-3xl font-bold font-mono text-white">
+              ${grossBasketRevenue}
+              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+            </div>
+            <PriceInfoIcon commodityId="comm-ethylene" currentPrice={grossBasketRevenue} unit="USD/t" size="xs" />
           </div>
           <p className="text-xs text-neutral-400 mt-1">Weighted Chemical Realization</p>
           <div className="mt-4 pt-3 border-t border-neutral-800 text-xs font-mono space-y-1.5 text-neutral-300">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-neutral-400">Ethylene ({(ethyleneYield * 100).toFixed(0)}%):</span>
-              <span className="text-emerald-400 font-bold">${(ethyleneYield * ethylenePrice).toFixed(0)}</span>
+              <div className="flex items-center gap-1 text-emerald-400 font-bold">
+                <span>${(ethyleneYield * ethylenePrice).toFixed(0)}</span>
+                <PriceInfoIcon commodityId="comm-ethylene" currentPrice={ethylenePrice} unit="USD/t" size="xs" />
+              </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-neutral-400">Propylene ({(propyleneYield * 100).toFixed(0)}%):</span>
-              <span className="text-purple-400 font-bold">${(propyleneYield * propylenePrice).toFixed(0)}</span>
+              <div className="flex items-center gap-1 text-purple-400 font-bold">
+                <span>${(propyleneYield * propylenePrice).toFixed(0)}</span>
+                <PriceInfoIcon commodityId="comm-propylene" currentPrice={propylenePrice} unit="USD/t" size="xs" />
+              </div>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-400">Pygas & Byproducts:</span>
@@ -245,22 +276,34 @@ export default function CrackerEconomicsPage() {
         {/* Step 4: Net EBITDA Profit */}
         <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/60 via-neutral-900 to-neutral-950 border border-emerald-500/50 relative overflow-hidden backdrop-blur-md shadow-xl shadow-emerald-950/30">
           <div className="flex items-center justify-between text-xs font-mono text-emerald-400 mb-2 font-bold">
-            <span>STEP 4: NET PROFIT</span>
+            <div className="flex items-center gap-1.5">
+              <span>STEP 4: NET PROFIT</span>
+              <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
+            </div>
             <Zap className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="text-2xl lg:text-3xl font-bold font-mono text-emerald-300">
-            +${finalNetEbitdaPerTonne}
-            <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+          <div className="flex items-center gap-2">
+            <div className="text-2xl lg:text-3xl font-bold font-mono text-emerald-300">
+              +${finalNetEbitdaPerTonne}
+              <span className="text-xs font-normal text-neutral-400 ml-1">/tonne</span>
+            </div>
+            <PriceInfoIcon commodityId="comm-o2c-margin" currentPrice={finalNetEbitdaPerTonne} unit="USD/t" size="xs" />
           </div>
           <p className="text-xs text-neutral-300 mt-1">Integrated O2C EBITDA Margin</p>
           <div className="mt-4 pt-3 border-t border-neutral-800 text-xs font-mono space-y-1.5">
-            <div className="flex justify-between text-white font-bold">
+            <div className="flex justify-between items-center text-white font-bold">
               <span>Annual EBITDA (USD):</span>
-              <span className="text-emerald-400">${annualEbitdaUsdM.toLocaleString()}M</span>
+              <div className="flex items-center gap-1 text-emerald-400">
+                <span>${annualEbitdaUsdM.toLocaleString()}M</span>
+                <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
+              </div>
             </div>
-            <div className="flex justify-between text-white font-bold">
+            <div className="flex justify-between items-center text-white font-bold">
               <span>Annual EBITDA (INR):</span>
-              <span className="text-amber-400">₹{annualEbitdaInrCr.toLocaleString()} Cr</span>
+              <div className="flex items-center gap-1 text-amber-400">
+                <span>₹{annualEbitdaInrCr.toLocaleString()} Cr</span>
+                <PriceInfoIcon commodityId="comm-o2c-margin" size="xs" />
+              </div>
             </div>
             <div className="flex justify-between text-neutral-400 text-[11px]">
               <span>Polymer Integration:</span>
@@ -310,8 +353,11 @@ export default function CrackerEconomicsPage() {
 
             {/* Brent Crude Oil Price Slider */}
             <div>
-              <div className="flex justify-between text-xs font-mono mb-1.5">
-                <span className="text-neutral-300">Brent Crude Oil Price:</span>
+              <div className="flex justify-between text-xs font-mono mb-1.5 items-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-300">Brent Crude Oil Price:</span>
+                  <PriceInfoIcon commodityId="comm-brent" currentPrice={brentInput} unit="USD/bbl" size="xs" />
+                </div>
                 <span className="text-amber-400 font-bold">${brentInput}/bbl</span>
               </div>
               <input
@@ -332,8 +378,11 @@ export default function CrackerEconomicsPage() {
 
             {/* US Ethane Spot Price Slider */}
             <div>
-              <div className="flex justify-between text-xs font-mono mb-1.5">
-                <span className="text-neutral-300">US Ethane Mont Belvieu Spot:</span>
+              <div className="flex justify-between text-xs font-mono mb-1.5 items-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-300">US Ethane Mont Belvieu Spot:</span>
+                  <PriceInfoIcon commodityId="comm-ethane" currentPrice={ethaneSpotInput} unit="USD/t" size="xs" />
+                </div>
                 <span className="text-cyan-400 font-bold">${ethaneSpotInput}/t ({(ethaneSpotInput / 6.2).toFixed(1)} ¢/gal)</span>
               </div>
               <input
@@ -346,29 +395,32 @@ export default function CrackerEconomicsPage() {
                 className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
               />
               <div className="flex justify-between text-[10px] font-mono text-neutral-500 mt-1">
-                <span>$100/t (US Gas Glut)</span>
-                <span>$157/t (Current FOB)</span>
-                <span>$350/t (Severe US Freeze)</span>
+                <span>$100 (Historical Low)</span>
+                <span>$157 (Live Spot)</span>
+                <span>$350 (Severe Polar Freeze)</span>
               </div>
             </div>
 
-            {/* VLEC Ocean Shipping Freight */}
+            {/* VLEC Shipping Cost Slider */}
             <div>
-              <div className="flex justify-between text-xs font-mono mb-1.5">
-                <span className="text-neutral-300">VLEC Ocean Freight (US Gulf to Dahej):</span>
-                <span className="text-purple-400 font-bold">${vlecFreight}/tonne</span>
+              <div className="flex justify-between text-xs font-mono mb-1.5 items-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-neutral-300">VLEC Shipping Freight (USGC to Dahej):</span>
+                  <PriceInfoIcon commodityId="comm-spread-ee" currentPrice={vlecFreight} unit="USD/t" size="xs" />
+                </div>
+                <span className="text-white font-bold">${vlecFreight}/t</span>
               </div>
               <input
                 type="range"
-                min="50"
-                max="160"
+                min="40"
+                max="180"
                 step="5"
                 value={vlecFreight}
                 onChange={(e) => setVlecFreight(Number(e.target.value))}
-                className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-neutral-400"
               />
               <div className="flex justify-between text-[10px] font-mono text-neutral-500 mt-1">
-                <span>$50/t (RIL Owned Fleet Base)</span>
+                <span>$40/t (RIL Captive Moat)</span>
                 <span>$85/t (Current Average)</span>
                 <span>$160/t (Suez / Canal Spike)</span>
               </div>
@@ -377,9 +429,12 @@ export default function CrackerEconomicsPage() {
             {/* Polymer Value Add Toggle */}
             <div className="pt-3 border-t border-neutral-800 flex items-center justify-between">
               <div>
-                <span className="text-xs font-mono text-white font-bold block">
-                  Downstream Polymer Integration (PE/PP)
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-mono text-white font-bold block">
+                    Downstream Polymer Integration (PE/PP)
+                  </span>
+                  <PriceInfoIcon commodityId="comm-hdpe" size="xs" />
+                </div>
                 <span className="text-[11px] text-neutral-400">
                   Adds +$135/t value capture converting olefins to polymer pellets
                 </span>

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { DottedGrid, MagnetTabs } from '@/components/obsidian';
 import { GlassCard3D, GlassMetricBox } from '@/components/glass';
+import PriceInfoIcon from '@/components/common/PriceInfoIcon';
 import { useMarket } from '@/context/MarketContext';
 import { MarketCommodity } from '@/data/types';
 
@@ -250,13 +251,19 @@ function MarketContent() {
               </span>
               <div className="space-y-2">
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
-                  <div className="font-bold text-sm text-neutral-900 dark:text-white">US Ethane (C2H6)</div>
-                  <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">$145/t (FOB)</div>
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-sm text-neutral-900 dark:text-white">US Ethane (C2H6)</div>
+                    <PriceInfoIcon commodityId="comm-ethane" currentPrice={145} unit="USD/t" size="xs" />
+                  </div>
+                  <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold mt-0.5">$145/t (FOB)</div>
                   <div className="text-xs text-neutral-500 mt-0.5">~80% Ethylene Yield</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
-                  <div className="font-bold text-sm text-neutral-900 dark:text-white">Naphtha (C5-C12)</div>
-                  <div className="text-xs text-rose-600 dark:text-rose-400 font-mono font-bold">$685/t (CFR)</div>
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-sm text-neutral-900 dark:text-white">Naphtha (C5-C12)</div>
+                    <PriceInfoIcon commodityId="comm-naphtha" currentPrice={685} unit="USD/t" size="xs" />
+                  </div>
+                  <div className="text-xs text-rose-600 dark:text-rose-400 font-mono font-bold mt-0.5">$685/t (CFR)</div>
                   <div className="text-xs text-neutral-500 mt-0.5">~30% Ethylene Yield</div>
                 </div>
               </div>
@@ -284,12 +291,18 @@ function MarketContent() {
               </span>
               <div className="space-y-2">
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
-                  <div className="font-bold text-sm text-neutral-900 dark:text-white">Ethylene</div>
-                  <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">$840/t</div>
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-sm text-neutral-900 dark:text-white">Ethylene</div>
+                    <PriceInfoIcon commodityId="comm-ethylene" currentPrice={840} unit="USD/t" size="xs" />
+                  </div>
+                  <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">$840/t</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10">
-                  <div className="font-bold text-sm text-neutral-900 dark:text-white">Propylene</div>
-                  <div className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300">$790/t</div>
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-sm text-neutral-900 dark:text-white">Propylene</div>
+                    <PriceInfoIcon commodityId="comm-propylene" currentPrice={790} unit="USD/t" size="xs" />
+                  </div>
+                  <div className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 mt-0.5">$790/t</div>
                 </div>
               </div>
             </div>
@@ -300,14 +313,17 @@ function MarketContent() {
                 4. Polymers & Chemicals
               </span>
               <div className="space-y-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200">
-                  Polyethylene (HDPE / LLDPE)
+                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200 flex items-center justify-between">
+                  <span>Polyethylene (HDPE / LLDPE)</span>
+                  <PriceInfoIcon commodityId="comm-hdpe" size="xs" />
                 </div>
-                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200">
-                  Polypropylene (PP)
+                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200 flex items-center justify-between">
+                  <span>Polypropylene (PP)</span>
+                  <PriceInfoIcon commodityId="comm-pp" size="xs" />
                 </div>
-                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200">
-                  Polyester Chain (MEG & PTA)
+                <div className="p-2.5 rounded-lg bg-white dark:bg-white/[0.08] border border-neutral-200 dark:border-white/10 font-semibold text-neutral-800 dark:text-neutral-200 flex items-center justify-between">
+                  <span>Polyester Chain (MEG & PTA)</span>
+                  <PriceInfoIcon commodityId="comm-meg" size="xs" />
                 </div>
               </div>
             </div>
@@ -323,17 +339,35 @@ function MarketContent() {
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
                 6-Month Price Trend • Live Synchronized
               </span>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white">
-                {selectedCommodity.name} ({selectedCommodity.symbol})
-              </h3>
+              <div className="flex items-center gap-2.5 mt-0.5">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white">
+                  {selectedCommodity.name} ({selectedCommodity.symbol})
+                </h3>
+                <PriceInfoIcon
+                  commodityId={selectedCommodity.id}
+                  currentPrice={selectedCommodity.currentPrice}
+                  unit={selectedCommodity.unit}
+                  change1D={selectedCommodity.change1D}
+                  size="md"
+                />
+              </div>
             </div>
 
             <div className="text-right">
-              <div className="text-3xl font-extrabold font-mono text-neutral-900 dark:text-white">
-                {selectedCommodity.currency === 'USD' ? '$' : '₹'}{selectedCommodity.currentPrice.toLocaleString()}
-                <span className="text-sm font-semibold text-neutral-500 ml-1">
-                  {selectedCommodity.unit}
+              <div className="flex items-center justify-end gap-2 text-3xl font-extrabold font-mono text-neutral-900 dark:text-white">
+                <span>
+                  {selectedCommodity.currency === 'USD' ? '$' : '₹'}{selectedCommodity.currentPrice.toLocaleString()}
+                  <span className="text-sm font-semibold text-neutral-500 ml-1">
+                    {selectedCommodity.unit}
+                  </span>
                 </span>
+                <PriceInfoIcon
+                  commodityId={selectedCommodity.id}
+                  currentPrice={selectedCommodity.currentPrice}
+                  unit={selectedCommodity.unit}
+                  change1D={selectedCommodity.change1D}
+                  size="sm"
+                />
               </div>
               <div className={`text-sm font-mono font-bold ${selectedCommodity.change1D >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                 {selectedCommodity.change1D >= 0 ? '+' : ''}{selectedCommodity.change1D}% Today
@@ -347,7 +381,13 @@ function MarketContent() {
           </div>
 
           <div className="flex items-center justify-between text-xs text-neutral-500 pt-2 border-t border-neutral-200/80 dark:border-white/10 font-mono">
-            <span>Source: {selectedCommodity.source}</span>
+            <div className="flex items-center gap-2">
+              <span>Source: {selectedCommodity.source}</span>
+              <PriceInfoIcon
+                commodityId={selectedCommodity.id}
+                size="xs"
+              />
+            </div>
             <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{selectedCommodity.timestamp}</span>
           </div>
         </GlassCard3D>
@@ -360,9 +400,18 @@ function MarketContent() {
             </h3>
 
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between py-2 border-b border-neutral-200/60 dark:border-white/10">
+              <div className="flex justify-between items-center py-2 border-b border-neutral-200/60 dark:border-white/10">
                 <span className="text-neutral-500">Commodity:</span>
-                <span className="font-bold text-neutral-900 dark:text-white">{selectedCommodity.name}</span>
+                <div className="flex items-center gap-1.5 font-bold text-neutral-900 dark:text-white">
+                  <span>{selectedCommodity.name}</span>
+                  <PriceInfoIcon
+                    commodityId={selectedCommodity.id}
+                    currentPrice={selectedCommodity.currentPrice}
+                    unit={selectedCommodity.unit}
+                    change1D={selectedCommodity.change1D}
+                    size="xs"
+                  />
+                </div>
               </div>
               <div className="flex justify-between py-2 border-b border-neutral-200/60 dark:border-white/10">
                 <span className="text-neutral-500">Category:</span>
@@ -454,10 +503,28 @@ function MarketContent() {
                       {c.symbol}
                     </td>
                     <td className="py-3.5 px-5 font-semibold text-neutral-800 dark:text-neutral-200">
-                      {c.name}
+                      <div className="flex items-center gap-1.5">
+                        <span>{c.name}</span>
+                        <PriceInfoIcon
+                          commodityId={c.id}
+                          currentPrice={c.currentPrice}
+                          unit={c.unit}
+                          change1D={c.change1D}
+                          size="xs"
+                        />
+                      </div>
                     </td>
                     <td className="py-3.5 px-5 font-mono font-extrabold text-neutral-900 dark:text-white">
-                      {c.currency === 'USD' ? '$' : '₹'}{c.currentPrice.toLocaleString()} {c.unit}
+                      <div className="flex items-center gap-1.5">
+                        <span>{c.currency === 'USD' ? '$' : '₹'}{c.currentPrice.toLocaleString()} {c.unit}</span>
+                        <PriceInfoIcon
+                          commodityId={c.id}
+                          currentPrice={c.currentPrice}
+                          unit={c.unit}
+                          change1D={c.change1D}
+                          size="xs"
+                        />
+                      </div>
                     </td>
                     <td className={`py-3.5 px-5 font-mono font-semibold ${c.change1D >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                       {c.change1D >= 0 ? '+' : ''}{c.change1D}%

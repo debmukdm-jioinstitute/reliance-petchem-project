@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import GlassCard3D from './GlassCard3D';
 
+import PriceInfoIcon from '@/components/common/PriceInfoIcon';
+
 interface GlassMetricBoxProps {
   title: string;
   value: string;
@@ -15,6 +17,8 @@ interface GlassMetricBoxProps {
   unit?: string;
   href?: string;
   highlight?: boolean;
+  commodityId?: string;
+  showInfoIcon?: boolean;
 }
 
 export default function GlassMetricBox({
@@ -27,6 +31,8 @@ export default function GlassMetricBox({
   unit,
   href,
   highlight = false,
+  commodityId,
+  showInfoIcon = true,
 }: GlassMetricBoxProps) {
   const content = (
     <GlassCard3D
@@ -38,14 +44,25 @@ export default function GlassMetricBox({
       glowColor={highlight ? 'rgba(191, 161, 97, 0.35)' : 'rgba(255, 255, 255, 0.2)'}
     >
       <div className="flex items-start justify-between gap-3 mb-4">
-        {/* Title */}
-        <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-neutral-600 dark:text-neutral-400">
-          {title}
-        </span>
+        {/* Title and small i information icon */}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-xs sm:text-sm font-bold tracking-wider uppercase text-neutral-600 dark:text-neutral-400 truncate">
+            {title}
+          </span>
+          {showInfoIcon && (
+            <PriceInfoIcon
+              commodityId={commodityId || title}
+              currentPrice={value}
+              unit={unit}
+              size="xs"
+              className="shrink-0"
+            />
+          )}
+        </div>
 
         {/* Badge */}
         {badgeText && (
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-100/90 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/15 backdrop-blur-md shadow-xs">
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-100/90 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/15 backdrop-blur-md shadow-xs shrink-0">
             {badgeText}
           </span>
         )}
