@@ -22,6 +22,7 @@ import {
   Radar
 } from 'lucide-react';
 import Link from 'next/link';
+import RelianceLogo from '@/components/common/RelianceLogo';
 
 interface RiskScenario {
   id: string;
@@ -101,26 +102,31 @@ export default function PriceRiskSentinelPage() {
 
   return (
     <div className="space-y-8 animate-fadeIn pb-12">
-      {/* Top Banner */}
+      {/* Top Banner with Reliance Logo */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-6 rounded-2xl bg-[#0B0F19] border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase rounded-md bg-red-950/80 border border-red-800/60 text-red-400 font-bold flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              AI PRICE RISK SENTINEL
-            </span>
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase rounded-md bg-neutral-800 text-neutral-300">
-              GEOPOLITICAL & FEEDSTOCK RADAR
-            </span>
+        <div className="relative z-10 flex items-center gap-4">
+          <RelianceLogo size="md" variant="badge" />
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase rounded-md bg-red-950/80 border border-red-800/60 text-red-400 font-bold flex items-center gap-1.5">
+                <ShieldAlert className="w-3 h-3" />
+                AI PRICE RISK SENTINEL
+              </span>
+              <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase rounded-md bg-neutral-800 text-neutral-300">
+                GEOPOLITICAL RADAR
+              </span>
+              <span className="text-xs font-serif italic text-[#8F7640] dark:text-[#D4BA7B] font-bold">
+                Growth is Life
+              </span>
+            </div>
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white font-mono">
+              Energy Price Risk & Shock Sentinel
+            </h1>
+            <p className="text-xs text-neutral-400 mt-1 max-w-2xl leading-relaxed font-mono">
+              Surveillance of global crude, NGL exports & shipping shocks protecting Reliance O2C assets.
+            </p>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white font-mono">
-            Energy Price Risk & Shock Sentinel
-          </h1>
-          <p className="text-sm text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-            Continuous AI surveillance of global energy developments, shipping disruptions, and raw material spikes. 
-            Directly quantifies financial downside on Reliance O2C assets and formulates immediate operational hedging actions.
-          </p>
         </div>
 
         <div className="flex items-center gap-3 relative z-10">

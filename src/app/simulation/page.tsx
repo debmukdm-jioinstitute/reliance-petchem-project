@@ -22,6 +22,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
+import RelianceLogo from '@/components/common/RelianceLogo';
 
 export default function ScadaSimulationPage() {
   const { commodities, spreads, lastSyncTime, isSyncing, refreshPrices } = useMarket();
@@ -79,23 +80,28 @@ export default function ScadaSimulationPage() {
       {/* Top Banner with SCADA Status & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-[#0B0F19] border border-neutral-800 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase rounded-md bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              SCADA DIGITAL TWIN v4.2
-            </span>
-            <span className="px-2.5 py-1 text-[11px] font-mono uppercase rounded-md bg-neutral-800 text-neutral-300">
-              DCS MIMIC FEED: LIVE
-            </span>
+        <div className="relative z-10 flex items-center gap-4">
+          <RelianceLogo size="md" variant="badge" />
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase rounded-md bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 font-bold flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                SCADA DIGITAL TWIN v4.2
+              </span>
+              <span className="px-2.5 py-0.5 text-[10px] font-mono uppercase rounded-md bg-neutral-800 text-neutral-300">
+                DCS MIMIC: LIVE
+              </span>
+              <span className="text-xs font-serif italic text-[#8F7640] dark:text-[#D4BA7B] font-bold">
+                Growth is Life
+              </span>
+            </div>
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white font-mono">
+              Cracker SCADA Simulation & Telemetry
+            </h1>
+            <p className="text-xs text-neutral-400 mt-1 max-w-2xl leading-relaxed font-mono">
+              Asset: Reliance O2C Dahej & Jamnagar Dual-Feed Complexes • Real-Time Hydrodynamic Model
+            </p>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white font-mono">
-            Cracker SCADA Simulation & Telemetry
-          </h1>
-          <p className="text-sm text-neutral-400 mt-1 max-w-2xl leading-relaxed">
-            Real-time hydrodynamic simulation of Reliance cracker batteries (Dahej & Jamnagar complexes). 
-            Manipulate feed blend, furnace severity, and throughput to observe instant mass balance and margin effects.
-          </p>
         </div>
 
         {/* Live sync actions */}

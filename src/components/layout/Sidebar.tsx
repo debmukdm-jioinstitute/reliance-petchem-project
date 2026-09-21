@@ -24,6 +24,7 @@ import {
   Settings,
   Activity,
 } from 'lucide-react';
+import RelianceLogo from '@/components/common/RelianceLogo';
 
 interface NavItem {
   id: string;
@@ -158,10 +159,25 @@ export default function Sidebar() {
 
   return (
     <aside className="w-68 h-[calc(100vh-4rem)] bg-neutral-50 dark:bg-[#0D0D11] border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 overflow-y-auto select-none transition-colors duration-200">
-      <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-[#09090B]/50">
-        <div className="text-xs uppercase tracking-wider font-bold text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
-          <span>Modules</span>
-          <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] text-xs font-semibold">18 Sections</span>
+      {/* Reliance Brand Header */}
+      <div className="p-3.5 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#09090B]">
+        <div className="flex items-center gap-2.5">
+          <RelianceLogo size="xs" variant="badge" />
+          <div className="min-w-0">
+            <span className="text-xs font-bold text-neutral-900 dark:text-white font-mono truncate block">
+              Reliance O2C
+            </span>
+            <span className="text-[10px] text-[#8F7640] dark:text-[#D4BA7B] font-serif italic font-semibold block">
+              Growth is Life
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 py-2 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-100/50 dark:bg-neutral-900/40">
+        <div className="text-[11px] uppercase tracking-wider font-bold text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
+          <span>Control Modules</span>
+          <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] text-[10px] font-semibold">10 Units</span>
         </div>
       </div>
 

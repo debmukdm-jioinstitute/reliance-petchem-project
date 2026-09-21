@@ -24,6 +24,7 @@ import { GlassCard3D, GlassMetricBox } from '@/components/glass';
 import { ArrowFillButton, DottedGrid } from '@/components/obsidian';
 import { useMarket } from '@/context/MarketContext';
 import ScadaDiagram, { ScadaState } from '@/components/scada/ScadaDiagram';
+import RelianceLogo from '@/components/common/RelianceLogo';
 
 export default function OverviewPage() {
   const router = useRouter();
@@ -70,20 +71,27 @@ export default function OverviewPage() {
     <AppShell>
       <div className="max-w-7xl mx-auto space-y-8 pb-12">
         
-        {/* Hero Section */}
+        {/* Hero Section with Official Reliance Logo */}
         <GlassCard3D className="p-6 sm:p-10">
           <DottedGrid>
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-3 max-w-3xl">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-500/30">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    SCADA Simulation & Digital Twin
-                  </span>
-                  <span className="text-neutral-400 dark:text-neutral-600 font-bold">•</span>
-                  <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 font-mono">
-                    Reliance Industries (O2C Petrochemicals)
-                  </span>
+              <div className="space-y-4 max-w-3xl">
+                <div className="flex items-center gap-4">
+                  <RelianceLogo size="md" variant="badge" />
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-500/30 font-mono">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        SCADA Digital Twin Live
+                      </span>
+                      <span className="text-xs font-serif italic text-[#8F7640] dark:text-[#D4BA7B] font-bold">
+                        Growth is Life
+                      </span>
+                    </div>
+                    <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 font-mono block mt-0.5">
+                      Reliance Industries Limited • O2C Petrochemicals Business
+                    </span>
+                  </div>
                 </div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white font-mono">
                   Petchem SCADA & Optimization OS

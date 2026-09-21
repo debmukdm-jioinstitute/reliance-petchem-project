@@ -10,6 +10,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import RelianceLogo from '@/components/common/RelianceLogo';
 
 interface NavbarProps {
   onOpenCommandPalette: () => void;
@@ -24,25 +25,19 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3 group">
-            {/* Reliance gold emblem */}
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D4BA7B] via-[#BFA161] to-[#8F7640] p-0.5 shadow-sm flex items-center justify-center">
-              <div className="w-full h-full bg-white dark:bg-[#121217] rounded-[10px] flex items-center justify-center transition-colors">
-                <span className="font-extrabold text-[#8F7640] dark:text-[#D4BA7B] text-base tracking-tighter">
-                  R
-                </span>
-              </div>
-            </div>
+            {/* Official Reliance Industries Logo */}
+            <RelianceLogo size="sm" variant="badge" />
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold tracking-tight text-neutral-900 dark:text-white text-base">
+                <span className="font-bold tracking-tight text-neutral-900 dark:text-white text-base font-mono">
                   RIL Intelligence OS
                 </span>
-                <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-[#D4BA7B] border border-amber-500/20">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-[#D4BA7B] border border-amber-500/30">
                   O2C
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 font-medium hidden sm:block">
-                Petrochemicals & Cracker Business Intelligence
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-medium hidden sm:block font-mono">
+                Petrochemicals & Cracker Digital Twin
               </p>
             </div>
           </Link>

@@ -15,9 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RIL Intelligence OS — AI-Powered Market, Project & Scenario Intelligence",
+  title: "RIL Intelligence OS — Petchem SCADA, Economics & Optimization",
   description:
     "Executive-grade institutional intelligence operating system for Reliance Industries Limited (O2C / Petrochemicals & Cracker Business).",
+  icons: {
+    icon: "/images/reliance-logo.png",
+    apple: "/images/reliance-logo.png",
+  },
 };
 
 export default function RootLayout({
