@@ -1,24 +1,52 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  color-scheme: light dark;
+  
   --ril-gold: #BFA161;
   --ril-gold-light: #D4BA7B;
   --ril-gold-dark: #8F7640;
   --ril-gold-glow: rgba(191, 161, 97, 0.18);
   
-  --bg-canvas: #080B10;
-  --bg-surface: #0E141F;
-  --bg-elevated: #151D2C;
-  --bg-card: #121824;
-  --bg-overlay: rgba(8, 11, 16, 0.85);
+  /* Light Theme (Default clean minimal white) */
+  --bg-canvas: #FFFFFF;
+  --bg-surface: #F8F9FA;
+  --bg-elevated: #F1F3F5;
+  --bg-card: #FFFFFF;
+  --bg-overlay: rgba(255, 255, 255, 0.9);
 
-  --border-subtle: #1A2232;
-  --border-muted: #242F44;
+  --border-subtle: #E4E4E7;
+  --border-muted: #D4D4D8;
   --border-focus: #BFA161;
 
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-primary: #09090B;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --text-gold: #8F7640;
+
+  --status-positive: #059669;
+  --status-negative: #E11D48;
+  --status-warning: #D97706;
+  --status-info: #0284C7;
+}
+
+.dark {
+  /* Dark Theme (Obsidian minimal black) */
+  --bg-canvas: #09090B;
+  --bg-surface: #121216;
+  --bg-elevated: #18181F;
+  --bg-card: #121216;
+  --bg-overlay: rgba(9, 9, 11, 0.9);
+
+  --border-subtle: #27272A;
+  --border-muted: #3F3F46;
+  --border-focus: #BFA161;
+
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
   --text-gold: #D4BA7B;
 
   --status-positive: #10B981;
@@ -32,51 +60,50 @@ body {
   color: var(--text-primary);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Custom Bloomberg-style terminal monospaced & tabular figures */
+/* Custom terminal monospaced & tabular figures */
 .font-tabular {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* Sleek minimalist scrollbar */
+/* Minimalist scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(8, 11, 16, 0.6);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #242F44;
-  border-radius: 3px;
+  background: var(--border-muted);
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #BFA161;
+  background: var(--ril-gold);
 }
 
-/* Glassmorphism surfaces */
-.glass-panel {
-  background: rgba(14, 20, 31, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Obsidian UI Glass & Surface styles */
+.obsidian-box {
+  background-color: var(--bg-card);
   border: 1px solid var(--border-subtle);
+  border-radius: 0.875rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-panel-elevated {
-  background: rgba(21, 29, 44, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-muted);
+.obsidian-box:hover {
+  border-color: var(--border-muted);
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
+}
+
+.dark .obsidian-box:hover {
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
+  border-color: #52525B;
 }
 
 .gold-glow {
   box-shadow: 0 0 20px -3px rgba(191, 161, 97, 0.25);
-}
-
-.gold-border-glow:hover {
-  border-color: rgba(191, 161, 97, 0.5);
-  box-shadow: 0 0 16px -2px rgba(191, 161, 97, 0.2);
 }
 
 /* Pulse animation for live data ticks */
@@ -88,11 +115,11 @@ body {
 
 .live-indicator {
   display: inline-block;
-  width: 7px;
-  height: 7px;
-  background-color: #10B981;
+  width: 8px;
+  height: 8px;
+  background-color: var(--status-positive);
   border-radius: 50%;
-  box-shadow: 0 0 8px #10B981;
+  box-shadow: 0 0 8px var(--status-positive);
 }
 
 .live-pulse-anim {

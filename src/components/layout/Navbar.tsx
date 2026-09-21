@@ -7,13 +7,9 @@ import {
   Search, 
   Sparkles, 
   Bell, 
-  ShieldCheck, 
-  Layers, 
-  Terminal, 
-  Sliders,
-  ChevronDown,
-  UserCheck
+  ShieldCheck
 } from 'lucide-react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 interface NavbarProps {
   onOpenCommandPalette: () => void;
@@ -23,94 +19,97 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#080B10]/95 backdrop-blur-md border-b border-[#1A2232]">
-      <div className="flex items-center justify-between h-14 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#09090B]/90 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-colors duration-200">
+      <div className="flex items-center justify-between h-16 px-4 lg:px-8 max-w-[1600px] mx-auto">
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            {/* Reliance stylized gold glyph */}
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4BA7B] to-[#8F7640] p-0.5 shadow-md flex items-center justify-center">
-              <div className="w-full h-full bg-[#0E141F] rounded-[7px] flex items-center justify-center">
-                <span className="font-bold text-[#D4BA7B] text-sm tracking-tighter">R</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            {/* Reliance gold emblem */}
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D4BA7B] via-[#BFA161] to-[#8F7640] p-0.5 shadow-sm flex items-center justify-center">
+              <div className="w-full h-full bg-white dark:bg-[#121217] rounded-[10px] flex items-center justify-center transition-colors">
+                <span className="font-extrabold text-[#8F7640] dark:text-[#D4BA7B] text-base tracking-tighter">
+                  R
+                </span>
               </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold tracking-tight text-[#F8FAFC] text-sm uppercase">
+                <span className="font-bold tracking-tight text-neutral-900 dark:text-white text-base">
                   RIL Intelligence OS
                 </span>
-                <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#BFA161]/15 text-[#D4BA7B] border border-[#BFA161]/30">
-                  O2C PROD
+                <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-[#D4BA7B] border border-amber-500/20">
+                  O2C
                 </span>
               </div>
-              <p className="text-[10px] text-[#94A3B8] tracking-normal font-light hidden sm:block">
-                AI-Powered Market, Project & Scenario Intelligence
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 font-medium hidden sm:block">
+                Petrochemicals & Cracker Business Intelligence
               </p>
             </div>
           </Link>
         </div>
 
-        {/* Center: Google-like Quick Command Bar */}
-        <div className="flex-1 max-w-xl mx-4 hidden md:block">
+        {/* Center: Search Command Bar */}
+        <div className="flex-1 max-w-lg mx-6 hidden md:block">
           <button
             onClick={onOpenCommandPalette}
-            className="w-full h-9 px-3 rounded-lg bg-[#0E141F] border border-[#1E2738] hover:border-[#BFA161]/50 text-left flex items-center justify-between text-xs text-[#64748B] transition-all group shadow-inner"
+            type="button"
+            className="w-full h-10 px-4 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 text-left flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-400 transition-all group"
           >
-            <div className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#BFA161] transition-colors" />
-              <span className="truncate group-hover:text-[#94A3B8] transition-colors">
-                Search meetings, documents, assets, forecasts, or ask AI...
+            <div className="flex items-center gap-2.5">
+              <Search className="w-4 h-4 text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200 transition-colors" />
+              <span className="truncate">
+                Search meetings, documents, forecasts, or ask AI...
               </span>
             </div>
-            <kbd className="hidden sm:inline-flex items-center gap-1 font-mono text-[10px] bg-[#161F30] text-[#94A3B8] px-1.5 py-0.5 rounded border border-[#242F44]">
+            <kbd className="hidden sm:inline-flex items-center gap-1 font-mono text-xs bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-700 shadow-2xs">
               ⌘K
             </kbd>
           </button>
         </div>
 
-        {/* Right: Quick Tools & Role Context */}
+        {/* Right: Quick Tools & Theme Toggle */}
         <div className="flex items-center gap-3">
-          {/* Mobile search trigger */}
+          {/* Mobile search */}
           <button
             onClick={onOpenCommandPalette}
-            className="p-2 rounded-lg text-[#94A3B8] hover:text-white hover:bg-[#121824] md:hidden"
+            className="p-2.5 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 md:hidden"
             aria-label="Search"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-5 h-5" />
           </button>
 
           {/* AI Copilot Shortcut */}
           <Link
             href="/ai"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all border ${
               pathname === '/ai'
-                ? 'bg-[#BFA161]/20 border-[#BFA161] text-[#D4BA7B]'
-                : 'bg-[#0E141F] border-[#1E2738] text-[#94A3B8] hover:text-white hover:border-[#BFA161]/50'
+                ? 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-[#D4BA7B]'
+                : 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-600'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#BFA161]" />
+            <Sparkles className="w-4 h-4 text-[#BFA161]" />
             <span className="hidden sm:inline">AI Copilot</span>
           </Link>
 
           {/* Alerts Counter */}
           <Link
             href="/alerts"
-            className="relative p-2 rounded-lg text-[#94A3B8] hover:text-white hover:bg-[#121824] transition-colors border border-transparent hover:border-[#1E2738]"
-            title="System Alerts & Shocks"
+            className="relative p-2.5 rounded-xl text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800"
+            title="System Alerts"
           >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F43F5E] animate-ping" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#F43F5E]" />
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#09090B]" />
           </Link>
 
-          {/* Executive Role Switcher Badge */}
-          <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-[#1E2738]">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#121824] border border-[#242F44] text-[11px] text-[#94A3B8]">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
-              <span className="font-medium text-[#F8FAFC]">Executive Board</span>
-              <span className="text-[#64748B]">•</span>
-              <span className="text-[#BFA161]">Jio Inst / RIL</span>
-            </div>
+          {/* Executive Badge */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="font-semibold text-neutral-900 dark:text-white">Leadership</span>
+          </div>
+
+          {/* Light / Dark Theme Toggle */}
+          <div className="pl-1 border-l border-neutral-200 dark:border-neutral-800">
+            <ThemeToggle />
           </div>
         </div>
       </div>

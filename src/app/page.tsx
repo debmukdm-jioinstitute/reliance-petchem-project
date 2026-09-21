@@ -6,24 +6,21 @@ import { useRouter } from 'next/navigation';
 import AppShell, { useIntelligence } from '@/components/layout/AppShell';
 import {
   TrendingUp,
-  Briefcase,
-  AlertTriangle,
-  Calendar,
-  CheckCircle2,
   Sparkles,
-  ArrowUpRight,
-  ArrowDownRight,
   ShieldCheck,
   Search,
-  ExternalLink,
   ChevronRight,
-  Layers,
-  ArrowRight,
-  FileText,
   Clock,
-  Zap
+  Layers,
+  ArrowRight
 } from 'lucide-react';
-import { CHRONOLOGICAL_CHANGES, MARKET_COMMODITIES } from '@/data/knowledgeStore';
+import { CHRONOLOGICAL_CHANGES } from '@/data/knowledgeStore';
+import { 
+  CardSpotlight, 
+  DottedGrid, 
+  ArrowFillButton, 
+  ObsidianMetricBox 
+} from '@/components/obsidian';
 
 export default function OverviewPage() {
   const router = useRouter();
@@ -38,353 +35,300 @@ export default function OverviewPage() {
 
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Top Header & Operational Readiness Bar */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[#1A2232]">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-mono tracking-wider uppercase text-[#BFA161] font-semibold flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                Executive Command Center
-              </span>
-              <span className="text-[#64748B]">•</span>
-              <span className="text-[11px] text-[#94A3B8]">Reliance Industries Limited (O2C)</span>
-            </div>
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-[#F8FAFC]">
-              RIL INTELLIGENCE OS
-            </h1>
-            <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              One unified institutional intelligence layer for market dynamics, capital allocation, scenario simulation, and cracker operational decisions.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/executive"
-              className="px-3.5 py-2 rounded-lg bg-[#BFA161]/15 hover:bg-[#BFA161]/25 border border-[#BFA161]/40 text-[#D4BA7B] text-xs font-medium transition-all flex items-center gap-1.5 shadow-sm"
-            >
-              <Zap className="w-3.5 h-3.5 text-[#BFA161]" />
-              <span>60s Executive Brief</span>
-            </Link>
-            <Link
-              href="/scenarios"
-              className="px-3.5 py-2 rounded-lg bg-[#141C2B] hover:bg-[#1A2438] border border-[#242F44] text-[#F8FAFC] text-xs font-medium transition-all flex items-center gap-1.5"
-            >
-              <Layers className="w-3.5 h-3.5 text-[#38BDF8]" />
-              <span>Run Scenario</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Executive Pulse Status Badges */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {[
-            { label: 'Market Status', val: 'Feedstock Delta Favors Ethane', status: 'POSITIVE', color: 'text-[#10B981]' },
-            { label: 'Project Status', val: 'Phase 1: Scoping Aligned', status: 'POSITIVE', color: 'text-[#10B981]' },
-            { label: 'AI Signal', val: 'Maximize Dahej Ethane Run', status: 'BULLISH', color: 'text-[#D4BA7B]' },
-            { label: 'Risk Level', val: 'Global Ethylene Oversupply', status: 'WATCH', color: 'text-[#F59E0B]' },
-            { label: 'Latest Meeting', val: 'Meeting 2 (Hanoz Alignment)', status: 'COMPLETED', color: 'text-[#38BDF8]' },
-            { label: 'Next Milestone', val: 'Model Calibration & Review', status: 'SCHEDULED', color: 'text-[#F8FAFC]' },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="p-3 rounded-xl bg-[#0E141F] border border-[#1A2232] space-y-1 hover:border-[#BFA161]/40 transition-colors"
-            >
-              <div className="text-[10px] uppercase tracking-wider font-mono text-[#64748B]">
-                {item.label}
+      <div className="max-w-7xl mx-auto space-y-10">
+        
+        {/* Top Hero Section with ObsidianUI DottedGrid */}
+        <DottedGrid className="p-8 sm:p-10 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121217] shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Live System
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-600 font-bold">•</span>
+                <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">
+                  Reliance Industries Limited (O2C)
+                </span>
               </div>
-              <div className={`text-xs font-semibold truncate ${item.color}`}>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+                Cracker & Petchem Intelligence
+              </h1>
+              <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 font-normal leading-relaxed pt-1">
+                Real-time cracker economics, dual simulation models, AI price forecasts, and strategic capital allocation.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link href="/executive">
+                <ArrowFillButton variant="primary">
+                  60-Second Brief
+                </ArrowFillButton>
+              </Link>
+              <Link href="/scenarios">
+                <ArrowFillButton variant="secondary">
+                  Run Scenarios
+                </ArrowFillButton>
+              </Link>
+            </div>
+          </div>
+        </DottedGrid>
+
+        {/* 6 High-Visibility Status Boxes */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            { label: 'Feedstock Edge', val: 'Ethane Advantage', status: 'POSITIVE', badge: '+Delta', color: 'text-emerald-600 dark:text-emerald-400' },
+            { label: 'Project Phase', val: 'Scoping Approved', status: 'ACTIVE', badge: 'Phase 1', color: 'text-neutral-900 dark:text-white' },
+            { label: 'AI Optimization', val: 'Run Dahej Ethane', status: 'BULLISH', badge: 'Max Yield', color: 'text-amber-600 dark:text-[#D4BA7B]' },
+            { label: 'Market Risk', val: 'Global Oversupply', status: 'WATCH', badge: 'High Risk', color: 'text-rose-600 dark:text-rose-400' },
+            { label: 'Latest Meeting', val: 'Hanoz & Adepu', status: 'RECORDED', badge: 'Minutes', color: 'text-sky-600 dark:text-sky-400' },
+            { label: 'Next Review', val: 'Model Calibration', status: 'SCHEDULED', badge: 'Upcoming', color: 'text-neutral-900 dark:text-white' },
+          ].map((item, i) => (
+            <CardSpotlight
+              key={i}
+              className="p-4 flex flex-col justify-between hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                  {item.label}
+                </span>
+                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                  {item.badge}
+                </span>
+              </div>
+              <div className={`text-base font-bold truncate mt-1 ${item.color}`}>
                 {item.val}
               </div>
-            </div>
+            </CardSpotlight>
           ))}
         </div>
 
-        {/* 12 Clickable Executive KPI Cards */}
-        <div className="space-y-3">
+        {/* Key Metrics Bento Grid — Increased Font Size & Visibility */}
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase font-mono tracking-wider font-semibold text-[#64748B] flex items-center gap-2">
-              <TrendingUp className="w-3.5 h-3.5 text-[#BFA161]" />
-              Executive Metrics & Live Spreads (Click to Inspect)
+            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-[#8F7640] dark:text-[#D4BA7B]" />
+              Key Market & Project Metrics
             </h2>
-            <span className="text-[10px] text-[#64748B] font-mono">
-              Auto-synced with Platts / ICIS / RBI
+            <span className="text-xs font-mono font-medium text-neutral-600 dark:text-neutral-400">
+              Live Feed • Click to Inspect
             </span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
-            {[
-              {
-                id: 'kpi-ethylene',
-                name: 'ETHYLENE',
-                val: '$840',
-                unit: '/t',
-                delta: '+1.82%',
-                isUp: true,
-                sub: 'CFR SE Asia / India',
-                href: '/market?tab=products&item=ethylene',
-              },
-              {
-                id: 'kpi-propylene',
-                name: 'PROPYLENE',
-                val: '$790',
-                unit: '/t',
-                delta: '-0.63%',
-                isUp: false,
-                sub: 'FOB Korea / India',
-                href: '/market?tab=products&item=propylene',
-              },
-              {
-                id: 'kpi-naphtha',
-                name: 'NAFTA',
-                val: '$685',
-                unit: '/t',
-                delta: '+3.16%',
-                isUp: true,
-                sub: '+61% YoY spike',
-                href: '/market?tab=feedstocks&item=naphtha',
-              },
-              {
-                id: 'kpi-ethane',
-                name: 'ETHANE',
-                val: '$145',
-                unit: '/t',
-                delta: '-1.36%',
-                isUp: false,
-                sub: 'Mont Belvieu FOB',
-                href: '/market?tab=feedstocks&item=ethane',
-              },
-              {
-                id: 'kpi-brent',
-                name: 'BRENT',
-                val: '$82.40',
-                unit: '/bbl',
-                delta: '+0.92%',
-                isUp: true,
-                sub: 'ICE Futures London',
-                href: '/market?tab=energy&item=brent',
-              },
-              {
-                id: 'kpi-natgas',
-                name: 'NATURAL GAS',
-                val: '$2.45',
-                unit: '/MMBtu',
-                delta: '-1.50%',
-                isUp: false,
-                sub: 'Henry Hub Benchmark',
-                href: '/market?tab=energy',
-              },
-              {
-                id: 'kpi-fx',
-                name: 'FX (USD/INR)',
-                val: '₹83.95',
-                unit: '',
-                delta: '+0.08%',
-                isUp: true,
-                sub: 'RBI Reference Rate',
-                href: '/market?tab=fx',
-              },
-              {
-                id: 'kpi-o2c-margin',
-                name: 'O2C MARGIN',
-                val: '$9.80',
-                unit: '/bbl',
-                delta: '+4.25%',
-                isUp: true,
-                sub: 'Ethane boost driver',
-                href: '/financial',
-              },
-              {
-                id: 'kpi-capex',
-                name: 'CAPEX',
-                val: '>$2.0B',
-                unit: 'USD',
-                delta: 'Active',
-                isUp: true,
-                sub: 'Terminals + 6 VLECs',
-                href: '/project/capex',
-              },
-              {
-                id: 'kpi-irr',
-                name: 'PROJECT IRR',
-                val: '19.4%',
-                unit: '',
-                delta: 'Base Plan',
-                isUp: true,
-                sub: 'P50 Monte Carlo',
-                href: '/financial',
-              },
-              {
-                id: 'kpi-npv',
-                name: 'PROJECT NPV',
-                val: '$2,840M',
-                unit: 'USD',
-                delta: '+$940M Upside',
-                isUp: true,
-                sub: '10.5% Discount Rate',
-                href: '/financial',
-              },
-              {
-                id: 'kpi-status',
-                name: 'PROJECT STATUS',
-                val: 'On Track',
-                unit: '',
-                delta: 'Phase 1',
-                isUp: true,
-                sub: 'Dual Simulator Scoped',
-                href: '/project',
-              },
-            ].map((kpi) => (
-              <Link
-                key={kpi.id}
-                href={kpi.href}
-                className="group p-3.5 rounded-xl bg-[#0E1420] border border-[#1A2232] hover:border-[#BFA161]/50 hover:bg-[#121929] transition-all flex flex-col justify-between shadow-sm relative overflow-hidden"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono font-medium text-[#94A3B8] group-hover:text-[#BFA161] transition-colors">
-                    {kpi.name}
-                  </span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#BFA161] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-                <div className="my-2">
-                  <div className="text-xl font-bold font-tabular text-[#F8FAFC]">
-                    {kpi.val}
-                    <span className="text-xs font-normal text-[#94A3B8] ml-0.5">
-                      {kpi.unit}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-[#64748B] truncate mt-0.5">
-                    {kpi.sub}
-                  </div>
-                </div>
-                <div className="flex items-center text-[10px] font-mono">
-                  <span
-                    className={`flex items-center font-medium ${
-                      kpi.isUp ? 'text-[#10B981]' : 'text-[#F43F5E]'
-                    }`}
-                  >
-                    {kpi.delta}
-                  </span>
-                </div>
-              </Link>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <ObsidianMetricBox
+              title="Ethylene Spot"
+              value="$840"
+              unit="/t"
+              subtitle="CFR SE Asia / India"
+              badgeText="Product"
+              trend="up"
+              trendValue="+1.82%"
+              href="/market?tab=products&item=ethylene"
+              highlight
+            />
+            <ObsidianMetricBox
+              title="Propylene Spot"
+              value="$790"
+              unit="/t"
+              subtitle="FOB Korea / Domestic"
+              badgeText="Product"
+              trend="down"
+              trendValue="-0.63%"
+              href="/market?tab=products&item=propylene"
+            />
+            <ObsidianMetricBox
+              title="Naphtha Feedstock"
+              value="$685"
+              unit="/t"
+              subtitle="+61% YoY cost spike"
+              badgeText="Feedstock"
+              trend="up"
+              trendValue="+3.16%"
+              href="/market?tab=feedstocks&item=naphtha"
+            />
+            <ObsidianMetricBox
+              title="US Ethane FOB"
+              value="$145"
+              unit="/t"
+              subtitle="Mont Belvieu deep discount"
+              badgeText="Feedstock"
+              trend="down"
+              trendValue="-1.36%"
+              href="/market?tab=feedstocks&item=ethane"
+              highlight
+            />
+            <ObsidianMetricBox
+              title="Brent Crude"
+              value="$82.40"
+              unit="/bbl"
+              subtitle="ICE London Futures"
+              badgeText="Energy"
+              trend="up"
+              trendValue="+0.92%"
+              href="/market?tab=energy&item=brent"
+            />
+            <ObsidianMetricBox
+              title="Ethylene Cost Gap"
+              value="~10x"
+              unit="Advantage"
+              subtitle="$250/t ethane vs $2,629/t naphtha"
+              badgeText="Cost Spread"
+              trend="up"
+              trendValue="High Margin"
+              href="/operations"
+              highlight
+            />
+            <ObsidianMetricBox
+              title="Committed Capex"
+              value=">$2.0B"
+              unit="USD"
+              subtitle="Dahej Terminal + 6 VLECs"
+              badgeText="Capital"
+              trend="neutral"
+              trendValue="Funded"
+              href="/project/capex"
+            />
+            <ObsidianMetricBox
+              title="Project IRR (P50)"
+              value="19.4%"
+              unit="Return"
+              subtitle="10,000-run Monte Carlo base"
+              badgeText="Financial"
+              trend="up"
+              trendValue="+$940M NPV"
+              href="/financial"
+              highlight
+            />
           </div>
         </div>
 
-        {/* "WHAT CHANGED" — AI-Generated Chronological Change Feed */}
+        {/* "Recent Updates" — Clean Obsidian Cards */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-[#F8FAFC] flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#BFA161]" />
-                What Changed
+              <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#8F7640] dark:text-[#D4BA7B]" />
+                Recent Intelligence Updates
               </h2>
-              <p className="text-xs text-[#94A3B8]">
-                AI-synthesized chronological intelligence feed cross-referenced across meeting transcripts, regulatory disclosures, and market shocks.
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Key takeaways from meeting notes, market shifts, and project milestones.
               </p>
             </div>
             <button
               onClick={() => openAuditModal('audit-01')}
-              className="text-xs font-mono text-[#D4BA7B] hover:underline flex items-center gap-1"
+              className="text-xs font-semibold text-neutral-700 dark:text-[#D4BA7B] hover:underline flex items-center gap-1.5"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#BFA161]" />
-              Why did AI say this?
+              <ShieldCheck className="w-4 h-4 text-[#8F7640] dark:text-[#D4BA7B]" />
+              Audit Trace
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {CHRONOLOGICAL_CHANGES.map((chg) => (
-              <div
+              <CardSpotlight
                 key={chg.id}
-                className="p-4 rounded-xl bg-[#0E1420] border border-[#1A2232] hover:border-[#BFA161]/40 transition-all flex flex-col md:flex-row md:items-start justify-between gap-4 group"
+                className="p-6 transition-all group"
               >
-                <div className="flex items-start gap-3.5 flex-1">
-                  <div className="p-2 rounded-lg bg-[#141C2B] border border-[#242F44] text-[#BFA161] font-mono text-[11px] shrink-0 text-center min-w-[68px]">
-                    <Clock className="w-3.5 h-3.5 mx-auto mb-1 text-[#D4BA7B]" />
-                    {chg.date}
-                  </div>
-
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-[#162030] text-[#38BDF8] border border-[#242F44]">
-                        {chg.category}
+                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5">
+                  <div className="flex items-start gap-4 flex-1">
+                    {/* Date badge */}
+                    <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-center shrink-0 min-w-[80px]">
+                      <Clock className="w-4 h-4 mx-auto mb-1 text-neutral-600 dark:text-[#D4BA7B]" />
+                      <span className="text-xs font-mono font-bold text-neutral-800 dark:text-neutral-200">
+                        {chg.date}
                       </span>
-                      <h3 className="text-sm font-semibold text-[#F8FAFC] group-hover:text-[#D4BA7B] transition-colors">
-                        {chg.title}
-                      </h3>
                     </div>
 
-                    <p className="text-xs text-[#94A3B8] leading-relaxed">
-                      {chg.summary}
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 text-[11px]">
-                      <div className="p-2 rounded bg-[#0A0E17] border border-[#1A2232]">
-                        <span className="text-[#64748B] block text-[10px] uppercase font-mono">Why it matters:</span>
-                        <span className="text-[#CBD5E1]">{chg.whyItMatters}</span>
+                    <div className="space-y-2 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700">
+                          {chg.category}
+                        </span>
+                        <h3 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-[#D4BA7B] transition-colors">
+                          {chg.title}
+                        </h3>
                       </div>
-                      <div className="p-2 rounded bg-[#0A0E17] border border-[#1A2232]">
-                        <span className="text-[#64748B] block text-[10px] uppercase font-mono">Potential business impact:</span>
-                        <span className="text-[#10B981] font-medium">{chg.potentialImpact}</span>
+
+                      <p className="text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                        {chg.summary}
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                        <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800">
+                          <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
+                            Why it matters
+                          </span>
+                          <span className="text-sm text-neutral-800 dark:text-neutral-200 font-medium">
+                            {chg.whyItMatters}
+                          </span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800">
+                          <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
+                            Business impact
+                          </span>
+                          <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                            {chg.potentialImpact}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex md:flex-col items-end justify-between md:justify-start gap-2 border-t md:border-t-0 md:border-l border-[#1A2232] pt-2 md:pt-0 md:pl-4 shrink-0 text-right">
-                  <span className="text-[10px] font-mono text-[#64748B] bg-[#121824] px-2 py-0.5 rounded border border-[#1E2738]">
-                    {chg.source.sourceTitle}
-                  </span>
-                  <button
-                    onClick={() => openAuditModal('audit-01')}
-                    className="text-[11px] text-[#BFA161] hover:text-[#D4BA7B] flex items-center gap-1 font-mono transition-colors"
-                  >
-                    Trace Source <ChevronRight className="w-3 h-3" />
-                  </button>
+                  <div className="flex lg:flex-col items-center lg:items-end justify-between lg:justify-start gap-3 border-t lg:border-t-0 lg:border-l border-neutral-200 dark:border-neutral-800 pt-3 lg:pt-0 lg:pl-5 shrink-0">
+                    <span className="text-xs font-mono font-medium text-neutral-600 dark:text-neutral-400 px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                      {chg.source.sourceTitle}
+                    </span>
+                    <button
+                      onClick={() => openAuditModal('audit-01')}
+                      className="text-xs font-semibold text-[#8F7640] dark:text-[#D4BA7B] hover:underline flex items-center gap-1"
+                    >
+                      View Source <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </CardSpotlight>
             ))}
           </div>
         </div>
 
-        {/* Bottom: Ask the Intelligence Layer (Natural Language Bar) */}
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0E1524] to-[#121A2D] border border-[#1E293B] shadow-xl relative overflow-hidden">
-          <div className="relative z-10 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#D4BA7B] uppercase tracking-wide">
-              <Sparkles className="w-4 h-4 text-[#BFA161]" />
-              Ask the Intelligence Layer
+        {/* Natural Language Discovery Box */}
+        <CardSpotlight className="p-8 border border-neutral-200 dark:border-neutral-800">
+          <div className="space-y-4 max-w-4xl">
+            <div className="flex items-center gap-2 text-sm font-bold text-[#8F7640] dark:text-[#D4BA7B] uppercase tracking-wide">
+              <Sparkles className="w-4 h-4" />
+              Ask the Project Intelligence Assistant
             </div>
-            <p className="text-xs text-[#94A3B8]">
-              Natural-language information discovery across ingested meeting transcripts, market time-series, quantitative forecasts, and dynamic financial scenarios.
+            <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white">
+              Search meetings, prices, models, or decisions in plain English
+            </h3>
+            <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300">
+              Instant answers backed by direct quotes from Rajesh Rawal and Hanoz meetings, O2C project documents, and quantitative forecasts.
             </p>
 
-            <form onSubmit={handleAskNaturalQuery} className="flex items-center gap-2 pt-1">
+            <form onSubmit={handleAskNaturalQuery} className="flex items-center gap-3 pt-2">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={naturalQuery}
                   onChange={(e) => setNaturalQuery(e.target.value)}
-                  placeholder="Ask about the project, market, forecasts, scenarios, capex or meetings (e.g. 'What did Rajesh say about switching?')..."
-                  className="w-full h-12 pl-10 pr-4 rounded-xl bg-[#080B10] border border-[#242F44] text-xs text-[#F8FAFC] placeholder-[#64748B] focus:border-[#BFA161] focus:outline-none transition-colors"
+                  placeholder="e.g. What did Rajesh Rawal say about feedstock switching flexibility?"
+                  className="w-full h-14 pl-12 pr-4 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-sm sm:text-base text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-500 focus:border-[#BFA161] focus:ring-2 focus:ring-[#BFA161]/20 focus:outline-none transition-all"
                 />
               </div>
-              <button
-                type="submit"
-                className="h-12 px-5 rounded-xl bg-[#BFA161] hover:bg-[#D4BA7B] text-[#080B10] text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0 shadow-md"
-              >
-                <span>Query OS</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <ArrowFillButton type="submit" variant="primary" className="h-14">
+                Ask
+              </ArrowFillButton>
             </form>
 
-            <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] text-[#64748B]">
-              <span className="font-mono text-[10px]">Sample Prompts:</span>
+            <div className="flex flex-wrap items-center gap-2 pt-2 text-xs">
+              <span className="font-semibold text-neutral-500">Try asking:</span>
               {[
-                'What changed in ethane economics this month?',
-                'How would a 20% increase in Brent affect cracker economics?',
-                'What assumptions were invalidated in Meeting 1?',
-                'Why did the forecast change?'
+                'Why did we drop the naphtha-to-ethane switching problem?',
+                'How does the Dahej terminal expand our margins?',
+                'What is the Dual Simulation architecture approved in Meeting 2?',
+                'What is the cost difference between ethane and naphtha?'
               ].map((prompt, i) => (
                 <button
                   key={i}
@@ -393,14 +337,15 @@ export default function OverviewPage() {
                     setNaturalQuery(prompt);
                     router.push(`/ai?q=${encodeURIComponent(prompt)}`);
                   }}
-                  className="px-2.5 py-1 rounded-md bg-[#162030] hover:bg-[#1E2B40] text-[#94A3B8] hover:text-[#F8FAFC] border border-[#242F44] transition-colors truncate max-w-xs"
+                  className="px-3 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 transition-colors"
                 >
                   &quot;{prompt}&quot;
                 </button>
               ))}
             </div>
           </div>
-        </div>
+        </CardSpotlight>
+
       </div>
     </AppShell>
   );

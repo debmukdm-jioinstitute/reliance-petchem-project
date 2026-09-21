@@ -33,18 +33,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <IntelligenceContext.Provider value={{ openAuditModal, openCommandPalette }}>
-      <div className="min-h-screen flex flex-col bg-[#080B10] text-[#F8FAFC]">
-        {/* Top Executive Navbar */}
+      <div className="min-h-screen flex flex-col bg-white dark:bg-[#09090B] text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
+        {/* Top Executive Navbar with Theme Toggle */}
         <Navbar onOpenCommandPalette={openCommandPalette} />
 
-        {/* Real-time Bloomberg-style Ticker Strip */}
+        {/* Real-time Ticker Strip */}
         <MarketTickerStrip />
 
         {/* Main Body with Sidebar + Main Viewport */}
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />
 
-          <main className="flex-1 overflow-y-auto bg-[#080B10] p-4 lg:p-6 pb-20">
+          <main className="flex-1 overflow-y-auto bg-neutral-50/60 dark:bg-[#09090B] p-5 lg:p-8 pb-24 transition-colors duration-200">
             {children}
           </main>
         </div>

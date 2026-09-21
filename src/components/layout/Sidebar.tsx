@@ -22,8 +22,6 @@ import {
   Share2,
   Sparkles,
   Settings,
-  ChevronRight,
-  ShieldAlert
 } from 'lucide-react';
 
 interface NavItem {
@@ -33,7 +31,6 @@ interface NavItem {
   href: string;
   icon: React.ElementType;
   badge?: string;
-  badgeColor?: string;
   subItems?: { name: string; href: string }[];
 }
 
@@ -45,45 +42,42 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     href: '/',
     icon: LayoutDashboard,
     badge: 'LIVE',
-    badgeColor: 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40'
   },
   {
     id: 'executive',
     code: '02',
-    name: 'Executive Intelligence',
+    name: 'Executive Briefing',
     href: '/executive',
     icon: Crown,
-    badge: '60s Brief',
-    badgeColor: 'bg-[#BFA161]/20 text-[#D4BA7B] border-[#BFA161]/40',
+    badge: '60s',
     subItems: [
-      { name: 'Executive Brief', href: '/executive#brief' },
+      { name: 'Executive Summary', href: '/executive#brief' },
       { name: 'Today\'s Signals', href: '/executive#signals' },
-      { name: 'Leadership Attention', href: '/executive#attention' }
+      { name: 'Leadership Priority', href: '/executive#attention' }
     ]
   },
   {
     id: 'meetings',
     code: '03',
-    name: 'Meetings & MoM',
+    name: 'Meeting Minutes',
     href: '/meetings',
     icon: Users,
-    badge: '2 Ingested',
-    badgeColor: 'bg-[#38BDF8]/20 text-[#38BDF8] border-[#38BDF8]/40',
+    badge: '2 Notes',
     subItems: [
-      { name: 'Meeting 1 (06 Jul 2026)', href: '/meetings/meeting-1' },
-      { name: 'Meeting 2 (Hanoz Alignment)', href: '/meetings/meeting-2' }
+      { name: 'Rajesh Rawal (Meeting 1)', href: '/meetings/meeting-1' },
+      { name: 'Hanoz & Adepu (Meeting 2)', href: '/meetings/meeting-2' }
     ]
   },
   {
     id: 'project',
     code: '04',
-    name: 'Project Management',
+    name: 'Project Roadmap',
     href: '/project',
     icon: Briefcase,
     subItems: [
-      { name: 'Workstreams', href: '/project#workstreams' },
-      { name: 'Capex Deployment', href: '/project/capex' },
-      { name: 'Milestones & Timeline', href: '/project#timeline' }
+      { name: '5 Core Workstreams', href: '/project#workstreams' },
+      { name: 'Dahej Expansion Capex', href: '/project/capex' },
+      { name: 'Key Milestones', href: '/project#timeline' }
     ]
   },
   {
@@ -92,39 +86,35 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     name: 'Market Intelligence',
     href: '/market',
     icon: TrendingUp,
-    badge: 'Bloomberg',
-    badgeColor: 'bg-[#BFA161]/20 text-[#D4BA7B] border-[#BFA161]/40',
+    badge: 'Real-time',
     subItems: [
       { name: 'Cracker Value Chain', href: '/market?tab=cracker' },
-      { name: 'Feedstocks (Ethane/Naphtha)', href: '/market?tab=feedstocks' },
-      { name: 'Products (Ethylene/Propylene)', href: '/market?tab=products' },
-      { name: 'FX & Energy', href: '/market?tab=energy' }
+      { name: 'Ethane & Naphtha Spreads', href: '/market?tab=feedstocks' },
+      { name: 'Ethylene & Propylene Prices', href: '/market?tab=products' },
     ]
   },
   {
     id: 'forecasts',
     code: '06',
-    name: 'Forecasting Engine',
+    name: 'Price Forecasts',
     href: '/forecasts',
     icon: LineChart,
-    badge: 'TimesFM',
-    badgeColor: 'bg-[#818CF8]/20 text-[#A5B4FC] border-[#818CF8]/40',
+    badge: '4 Models',
     subItems: [
-      { name: 'Multi-Model Ensemble', href: '/forecasts#ensemble' },
-      { name: 'Backtest Validation', href: '/forecasts#backtest' }
+      { name: 'Feedstock Price Paths', href: '/forecasts?asset=ethane' },
+      { name: 'Model Accuracy (MAE/MAPE)', href: '/forecasts?tab=accuracy' }
     ]
   },
   {
     id: 'scenarios',
     code: '07',
-    name: 'Scenario Engine',
+    name: 'Dual Simulation',
     href: '/scenarios',
     icon: SlidersHorizontal,
-    badge: 'Waterfall',
-    badgeColor: 'bg-[#F59E0B]/20 text-[#FBBF24] border-[#F59E0B]/40',
+    badge: '10k Runs',
     subItems: [
-      { name: 'Scenario Builder', href: '/scenarios' },
-      { name: 'Monte Carlo (10k)', href: '/scenarios/monte-carlo' }
+      { name: 'Interactive Scenarios', href: '/scenarios' },
+      { name: '10,000-Run Monte Carlo', href: '/scenarios/monte-carlo' },
     ]
   },
   {
@@ -133,11 +123,9 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     name: 'Financial Model',
     href: '/financial',
     icon: DollarSign,
-    badge: 'NPV / IRR',
-    badgeColor: 'bg-[#10B981]/20 text-[#34D399] border-[#10B981]/40',
     subItems: [
-      { name: 'DCF Asset Matrix', href: '/financial' },
-      { name: 'Assumption Register', href: '/financial#assumptions' }
+      { name: 'RIL Asset DCF Valuation', href: '/financial#valuation' },
+      { name: 'Dahej Expansion ROI', href: '/financial#expansion' }
     ]
   },
   {
@@ -146,62 +134,55 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     name: 'Cracker Operations',
     href: '/operations',
     icon: Cpu,
+    badge: 'Flexible',
     subItems: [
-      { name: 'Switching Dynamics', href: '/operations#switching' },
-      { name: 'VLEC Fleet (6+3)', href: '/operations#vlec' }
+      { name: 'Feedstock Switching', href: '/operations#switching' },
+      { name: 'VLEC Ships & Dahej Pipe', href: '/operations#logistics' }
     ]
   },
   {
     id: 'competitive-intelligence',
     code: '10',
-    name: 'Competitive Intel',
+    name: 'Competitor Benchmark',
     href: '/competitive-intelligence',
     icon: Globe2,
     subItems: [
-      { name: 'Global O2C Benchmark', href: '/competitive-intelligence#matrix' },
-      { name: 'Global Oversupply', href: '/competitive-intelligence#oversupply' }
+      { name: 'Global Cracker Peers', href: '/competitive-intelligence#matrix' },
+      { name: 'Global Oversupply Risk', href: '/competitive-intelligence#oversupply' }
     ]
   },
   {
     id: 'ai-research',
     code: '11',
-    name: 'AI Research & Literature',
+    name: 'Industry Research',
     href: '/ai-research',
     icon: BookOpen,
-    subItems: [
-      { name: 'ACS Omega Olefin Yields', href: '/ai-research#acs' },
-      { name: 'RL Procurement', href: '/ai-research#rl' }
-    ]
   },
   {
     id: 'documents',
     code: '12',
-    name: 'Document Intelligence',
+    name: 'Source Documents',
     href: '/documents',
     icon: FileText,
-    badge: '5 Grounded',
-    badgeColor: 'bg-[#38BDF8]/20 text-[#38BDF8] border-[#38BDF8]/40'
   },
   {
     id: 'data',
     code: '13',
-    name: 'Data Layer & Quality',
+    name: 'Data Center',
     href: '/data',
-    icon: Database
+    icon: Database,
   },
   {
     id: 'alerts',
     code: '14',
-    name: 'Alerts & Market Shocks',
+    name: 'Alerts & Shocks',
     href: '/alerts',
     icon: AlertTriangle,
-    badge: '3 Active',
-    badgeColor: 'bg-[#F43F5E]/20 text-[#FB7185] border-[#F43F5E]/40'
   },
   {
     id: 'actions',
     code: '15',
-    name: 'Action Center',
+    name: 'Action Items',
     href: '/actions',
     icon: CheckSquare
   },
@@ -211,22 +192,18 @@ const PRIMARY_NAVIGATION: NavItem[] = [
     name: 'Knowledge Graph',
     href: '/knowledge-graph',
     icon: Share2,
-    badge: 'Palantir',
-    badgeColor: 'bg-[#BFA161]/20 text-[#D4BA7B] border-[#BFA161]/40'
   },
   {
     id: 'ai',
     code: '17',
-    name: 'AI Copilot & Agents',
+    name: 'AI Copilot',
     href: '/ai',
     icon: Sparkles,
-    badge: '8 Agents',
-    badgeColor: 'bg-[#BFA161]/20 text-[#D4BA7B] border-[#BFA161]/40'
   },
   {
     id: 'settings',
     code: '18',
-    name: 'Settings & Models',
+    name: 'Settings',
     href: '/settings',
     icon: Settings
   }
@@ -236,15 +213,15 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 h-[calc(100vh-3.5rem)] bg-[#0A0E17] border-r border-[#1A2232] flex flex-col shrink-0 overflow-y-auto select-none">
-      <div className="p-3 border-b border-[#1A2232] bg-[#080B10]/50">
-        <div className="text-[10px] uppercase tracking-wider font-semibold text-[#64748B] flex items-center justify-between">
-          <span>Navigation Architecture</span>
-          <span className="font-mono text-[#BFA161]">18 Modules</span>
+    <aside className="w-68 h-[calc(100vh-4rem)] bg-neutral-50 dark:bg-[#0D0D11] border-r border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0 overflow-y-auto select-none transition-colors duration-200">
+      <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-[#09090B]/50">
+        <div className="text-xs uppercase tracking-wider font-bold text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
+          <span>Modules</span>
+          <span className="font-mono text-[#8F7640] dark:text-[#D4BA7B] text-xs font-semibold">18 Sections</span>
         </div>
       </div>
 
-      <nav className="flex-1 p-2 space-y-0.5">
+      <nav className="flex-1 p-3 space-y-1">
         {PRIMARY_NAVIGATION.map((item) => {
           const isActive =
             item.href === '/'
@@ -254,24 +231,24 @@ export default function Sidebar() {
           const IconComponent = item.icon;
 
           return (
-            <div key={item.id} className="space-y-0.5">
+            <div key={item.id} className="space-y-1">
               <Link
                 href={item.href}
-                className={`group flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   isActive
-                    ? 'bg-[#151D2C] text-[#F8FAFC] border-l-2 border-[#BFA161] shadow-sm'
-                    : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#101622]'
+                    ? 'bg-neutral-200/80 dark:bg-neutral-800 text-neutral-900 dark:text-white border-l-4 border-[#BFA161] shadow-xs'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-900'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="font-mono text-[10px] text-[#64748B] group-hover:text-[#BFA161] transition-colors w-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500 group-hover:text-[#BFA161] transition-colors w-5">
                     {item.code}
                   </span>
                   <IconComponent
-                    className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                    className={`w-4 h-4 shrink-0 transition-colors ${
                       isActive
-                        ? 'text-[#BFA161]'
-                        : 'text-[#64748B] group-hover:text-[#94A3B8]'
+                        ? 'text-[#8F7640] dark:text-[#D4BA7B]'
+                        : 'text-neutral-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-200'
                     }`}
                   />
                   <span className="truncate">{item.name}</span>
@@ -279,8 +256,10 @@ export default function Sidebar() {
 
                 {item.badge && (
                   <span
-                    className={`text-[9px] font-mono px-1.5 py-0.2 rounded border shrink-0 ${
-                      item.badgeColor || 'bg-[#161F30] text-[#94A3B8] border-[#242F44]'
+                    className={`text-xs font-mono font-medium px-2 py-0.5 rounded-full shrink-0 ${
+                      isActive
+                        ? 'bg-amber-500/20 text-amber-800 dark:text-[#D4BA7B] border border-amber-500/30'
+                        : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     {item.badge}
@@ -288,14 +267,14 @@ export default function Sidebar() {
                 )}
               </Link>
 
-              {/* Nested Sub-navigation if route is active */}
+              {/* Nested Sub-navigation if active */}
               {isActive && item.subItems && (
-                <div className="ml-7 pl-2.5 border-l border-[#1E2738] py-1 space-y-0.5">
+                <div className="ml-8 pl-3 border-l-2 border-neutral-300 dark:border-neutral-800 py-1 space-y-1">
                   {item.subItems.map((sub) => (
                     <Link
                       key={sub.name}
                       href={sub.href}
-                      className="block text-[11px] text-[#64748B] hover:text-[#D4BA7B] transition-colors py-0.5 truncate"
+                      className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-[#D4BA7B] transition-colors py-1 truncate"
                     >
                       {sub.name}
                     </Link>
@@ -308,13 +287,15 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer System Status */}
-      <div className="p-3 border-t border-[#1A2232] bg-[#080B10]/80">
-        <div className="flex items-center justify-between text-[10px] text-[#64748B]">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-            Models Synced
+      <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#09090B]">
+        <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            System Live
           </span>
-          <span className="font-mono text-[#94A3B8]">BGE-M3 + TimesFM</span>
+          <span className="font-mono text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Reliance O2C
+          </span>
         </div>
       </div>
     </aside>
