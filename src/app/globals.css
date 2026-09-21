@@ -10,15 +10,16 @@
   --ril-gold-dark: #8F7640;
   --ril-gold-glow: rgba(191, 161, 97, 0.18);
   
-  /* Light Theme (Default clean minimal white) */
-  --bg-canvas: #FFFFFF;
-  --bg-surface: #F8F9FA;
+  /* Light Theme (Frosted Apple Glass) */
+  --bg-canvas: #F8F9FA;
+  --bg-surface: #FFFFFF;
   --bg-elevated: #F1F3F5;
-  --bg-card: #FFFFFF;
-  --bg-overlay: rgba(255, 255, 255, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.78);
+  --bg-overlay: rgba(255, 255, 255, 0.88);
 
-  --border-subtle: #E4E4E7;
-  --border-muted: #D4D4D8;
+  --border-subtle: rgba(228, 228, 231, 0.8);
+  --border-muted: rgba(212, 212, 216, 0.9);
+  --border-specular: rgba(255, 255, 255, 0.95);
   --border-focus: #BFA161;
 
   --text-primary: #09090B;
@@ -30,18 +31,22 @@
   --status-negative: #E11D48;
   --status-warning: #D97706;
   --status-info: #0284C7;
+
+  --glass-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.04), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-shadow-hover: 0 30px 60px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(191, 161, 97, 0.3), inset 0 1px 2px 0 rgba(255, 255, 255, 1);
 }
 
 .dark {
-  /* Dark Theme (Obsidian minimal black) */
+  /* Dark Theme (Apple visionOS Smoked Obsidian Glass) */
   --bg-canvas: #09090B;
-  --bg-surface: #121216;
-  --bg-elevated: #18181F;
-  --bg-card: #121216;
-  --bg-overlay: rgba(9, 9, 11, 0.9);
+  --bg-surface: #121217;
+  --bg-elevated: #181820;
+  --bg-card: rgba(18, 18, 24, 0.72);
+  --bg-overlay: rgba(9, 9, 11, 0.88);
 
-  --border-subtle: #27272A;
-  --border-muted: #3F3F46;
+  --border-subtle: rgba(39, 39, 42, 0.8);
+  --border-muted: rgba(63, 63, 70, 0.9);
+  --border-specular: rgba(255, 255, 255, 0.22);
   --border-focus: #BFA161;
 
   --text-primary: #FAFAFA;
@@ -53,6 +58,9 @@
   --status-negative: #F43F5E;
   --status-warning: #F59E0B;
   --status-info: #38BDF8;
+
+  --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.16);
+  --glass-shadow-hover: 0 35px 70px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 30px -5px rgba(191, 161, 97, 0.22), inset 0 1px 2px 0 rgba(255, 255, 255, 0.3);
 }
 
 body {
@@ -60,7 +68,7 @@ body {
   color: var(--text-primary);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Custom terminal monospaced & tabular figures */
@@ -84,26 +92,62 @@ body {
   background: var(--ril-gold);
 }
 
-/* Obsidian UI Glass & Surface styles */
-.obsidian-box {
+/* Apple 3D Glass Surface */
+.apple-glass {
   background-color: var(--bg-card);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
   border: 1px solid var(--border-subtle);
-  border-radius: 0.875rem;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border-top: 1px solid var(--border-specular);
+  box-shadow: var(--glass-shadow);
+  border-radius: 1.25rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
 }
 
-.obsidian-box:hover {
-  border-color: var(--border-muted);
-  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
+.apple-glass:hover {
+  box-shadow: var(--glass-shadow-hover);
 }
 
-.dark .obsidian-box:hover {
-  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
-  border-color: #52525B;
+/* 3D Transform Utilities */
+.preserve-3d {
+  transform-style: preserve-3d;
 }
 
-.gold-glow {
-  box-shadow: 0 0 20px -3px rgba(191, 161, 97, 0.25);
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.translate-z-10 {
+  transform: translateZ(10px);
+}
+
+.translate-z-20 {
+  transform: translateZ(20px);
+}
+
+.translate-z-30 {
+  transform: translateZ(30px);
+}
+
+/* Glass Pill Badge */
+.glass-pill {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Neon glows for stats and confidence scores */
+.glow-gold {
+  box-shadow: 0 0 16px -2px rgba(191, 161, 97, 0.35);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 16px -2px rgba(16, 185, 129, 0.35);
+}
+
+.glow-sky {
+  box-shadow: 0 0 16px -2px rgba(56, 189, 248, 0.35);
 }
 
 /* Pulse animation for live data ticks */
