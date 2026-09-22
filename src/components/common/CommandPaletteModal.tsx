@@ -76,7 +76,7 @@ export default function CommandPaletteModal({
     } else if (item.type === 'DECISION' || item.type === 'ASSUMPTION') {
       router.push('/executive');
     } else {
-      router.push(`/documents`);
+      router.push(`/ai?q=${encodeURIComponent(item.title)}`);
     }
   };
 
@@ -105,7 +105,7 @@ export default function CommandPaletteModal({
                 handleAskAI();
               }
             }}
-            placeholder="Ask AI, or search documents, feedstocks, plant assets..."
+            placeholder="Ask AI, or search markets, feedstocks, plant assets..."
             className="w-full h-14 bg-transparent text-sm text-[#F8FAFC] placeholder-[#64748B] focus:outline-none"
           />
           {query && (

@@ -21,7 +21,6 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
   const navTabs = [
     { label: 'Ask', href: '/', isActive: pathname === '/' || pathname === '/ai' },
     { label: 'Markets', href: '/market', isActive: pathname.startsWith('/market') },
-    { label: 'Research', href: '/documents', isActive: pathname.startsWith('/documents') },
     { label: 'Models', href: '/simulation', isActive: pathname === '/simulation' || pathname === '/scenarios' },
   ];
 

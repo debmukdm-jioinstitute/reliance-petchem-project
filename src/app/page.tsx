@@ -485,7 +485,7 @@ export default function OverviewPage() {
               <div className="space-y-2.5">
                 {/* Highlight Item 1 */}
                 <Link
-                  href="/documents"
+                  href="/economics"
                   className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -516,7 +516,7 @@ export default function OverviewPage() {
 
                 {/* Highlight Item 2 */}
                 <Link
-                  href="/documents"
+                  href="/project"
                   className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -547,7 +547,7 @@ export default function OverviewPage() {
 
                 {/* Highlight Item 3 */}
                 <Link
-                  href="/documents/doc-proposal"
+                  href="/project"
                   className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
@@ -627,10 +627,10 @@ export default function OverviewPage() {
 
               <div className="space-y-2">
                 {[
-                  { name: 'AI Cracker Industry Doc', href: '/documents' },
-                  { name: 'Group 9 Live Proposal', href: '/documents' },
+                  { name: 'Cracker Value Chain Model', href: '/economics' },
+                  { name: 'Group 9 Project Charter', href: '/project' },
                   { name: 'Market Data Feed', href: '/market' },
-                  { name: 'Cracker Asset Register', href: '/project' }
+                  { name: 'Cracker Asset Register', href: '/project/capex' }
                 ].map((item, idx) => (
                   <Link
                     key={idx}

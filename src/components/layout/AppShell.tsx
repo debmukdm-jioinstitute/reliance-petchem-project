@@ -34,7 +34,6 @@ const PATH_TITLES: Record<string, string> = {
   '/ai': 'AI Copilot Studio',
   '/alerts': 'Active System Alerts',
   '/financial': 'Financial Realization',
-  '/documents': 'Institutional Knowledge Base',
   '/competitive-intelligence': 'Peer & Competitive Radar',
 };
 

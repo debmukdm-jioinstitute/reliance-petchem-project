@@ -34,7 +34,7 @@ All facts, numbers, quotes, and assumptions are grounded in verified source docu
 
 ---
 
-## 18 Primary Navigation Modules
+## Primary Navigation Modules
 
 1. **`01 OVERVIEW` (`/`)**: Executive command center, live ticker strip, 12 clickable KPI cards, "What Changed" chronological change feed, natural language query bar.
 2. **`02 EXECUTIVE INTELLIGENCE` (`/executive`)**: AI-generated 60-second briefing, Today's Signals (Positive, Negative, Watch, Critical), Top 5 Developments, Decisions Register, Open Questions, Leadership Attention sentinel.
@@ -47,13 +47,12 @@ All facts, numbers, quotes, and assumptions are grounded in verified source docu
 9. **`09 OPERATIONS` (`/operations`)**: Sub-day switching dynamics, VLEC fleet tracking (6+3 vessels), Dahej pipeline, and plant mass balances.
 10. **`10 COMPETITIVE INTELLIGENCE` (`/competitive-intelligence`)**: Peer AI use case benchmark matrix (ExxonMobil, Dow, SABIC, BASF, LyondellBasell) and global oversupply analysis.
 11. **`11 AI RESEARCH` (`/ai-research`)**: Academic literature review from ACS Omega, ScienceDirect, and Ind. Eng. Chem. Res.
-12. **`12 DOCUMENTS` (`/documents`)**: Chunk-level document intelligence viewer with BGE-M3 vector embedding annotations.
-13. **`13 DATA` (`/data`)**: Pluggable `DataProvider` interface, latency monitors, and automated data quality scoring.
-14. **`14 ALERTS` (`/alerts`)**: Market shock detection, assumption cascade, and automatic downstream scenario recalculation.
-15. **`15 ACTION CENTER` (`/actions`)**: Extracted action items, owners, deadlines, priority levels, and execution evidence.
-16. **`16 KNOWLEDGE GRAPH` (`/knowledge-graph`)**: Palantir-grade interactive force-directed network graph connecting entities, plants, commodities, decisions, and relationships.
-17. **`17 AI COPILOT` (`/ai`)**: 3-column multi-agent conversational reasoning engine with live context panel, classification tags (FACT, MODEL OUTPUT, INFERENCE), and "Why Did AI Say This?" audit trail.
-18. **`18 SETTINGS` (`/settings`)**: Open-source first `ModelRouter` configuration (Ollama, vLLM, BGE-M3, TimesFM) and role-based access control.
+12. **`12 DATA` (`/data`)**: Pluggable `DataProvider` interface, latency monitors, and automated data quality scoring.
+13. **`13 ALERTS` (`/alerts`)**: Market shock detection, assumption cascade, and automatic downstream scenario recalculation.
+14. **`14 ACTION CENTER` (`/actions`)**: Extracted action items, owners, deadlines, priority levels, and execution evidence.
+15. **`15 KNOWLEDGE GRAPH` (`/knowledge-graph`)**: Palantir-grade interactive force-directed network graph connecting entities, plants, commodities, decisions, and relationships.
+16. **`16 AI COPILOT` (`/ai`)**: 3-column multi-agent conversational reasoning engine with live context panel, classification tags (FACT, MODEL OUTPUT, INFERENCE), and "Why Did AI Say This?" audit trail.
+17. **`17 SETTINGS` (`/settings`)**: Open-source first `ModelRouter` configuration (Ollama, vLLM, BGE-M3, TimesFM) and role-based access control.
 
 ---
 

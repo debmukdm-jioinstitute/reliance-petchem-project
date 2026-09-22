@@ -9,7 +9,6 @@ import {
   BarChart2,
   Ship,
   TrendingUp,
-  FileText,
   ClipboardList,
   Settings
 } from 'lucide-react';
@@ -51,12 +50,6 @@ const NAV_ITEMS: NavItem[] = [
     name: 'Scenario Analysis',
     href: '/scenarios',
     icon: TrendingUp,
-  },
-  {
-    id: 'news-insights',
-    name: 'News & Insights',
-    href: '/documents',
-    icon: FileText,
   },
   {
     id: 'reports',
