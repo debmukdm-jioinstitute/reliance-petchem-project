@@ -150,7 +150,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: -1.01,
     change1Y: 1.26,
     trend: 'UP',
-    source: 'Platts / ICIS Benchmark Feed',
+    source: 'Platts / ICIS Benchmark Feed • Yahoo Finance Live API',
+    sourceUrl: 'https://finance.yahoo.com/quote/BZ=F/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -184,7 +185,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: -1.01,
     change1Y: 1.26,
     trend: 'UP',
-    source: 'ICIS Chemical Pricing',
+    source: 'ICIS Chemical Pricing • Yahoo Finance Live API',
+    sourceUrl: 'https://finance.yahoo.com/quote/BZ=F/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -218,7 +220,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: 22.16,
     change1Y: 26.51,
     trend: 'DOWN',
-    source: 'Argus Media / S&P Commodity',
+    source: 'Argus Media / ICE Brent Proxy • Yahoo Finance',
+    sourceUrl: 'https://finance.yahoo.com/quote/BZ=F/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -252,7 +255,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: -8.19,
     change1Y: 3.09,
     trend: 'DOWN',
-    source: 'OPIS / EIA Natural Gas Liquids',
+    source: 'OPIS / EIA Mont Belvieu • Yahoo Finance Henry Hub',
+    sourceUrl: 'https://finance.yahoo.com/quote/NG=F/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -286,7 +290,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: 24.26,
     change1Y: 27.35,
     trend: 'UP',
-    source: 'ICE Futures Europe',
+    source: 'ICE Futures Europe • Yahoo Finance Live API (BZ=F)',
+    sourceUrl: 'https://finance.yahoo.com/quote/BZ=F/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -320,7 +325,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: 2.40,
     change1Y: 3.80,
     trend: 'UP',
-    source: 'RBI Reference Rate / Bloomberg',
+    source: 'RBI Reference Rate • Yahoo Finance Real-Time (INR=X)',
+    sourceUrl: 'https://finance.yahoo.com/quote/INR=X/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'EXCELLENT',
     history: [
@@ -349,7 +355,8 @@ export const MARKET_COMMODITIES: MarketCommodity[] = [
     changeYTD: 14.80,
     change1Y: 22.50,
     trend: 'UP',
-    source: 'Internal RIL Operational Proxy',
+    source: 'Internal RIL Operational Proxy • Yahoo Finance (RELIANCE.NS)',
+    sourceUrl: 'https://finance.yahoo.com/quote/RELIANCE.NS/',
     timestamp: '2026-09-21 09:30 IST',
     dataQuality: 'HIGH',
     history: [

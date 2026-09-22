@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, ArrowDownRight, Minus, Activity, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Minus, Activity, RefreshCw, ExternalLink } from 'lucide-react';
 import { useMarket } from '@/context/MarketContext';
 
 import PriceInfoIcon from '@/components/common/PriceInfoIcon';
@@ -31,28 +31,20 @@ export default function MarketTickerStrip() {
         {commodities.map((c) => {
           const isUp = c.change1D > 0;
           const isDown = c.change1D < 0;
-          const targetHref = c.id === 'comm-ethylene' 
-            ? '/market?tab=products&item=ethylene'
-            : c.id === 'comm-propylene'
-            ? '/market?tab=products&item=propylene'
-            : c.id === 'comm-naphtha'
-            ? '/market?tab=feedstocks&item=naphtha'
-            : c.id === 'comm-ethane'
-            ? '/market?tab=feedstocks&item=ethane'
-            : c.id === 'comm-brent'
-            ? '/market?tab=energy&item=brent'
-            : c.id === 'comm-fx-usdinr'
-            ? '/market?tab=fx'
-            : '/market';
+          const sourceLink = c.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/';
 
           return (
             <div key={c.id} className="flex items-center gap-1.5">
-              <Link
-                href={targetHref}
-                className="flex items-center gap-2 group hover:text-[#BFA161] transition-colors"
+              <a
+                href={sourceLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Live tick from ${c.source} (Click to open Yahoo Finance quote)`}
+                className="flex items-center gap-2 group hover:text-[#BFA161] transition-colors cursor-pointer"
               >
-                <span className="text-neutral-500 dark:text-neutral-400 font-semibold group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
+                <span className="text-neutral-500 dark:text-neutral-400 font-semibold group-hover:text-neutral-900 dark:group-hover:text-white transition-colors flex items-center gap-1">
                   {c.symbol}
+                  <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-80 transition-opacity" />
                 </span>
                 <span className="font-mono font-bold text-neutral-900 dark:text-neutral-100">
                   {c.currency === 'USD' ? '$' : '₹'}
@@ -77,7 +69,7 @@ export default function MarketTickerStrip() {
                   {isUp ? '+' : ''}
                   {c.change1D.toFixed(2)}%
                 </span>
-              </Link>
+              </a>
               <PriceInfoIcon
                 commodityId={c.id}
                 currentPrice={c.currentPrice}

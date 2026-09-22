@@ -382,7 +382,16 @@ function MarketContent() {
 
           <div className="flex items-center justify-between text-xs text-neutral-500 pt-2 border-t border-neutral-200/80 dark:border-white/10 font-mono">
             <div className="flex items-center gap-2">
-              <span>Source: {selectedCommodity.source}</span>
+              <a
+                href={selectedCommodity.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-amber-600 dark:hover:text-[#D4BA7B] transition-colors flex items-center gap-1 group"
+                title="Click to view live market source quote on Yahoo Finance"
+              >
+                <span>Source: {selectedCommodity.source}</span>
+                <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100" />
+              </a>
               <PriceInfoIcon
                 commodityId={selectedCommodity.id}
                 size="xs"
@@ -538,8 +547,18 @@ function MarketContent() {
                     <td className={`py-3.5 px-5 font-mono font-bold ${c.change1Y >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                       {c.change1Y >= 0 ? '+' : ''}{c.change1Y}%
                     </td>
-                    <td className="py-3.5 px-5 font-mono text-xs text-neutral-500">
-                      {c.source}
+                    <td className="py-3.5 px-5 font-mono text-xs">
+                      <a
+                        href={c.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-neutral-500 hover:text-amber-600 dark:hover:text-[#D4BA7B] transition-colors inline-flex items-center gap-1 group"
+                        title="Click to view live source quote on Yahoo Finance"
+                      >
+                        <span className="truncate max-w-[200px]">{c.source}</span>
+                        <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100 shrink-0" />
+                      </a>
                     </td>
                   </tr>
                 );

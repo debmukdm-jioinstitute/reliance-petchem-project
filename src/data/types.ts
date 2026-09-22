@@ -54,6 +54,7 @@ export interface MarketCommodity {
   change1Y: number;
   trend: 'UP' | 'DOWN' | 'FLAT';
   source: string;
+  sourceUrl?: string;
   timestamp: string;
   dataQuality: 'EXCELLENT' | 'HIGH' | 'ESTIMATED';
   history: {
@@ -61,6 +62,27 @@ export interface MarketCommodity {
     price: number;
     volume?: number;
   }[];
+}
+
+export interface BrentTimeframeInfo {
+  price: number;
+  changePercent: number;
+  changeValue: number;
+  label: string;
+  points: number[];
+  isUp: boolean;
+}
+
+export interface BrentChartData {
+  symbol: string;
+  sourceUrl: string;
+  lastUpdated: string;
+  timeframes: {
+    '1D': BrentTimeframeInfo;
+    '1W': BrentTimeframeInfo;
+    '1M': BrentTimeframeInfo;
+    '1Y': BrentTimeframeInfo;
+  };
 }
 
 export interface ForecastModelMetrics {

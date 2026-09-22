@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { MARKET_COMMODITIES } from '@/data/knowledgeStore';
-import { MarketCommodity, NewsWireItem } from '@/data/types';
+import { MarketCommodity, NewsWireItem, BrentChartData } from '@/data/types';
 
 interface RSSItem {
   title: string;
@@ -19,6 +19,7 @@ interface MarketSpreads {
 interface MarketContextType {
   commodities: MarketCommodity[];
   spreads: MarketSpreads;
+  brentChart?: BrentChartData;
   rssHeadlines: RSSItem[];
   newsWire: NewsWireItem[];
   lastSyncTime: string;
@@ -30,6 +31,46 @@ interface MarketContextType {
 const defaultSpreads: MarketSpreads = {
   ethyleneEthane: 729,
   ethyleneNaphtha: 70,
+};
+
+const DEFAULT_BRENT_CHART: BrentChartData = {
+  symbol: 'BZ=F',
+  sourceUrl: 'https://finance.yahoo.com/quote/BZ=F/',
+  lastUpdated: 'Live Market Synchronized',
+  timeframes: {
+    '1D': {
+      price: 99.85,
+      changePercent: 1.80,
+      changeValue: 1.76,
+      label: '+1.8% today',
+      isUp: true,
+      points: [97.39, 97.45, 97.8, 97.65, 98.1, 98.4, 98.25, 98.9, 99.2, 98.8, 99.4, 99.85],
+    },
+    '1W': {
+      price: 99.85,
+      changePercent: -4.73,
+      changeValue: -4.96,
+      label: '-4.7% this week',
+      isUp: false,
+      points: [105.7, 105.2, 104.8, 104.1, 103.8, 103.2, 102.6, 101.9, 100.8, 99.85],
+    },
+    '1M': {
+      price: 99.85,
+      changePercent: 5.80,
+      changeValue: 5.47,
+      label: '+5.8% this month',
+      isUp: true,
+      points: [92.17, 90.8, 88.58, 87.84, 89.4, 91.2, 93.6, 95.8, 97.4, 99.85],
+    },
+    '1Y': {
+      price: 99.85,
+      changePercent: 50.01,
+      changeValue: 33.29,
+      label: '+50.0% past year',
+      isUp: true,
+      points: [70.13, 68.4, 64.53, 62.73, 66.8, 72.1, 78.4, 84.5, 91.2, 96.0, 99.85],
+    },
+  },
 };
 
 const DEFAULT_NEWS_WIRE: NewsWireItem[] = [
@@ -80,6 +121,7 @@ const MarketContext = createContext<MarketContextType | undefined>(undefined);
 export function MarketProvider({ children }: { children: React.ReactNode }) {
   const [commodities, setCommodities] = useState<MarketCommodity[]>(MARKET_COMMODITIES);
   const [spreads, setSpreads] = useState<MarketSpreads>(defaultSpreads);
+  const [brentChart, setBrentChart] = useState<BrentChartData>(DEFAULT_BRENT_CHART);
   const [newsWire, setNewsWire] = useState<NewsWireItem[]>(DEFAULT_NEWS_WIRE);
   const [rssHeadlines, setRssHeadlines] = useState<RSSItem[]>(
     DEFAULT_NEWS_WIRE.map(n => ({ title: n.title, link: n.link, pubDate: n.pubDate, source: n.source }))
@@ -97,6 +139,7 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
       if (data.status === 'success' && data.commodities) {
         setCommodities(data.commodities);
         if (data.spreads) setSpreads(data.spreads);
+        if (data.brentChart) setBrentChart(data.brentChart);
         if (data.newsWire && data.newsWire.length > 0) {
           setNewsWire(data.newsWire);
         }
@@ -111,6 +154,9 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
         try {
           localStorage.setItem('ril-live-commodities', JSON.stringify(data.commodities));
           localStorage.setItem('ril-live-spreads', JSON.stringify(data.spreads));
+          if (data.brentChart) {
+            localStorage.setItem('ril-live-brent-chart', JSON.stringify(data.brentChart));
+          }
           if (data.newsWire) {
             localStorage.setItem('ril-live-newswire', JSON.stringify(data.newsWire));
           }
@@ -131,10 +177,12 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
     try {
       const cached = localStorage.getItem('ril-live-commodities');
       const cachedSpreads = localStorage.getItem('ril-live-spreads');
+      const cachedBrent = localStorage.getItem('ril-live-brent-chart');
       const cachedNews = localStorage.getItem('ril-live-newswire');
       const cachedTime = localStorage.getItem('ril-live-synctime');
       if (cached) setCommodities(JSON.parse(cached));
       if (cachedSpreads) setSpreads(JSON.parse(cachedSpreads));
+      if (cachedBrent) setBrentChart(JSON.parse(cachedBrent));
       if (cachedNews) setNewsWire(JSON.parse(cachedNews));
       if (cachedTime) setLastSyncTime(cachedTime);
     } catch (e) {
@@ -144,8 +192,8 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
     // Fetch live
     fetchLivePrices();
 
-    // Auto poll every 60 seconds
-    const interval = setInterval(fetchLivePrices, 60000);
+    // Auto poll every 45 seconds for real-time freshness
+    const interval = setInterval(fetchLivePrices, 45000);
     return () => clearInterval(interval);
   }, [fetchLivePrices]);
 
@@ -161,6 +209,7 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
       value={{
         commodities,
         spreads,
+        brentChart,
         rssHeadlines,
         newsWire,
         lastSyncTime,

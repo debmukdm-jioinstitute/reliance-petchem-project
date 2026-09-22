@@ -24,6 +24,20 @@ import {
 } from 'lucide-react';
 import { getCommodityIntelligence, CommodityIntelligenceData } from '@/data/commodityIntelligence';
 
+const YAHOO_SOURCE_MAP: Record<string, string> = {
+  'comm-brent': 'https://finance.yahoo.com/quote/BZ=F/',
+  'comm-natgas': 'https://finance.yahoo.com/quote/NG=F/',
+  'comm-fx-usdinr': 'https://finance.yahoo.com/quote/INR=X/',
+  'comm-ethane': 'https://finance.yahoo.com/quote/NG=F/',
+  'comm-naphtha': 'https://finance.yahoo.com/quote/BZ=F/',
+  'comm-ethylene': 'https://finance.yahoo.com/quote/BZ=F/',
+  'comm-propylene': 'https://finance.yahoo.com/quote/BZ=F/',
+  'comm-hdpe': 'https://finance.yahoo.com/quote/RELIANCE.NS/',
+  'comm-pp': 'https://finance.yahoo.com/quote/RELIANCE.NS/',
+  'comm-meg': 'https://finance.yahoo.com/quote/RELIANCE.NS/',
+  'comm-o2c-margin': 'https://finance.yahoo.com/quote/RELIANCE.NS/',
+};
+
 interface PriceInfoIconProps {
   commodityId: string;
   currentPrice?: number | string;
@@ -132,7 +146,6 @@ export default function PriceInfoIcon({
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-20 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 -right-24 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
         {/* TOP EXECUTIVE HEADER */}
         <div className="flex items-start justify-between gap-4 p-5 sm:p-7 border-b border-neutral-800/80 bg-neutral-900/60 relative z-10 shrink-0">
           <div className="space-y-2">
@@ -147,6 +160,16 @@ export default function PriceInfoIcon({
               <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
                 {info.updateFrequency}
               </span>
+              <a
+                href={YAHOO_SOURCE_MAP[commodityId] || 'https://finance.yahoo.com/quote/BZ=F/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-semibold rounded-lg bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-colors"
+                title="View live quote on Yahoo Finance"
+              >
+                <span>Yahoo Finance</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
             <h2 id={titleId} className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white font-mono flex items-center gap-2">

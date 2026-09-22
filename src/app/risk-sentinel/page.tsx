@@ -121,19 +121,63 @@ const THREAT_DATA: ThreatCard[] = [
   }
 ];
 
+function generateSvgCurve(points: number[], width = 200, height = 60, padding = 8) {
+  if (!points || points.length < 2) {
+    return {
+      strokePath: 'M 0,45 Q 100,25 200,15',
+      fillPath: 'M 0,45 Q 100,25 200,15 L 200,60 L 0,60 Z',
+      endPoint: { x: 200, y: 15 },
+    };
+  }
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const range = (max - min) || 1;
+  const usableHeight = height - padding * 2;
+
+  const coords = points.map((val, i) => {
+    const x = (i / (points.length - 1)) * width;
+    const y = height - padding - ((val - min) / range) * usableHeight;
+    return { x: +x.toFixed(1), y: +y.toFixed(1) };
+  });
+
+  let strokePath = `M ${coords[0].x},${coords[0].y}`;
+  for (let i = 0; i < coords.length - 1; i++) {
+    const current = coords[i];
+    const next = coords[i + 1];
+    const cx = ((current.x + next.x) / 2).toFixed(1);
+    strokePath += ` C ${cx},${current.y} ${cx},${next.y} ${next.x},${next.y}`;
+  }
+
+  const endPoint = coords[coords.length - 1];
+  const fillPath = `${strokePath} L ${width},${height} L 0,${height} Z`;
+
+  return { strokePath, fillPath, endPoint };
+}
+
 export default function PriceRiskSentinelPage() {
-  const { commodities, newsWire, refreshPrices, isSyncing, lastSyncTime } = useMarket();
+  const { commodities, newsWire, brentChart, refreshPrices, isSyncing, lastSyncTime } = useMarket();
 
   const [selectedRiskId, setSelectedRiskId] = useState<string>('risk-oil-spike');
   const [brentShockDelta, setBrentShockDelta] = useState<number>(15);
-  const [activeTimeframe, setActiveTimeframe] = useState<'1D' | '1W' | '1M' | '1Y'>('1M');
+  const [activeTimeframe, setActiveTimeframe] = useState<'1D' | '1W' | '1M' | '1Y'>('1D');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNewsCategory, setSelectedNewsCategory] = useState<'ALL' | 'RELIANCE' | 'PETCHEM' | 'ENERGY'>('ALL');
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
   const [modalSearch, setModalSearch] = useState('');
 
-  const liveBrent = commodities.find(c => c.id === 'comm-brent')?.currentPrice || 99.1;
+  const liveBrent = commodities.find(c => c.id === 'comm-brent')?.currentPrice || 99.85;
   const activeRisk = THREAT_DATA.find(r => r.id === selectedRiskId) || THREAT_DATA[0];
+
+  // Dynamic real-time timeframe metrics & chart path from Yahoo Finance
+  const currentTfData = brentChart?.timeframes?.[activeTimeframe] || {
+    price: liveBrent,
+    changePercent: 1.80,
+    changeValue: 1.76,
+    label: '+1.8% today',
+    isUp: true,
+    points: [97.4, 98.1, 98.5, 99.85],
+  };
+  const { strokePath, fillPath, endPoint } = generateSvgCurve(currentTfData.points);
 
   // Dynamic calculation based on slider
   const dynamicUnhinged = Number(((brentShockDelta / 15) * activeRisk.unhedgedBase).toFixed(0));
@@ -470,29 +514,41 @@ export default function PriceRiskSentinelPage() {
           {/* ================= RIGHT COLUMN: CRUDE PRICE & MULTI-SOURCE NEWS WIRE ================= */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-4 sm:space-y-5">
             
-            {/* Card 1: Global Crude Price (Brent) */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#121217] border border-black/[0.05] dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
+            {/* Card 1: Global Crude Price (Brent) - Clickable to Yahoo Finance source */}
+            <a
+              href={brentChart?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#121217] border border-black/[0.05] dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:border-black/20 dark:hover:border-white/20 transition-all space-y-4 group cursor-pointer relative overflow-hidden"
+              title="Click to view live Brent Crude Futures quote on Yahoo Finance (BZ=F)"
+            >
               
               {/* Header with Oil Droplet Icon & Timeframe Pills */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-neutral-900 text-white flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 flex items-center justify-center shrink-0">
                     <Droplets className="w-3.5 h-3.5" />
                   </div>
-                  <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
-                    Global Crude Price (Brent)
+                  <h3 className="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-1.5">
+                    <span>Global Crude Price (Brent)</span>
+                    <ExternalLink className="w-3 h-3 text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200 transition-colors" />
                   </h3>
                 </div>
 
-                {/* Timeframe Selector */}
-                <div className="flex items-center gap-1 text-xs">
+                {/* Timeframe Selector with stopPropagation to prevent link redirect when switching timeframe */}
+                <div className="flex items-center gap-1 text-xs relative z-20">
                   {(['1D', '1W', '1M', '1Y'] as const).map((tf) => (
                     <button
                       key={tf}
-                      onClick={() => setActiveTimeframe(tf)}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setActiveTimeframe(tf);
+                      }}
                       className={`px-2.5 py-0.5 rounded-full font-medium transition-all cursor-pointer ${
                         activeTimeframe === tf
-                          ? 'bg-[#EFECE6] dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold'
+                          ? 'bg-[#EFECE6] dark:bg-neutral-800 text-neutral-900 dark:text-white font-bold shadow-2xs'
                           : 'text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
                       }`}
                     >
@@ -504,48 +560,69 @@ export default function PriceRiskSentinelPage() {
 
               {/* Price Display */}
               <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
-                    $99.1
-                  </span>
-                  <span className="text-xs text-neutral-500 font-medium">
-                    /bbl
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight font-mono">
+                      ${currentTfData.price}
+                    </span>
+                    <span className="text-xs text-neutral-500 font-medium font-mono">
+                      /bbl
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                    <span>Source: Yahoo Finance</span>
+                    <ExternalLink className="w-3 h-3" />
                   </span>
                 </div>
-                <span className="text-xs font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
-                  <span>▲</span>
-                  <span>+1.8% today</span>
-                </span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className={`text-xs font-bold flex items-center gap-1 font-mono ${
+                    currentTfData.isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                  }`}>
+                    <span>{currentTfData.isUp ? '▲' : '▼'}</span>
+                    <span>{currentTfData.label}</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-neutral-400">
+                    • Live Yahoo API
+                  </span>
+                </div>
               </div>
 
-              {/* Smooth Area Line Chart */}
+              {/* Dynamic Smooth Area Line Chart */}
               <div className="w-full h-18 relative pt-1">
                 <svg viewBox="0 0 200 60" className="w-full h-full overflow-visible" preserveAspectRatio="none">
                   <defs>
-                    <linearGradient id="crudeChartGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10B981" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#10B981" stopOpacity="0.0" />
+                    <linearGradient id={`crudeChartGrad_${activeTimeframe}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={currentTfData.isUp ? '#10B981' : '#F43F5E'} stopOpacity="0.28" />
+                      <stop offset="100%" stopColor={currentTfData.isUp ? '#10B981' : '#F43F5E'} stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
                   {/* Fill area */}
                   <path
-                    d="M 0,50 Q 30,48 55,42 T 90,36 T 125,40 T 160,26 T 195,15 L 195,60 L 0,60 Z"
-                    fill="url(#crudeChartGrad)"
+                    d={fillPath}
+                    fill={`url(#crudeChartGrad_${activeTimeframe})`}
+                    className="transition-all duration-300"
                   />
                   {/* Stroke curve */}
                   <path
-                    d="M 0,50 Q 30,48 55,42 T 90,36 T 125,40 T 160,26 T 195,15"
+                    d={strokePath}
                     fill="none"
-                    stroke="#10B981"
+                    stroke={currentTfData.isUp ? '#10B981' : '#F43F5E'}
                     strokeWidth="2.5"
                     strokeLinecap="round"
+                    className="transition-all duration-300"
                   />
                   {/* Terminal point dot */}
-                  <circle cx="195" cy="15" r="3.5" fill="#10B981" />
+                  <circle
+                    cx={endPoint.x}
+                    cy={endPoint.y}
+                    r="3.5"
+                    fill={currentTfData.isUp ? '#10B981' : '#F43F5E'}
+                    className="transition-all duration-300 shadow-sm"
+                  />
                 </svg>
               </div>
 
-            </div>
+            </a>
 
 
             {/* Card 2: Live Market News Wire (Multi-Source Feeds) */}

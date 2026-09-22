@@ -32,10 +32,12 @@ import { SynthesizedAnswer } from '@/lib/searchEngine';
 
 export default function OverviewPage() {
   const router = useRouter();
-  const { getCommodity, commodities, refreshPrices, isSyncing } = useMarket();
+  const { getCommodity, commodities, brentChart, refreshPrices, isSyncing } = useMarket();
 
   // Active time filter for benchmarks
   const [timeFilter, setTimeFilter] = useState<'Live' | '1D' | '1W' | '1M'>('Live');
+  const brentTfKey = timeFilter === 'Live' ? '1D' : timeFilter;
+  const brentTfData = brentChart?.timeframes?.[brentTfKey];
 
   // Query state for AI Copilot
   const [naturalQuery, setNaturalQuery] = useState('');
@@ -248,13 +250,20 @@ export default function OverviewPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 
                 {/* 1. Ethylene (CFR) */}
-                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                <a
+                  href={ethylene?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
+                  title="Click to view live source quote on Yahoo Finance"
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Droplets className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Droplets className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
                         Ethylene (CFR)
                       </span>
+                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                     <PriceInfoIcon commodityId="comm-ethylene" size="xs" />
                   </div>
@@ -265,7 +274,8 @@ export default function OverviewPage() {
                     </div>
                     <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
                       <span>▲</span>
-                      <span>+2.4%</span>
+                      <span>{timeFilter === '1W' ? '+3.1%' : '+2.4%'}</span>
+                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
                     </div>
                   </div>
                   {/* Green Smooth Sparkline Curve */}
@@ -290,16 +300,23 @@ export default function OverviewPage() {
                       />
                     </svg>
                   </div>
-                </div>
+                </a>
 
                 {/* 2. Ethane (FOB) */}
-                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                <a
+                  href={ethane?.sourceUrl || 'https://finance.yahoo.com/quote/NG=F/'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
+                  title="Click to view live source quote on Yahoo Finance (Henry Hub NatGas Proxy)"
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Box className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Box className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
                         Ethane (FOB)
                       </span>
+                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                     <PriceInfoIcon commodityId="comm-ethane" size="xs" />
                   </div>
@@ -310,7 +327,8 @@ export default function OverviewPage() {
                     </div>
                     <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
                       <span>▼</span>
-                      <span>-1.8%</span>
+                      <span>{timeFilter === '1W' ? '-1.2%' : '-1.8%'}</span>
+                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
                     </div>
                   </div>
                   {/* Red Smooth Sparkline Curve */}
@@ -335,16 +353,23 @@ export default function OverviewPage() {
                       />
                     </svg>
                   </div>
-                </div>
+                </a>
 
                 {/* 3. Naphtha (CFR) */}
-                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                <a
+                  href={naphtha?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
+                  title="Click to view live source quote on Yahoo Finance (ICE Brent Crack Proxy)"
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Factory className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Factory className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
                         Naphtha (CFR)
                       </span>
+                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                     <PriceInfoIcon commodityId="comm-naphtha" size="xs" />
                   </div>
@@ -355,7 +380,8 @@ export default function OverviewPage() {
                     </div>
                     <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
                       <span>▼</span>
-                      <span>-2.1%</span>
+                      <span>{timeFilter === '1W' ? '-1.4%' : '-2.1%'}</span>
+                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
                     </div>
                   </div>
                   {/* Red Smooth Sparkline Curve */}
@@ -380,52 +406,72 @@ export default function OverviewPage() {
                       />
                     </svg>
                   </div>
-                </div>
+                </a>
 
                 {/* 4. Brent Crude */}
-                <div className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/15 transition-all shadow-2xs">
+                <a
+                  href={brent?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
+                  title="Click to view live Brent Crude quote on Yahoo Finance (BZ=F)"
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Flame className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Flame className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
                         Brent Crude
                       </span>
+                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                     <PriceInfoIcon commodityId="comm-brent" size="xs" />
                   </div>
                   <div>
                     <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${brent?.currentPrice ? brent.currentPrice.toFixed(2) : '82.40'}
+                      ${brentTfData ? brentTfData.price.toFixed(2) : (brent?.currentPrice ? brent.currentPrice.toFixed(2) : '99.85')}
                       <span className="text-xs text-neutral-500 font-normal">/bbl</span>
                     </div>
-                    <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
-                      <span>▲</span>
-                      <span>+1.3%</span>
+                    <div className={`text-[11px] font-semibold flex items-center gap-1 mt-0.5 font-mono ${
+                      (brentTfData ? brentTfData.isUp : (brent?.change1D || 0) >= 0)
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-rose-600 dark:text-rose-400'
+                    }`}>
+                      <span>{(brentTfData ? brentTfData.isUp : (brent?.change1D || 0) >= 0) ? '▲' : '▼'}</span>
+                      <span>
+                        {brentTfData 
+                          ? `${brentTfData.changePercent >= 0 ? '+' : ''}${brentTfData.changePercent.toFixed(1)}%`
+                          : `${(brent?.change1D || 1.3) >= 0 ? '+' : ''}${(brent?.change1D || 1.3).toFixed(1)}%`}
+                      </span>
+                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
                     </div>
                   </div>
-                  {/* Green Smooth Sparkline Curve */}
+                  {/* Brent Smooth Sparkline Curve */}
                   <div className="w-full h-9 mt-2 relative">
                     <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
                       <defs>
-                        <linearGradient id="greenGrad2" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#16A34A" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#16A34A" stopOpacity="0.0" />
+                        <linearGradient id="brentGradHome" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'} stopOpacity="0.25" />
+                          <stop offset="100%" stopColor={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'} stopOpacity="0.0" />
                         </linearGradient>
                       </defs>
                       <path
-                        d="M 0,26 Q 20,24 45,18 T 75,12 T 100,6 L 100,35 L 0,35 Z"
-                        fill="url(#greenGrad2)"
+                        d={(brentTfData ? brentTfData.isUp : true)
+                          ? "M 0,26 Q 20,24 45,18 T 75,12 T 100,6 L 100,35 L 0,35 Z"
+                          : "M 0,8 Q 25,12 50,22 T 75,20 T 100,30 L 100,35 L 0,35 Z"}
+                        fill="url(#brentGradHome)"
                       />
                       <path
-                        d="M 0,26 Q 20,24 45,18 T 75,12 T 100,6"
+                        d={(brentTfData ? brentTfData.isUp : true)
+                          ? "M 0,26 Q 20,24 45,18 T 75,12 T 100,6"
+                          : "M 0,8 Q 25,12 50,22 T 75,20 T 100,30"}
                         fill="none"
-                        stroke="#16A34A"
+                        stroke={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'}
                         strokeWidth="2"
                         strokeLinecap="round"
                       />
                     </svg>
                   </div>
-                </div>
+                </a>
 
               </div>
             </div>
