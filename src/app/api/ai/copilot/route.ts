@@ -5,7 +5,7 @@ import { performHybridSearch, SynthesizedAnswer } from '@/lib/searchEngine';
 import { searchTinyFish, buildAnswerFromTinyFish, TinyFishSearchResultItem } from '@/lib/tinyfish';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 25;
+export const maxDuration = 15;
 
 interface CopilotRequestBody {
   query: string;
@@ -14,11 +14,11 @@ interface CopilotRequestBody {
 
 function buildSystemPrompt(
   contextSnippets: string,
-  tinyFishSnippets: string,
+  liveWebSnippets: string,
   marketSnapshot: string,
   assetSummary: string
 ) {
-  return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard powered by TinyFish.
+  return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard.
 You have domain knowledge over:
 1. Reliance Industries Limited (RIL) O2C Business: Jamnagar, Dahej Cryogenic Terminal, Hazira, Nagothane, Vadodara, a VLEC fleet importing US ethane, and downstream polymer assets.
 2. Macroeconomics: Brent crude, US Mont Belvieu ethane prices, Asian Naphtha CFR, USD/INR, shipping freight rates, global petchem supply additions.
@@ -33,12 +33,12 @@ ${assetSummary}
 RETRIEVED PROJECT CONTEXT:
 ${contextSnippets || 'Reliance O2C operational architecture and feedstock balances.'}
 
-LIVE WEB INTELLIGENCE (VIA TINYFISH SEARCH API):
-${tinyFishSnippets || 'No external web search results found; answer from internal project data.'}
+REAL-TIME WEB INTELLIGENCE:
+${liveWebSnippets || 'No external web search results found; answer from internal project data.'}
 
 RULES:
 - Ground every number in the data given above, or say plainly when you are estimating.
-- Seamlessly blend real-time market data, TinyFish web intelligence, and cracker economics.
+- Seamlessly blend real-time market data, web intelligence, and cracker economics.
 - Be direct, strategic, and quantitative. No filler.
 - Respond with ONLY valid JSON, no markdown fences, matching exactly this schema:
 {
@@ -66,7 +66,7 @@ function toSynthesizedAnswer(
   parsed: unknown,
   trimmedQuery: string,
   searchHits: ReturnType<typeof performHybridSearch>,
-  tinyFishHits: TinyFishSearchResultItem[]
+  webHits: TinyFishSearchResultItem[]
 ): SynthesizedAnswer | null {
   const p = parsed as Record<string, unknown> | null;
   if (!p || typeof p.answer !== 'string') return null;
@@ -77,12 +77,12 @@ function toSynthesizedAnswer(
       : [];
 
   if (evidenceList.length === 0) {
-    // Populate with TinyFish live web results first
-    const tfEvidence = tinyFishHits.slice(0, 3).map((tf) => ({
-      sourceTitle: `${tf.site_name}: ${tf.title}`,
-      date: tf.date || 'Live 2026',
-      pageOrLine: tf.url,
-      quote: tf.snippet
+    // Populate with live web results first
+    const webEvidence = webHits.slice(0, 3).map((w) => ({
+      sourceTitle: `${w.site_name}: ${w.title}`,
+      date: w.date || 'Live 2026',
+      pageOrLine: w.url,
+      quote: w.snippet
     }));
 
     // Followed by local hybrid search hits
@@ -93,7 +93,7 @@ function toSynthesizedAnswer(
       quote: h.exactQuote || h.snippet
     }));
 
-    evidenceList = [...tfEvidence, ...localEvidence];
+    evidenceList = [...webEvidence, ...localEvidence];
   }
 
   return {
@@ -104,15 +104,16 @@ function toSynthesizedAnswer(
     evidence: evidenceList,
     numericalData: Array.isArray(p.numericalData) ? (p.numericalData as SynthesizedAnswer['numericalData']) : [],
     assumptions: Array.isArray(p.assumptions) ? (p.assumptions as string[]) : [],
-    uncertainty: typeof p.uncertainty === 'string' ? p.uncertainty : 'Grounded in TinyFish real-time search & RIL model telemetry.',
+    uncertainty: typeof p.uncertainty === 'string' ? p.uncertainty : 'Grounded in real-time market search & RIL model telemetry.',
     relatedAnalysis: Array.isArray(p.relatedAnalysis) ? (p.relatedAnalysis as string[]) : ['/economics', '/simulation', '/market'],
-    requiredAgents: ['TinyFish Search API', 'RIL O2C Copilot Engine']
+    requiredAgents: ['Real-Time Search Engine', 'RIL O2C Copilot Engine']
   };
 }
 
 async function tryOnlineLLM(systemPrompt: string, query: string): Promise<{ text: string } | null> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 12000);
+  // Fast 5.5s timeout for snappy responses
+  const timeoutId = setTimeout(() => controller.abort(), 5500);
   try {
     const response = await fetch('https://text.pollinations.ai/', {
       method: 'POST',
@@ -148,10 +149,10 @@ export async function POST(req: Request) {
     }
     const trimmedQuery = query.trim();
 
-    // 1. Fetch internal hybrid search context and TinyFish real-time web search in parallel
-    const [searchHits, tinyFishHits] = await Promise.all([
+    // 1. Fetch internal hybrid search context and backend real-time web search in parallel
+    const [searchHits, webHits] = await Promise.all([
       Promise.resolve(performHybridSearch(trimmedQuery)),
-      searchTinyFish(trimmedQuery, { limit: 6 })
+      searchTinyFish(trimmedQuery, { limit: 5 })
     ]);
 
     const contextSnippets = searchHits
@@ -164,13 +165,13 @@ export async function POST(req: Request) {
       )
       .join('\n\n');
 
-    const tinyFishSnippets = tinyFishHits
-      .slice(0, 5)
+    const liveWebSnippets = webHits
+      .slice(0, 4)
       .map(
-        (tf, i) =>
-          `[Web Search ${i + 1}] Source: "${tf.title}" (${tf.site_name}${tf.date ? ` • ${tf.date}` : ''})\n` +
-          `URL: ${tf.url}\n` +
-          `Content: ${tf.snippet}`
+        (w, i) =>
+          `[Web Search ${i + 1}] Source: "${w.title}" (${w.site_name}${w.date ? ` • ${w.date}` : ''})\n` +
+          `URL: ${w.url}\n` +
+          `Content: ${w.snippet}`
       )
       .join('\n\n');
 
@@ -187,26 +188,26 @@ export async function POST(req: Request) {
         `${a.siteName}: ${a.ethyleneCapacityKTA} KTA Ethylene, ${a.propyleneCapacityKTA} KTA Propylene, NPV $${a.npvUSD_Mn}M, IRR ${a.irrPct}%, Status: ${a.currentScheduleStatus}.`
     ).join('\n');
 
-    const systemPrompt = buildSystemPrompt(contextSnippets, tinyFishSnippets, marketSnapshot, assetSummary);
+    const systemPrompt = buildSystemPrompt(contextSnippets, liveWebSnippets, marketSnapshot, assetSummary);
 
-    // 2. Query cloud intelligence with TinyFish live web context
-    let providerUsed = 'TinyFish AI Agent + Cloud Intelligence';
+    // 2. Query cloud intelligence with real-time web context
+    let providerUsed = 'RIL Intelligence Engine (Live Web + Cloud)';
     let raw = await tryOnlineLLM(systemPrompt, trimmedQuery);
 
     let synthesizedResult: SynthesizedAnswer | null = null;
     if (raw) {
       try {
         const parsed = extractJson(raw.text);
-        synthesizedResult = toSynthesizedAnswer(parsed, trimmedQuery, searchHits, tinyFishHits);
+        synthesizedResult = toSynthesizedAnswer(parsed, trimmedQuery, searchHits, webHits);
       } catch {
         synthesizedResult = null;
       }
     }
 
-    // 3. Fallback: Synthesize directly from TinyFish Live Web Intelligence
+    // 3. High-speed synthesis fallback from real-time web intelligence
     if (!synthesizedResult) {
-      providerUsed = 'TinyFish AI Agent (Live Web Search)';
-      synthesizedResult = buildAnswerFromTinyFish(trimmedQuery, tinyFishHits);
+      providerUsed = 'RIL Intelligence Engine (Live Web Search)';
+      synthesizedResult = buildAnswerFromTinyFish(trimmedQuery, webHits);
     }
 
     return NextResponse.json({

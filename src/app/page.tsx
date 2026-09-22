@@ -43,7 +43,7 @@ export default function OverviewPage() {
   const [naturalQuery, setNaturalQuery] = useState('');
   const [isSolvingInline, setIsSolvingInline] = useState(false);
   const [inlineResult, setInlineResult] = useState<SynthesizedAnswer | null>(null);
-  const [inlineProvider, setInlineProvider] = useState<string>('TinyFish AI Agent');
+  const [inlineProvider, setInlineProvider] = useState<string>('RIL Intelligence Engine');
 
   // Active deep dive view toggle (SCADA, Economics, or Hidden)
   const [activeDeepDive, setActiveDeepDive] = useState<'none' | 'scada' | 'economics'>('none');
@@ -79,7 +79,7 @@ export default function OverviewPage() {
       const data = await res.json();
       if (data && data.answer) {
         setInlineResult(data.answer);
-        setInlineProvider(data.provider || 'TinyFish AI Agent');
+        setInlineProvider(data.provider || 'RIL Intelligence Engine');
       } else {
         router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
       }
@@ -122,7 +122,7 @@ export default function OverviewPage() {
                     Ask Intelligence
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-snug">
-                    Get quick answers from market data, cracker asset records, and TinyFish live web intelligence.
+                    Get quick answers from market data, cracker asset records, and live web intelligence.
                   </p>
                 </div>
 

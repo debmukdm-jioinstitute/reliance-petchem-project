@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const [llmProvider, setLlmProvider] = useState<string>('tinyfish');
+  const [llmProvider, setLlmProvider] = useState<string>('ril-engine');
   const [embeddingModel, setEmbeddingModel] = useState<string>('bge-m3');
   const [forecastEngine, setForecastEngine] = useState<string>('timesfm');
   const [activeRole, setActiveRole] = useState<string>('Leadership');
@@ -44,7 +44,7 @@ export default function SettingsPage() {
               PLATFORM SETTINGS & MODEL ROUTER
             </h1>
             <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              TinyFish agent routing, cloud model abstraction, embedding models, and enterprise role-based access control.
+              RIL ModelRouter intelligence abstraction, cloud models, embedding pipelines, and enterprise role-based access control.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function SettingsPage() {
                 onChange={(e) => setLlmProvider(e.target.value)}
                 className="w-full h-10 px-3 rounded-lg bg-[#0A0E17] border border-[#242F44] text-[#F8FAFC] focus:border-[#BFA161] focus:outline-none font-mono"
               >
-                <option value="tinyfish">TinyFish Web Agent & Search</option>
+                <option value="ril-engine">RIL Intelligence Engine (Live Web + Cloud)</option>
                 <option value="vllm">vLLM High-Throughput Server</option>
                 <option value="huggingface">Hugging Face Transformers</option>
                 <option value="api">Enterprise API Fallback</option>
