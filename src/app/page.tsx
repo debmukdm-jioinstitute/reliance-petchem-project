@@ -112,7 +112,7 @@ export default function OverviewPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           
           {/* ================= LEFT BENTO COLUMN: ASK INTELLIGENCE ================= */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <div className="rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative min-h-[640px] transition-all hover:shadow-[0_16px_48px_rgba(0,0,0,0.05)]">
               
               {/* Upper Section */}
@@ -204,7 +204,7 @@ export default function OverviewPage() {
 
 
           {/* ================= CENTER BENTO COLUMN: BENCHMARKS & GROUND TRUTH ================= */}
-          <div className="lg:col-span-6 space-y-5">
+          <div className="lg:col-span-8 space-y-5">
             
             {/* Top Center Card: Key Market Benchmarks */}
             <div className="p-6 sm:p-7 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-5">
@@ -611,100 +611,7 @@ export default function OverviewPage() {
           </div>
 
 
-          {/* ================= RIGHT BENTO COLUMN: CONTEXT, QUANT & AI ================= */}
-          <div className="lg:col-span-3 space-y-5">
-            
-            {/* Context Sources Card */}
-            <div className="p-6 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-3.5">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-neutral-900 dark:text-white font-sans">
-                  Context Sources
-                </h3>
-                <span className="w-6 h-6 rounded-full bg-[#FAF8F5] dark:bg-neutral-800 border border-black/[0.04] dark:border-white/10 text-[11px] font-bold text-neutral-600 dark:text-neutral-400 flex items-center justify-center font-mono shadow-2xs">
-                  4
-                </span>
-              </div>
 
-              <div className="space-y-2">
-                {[
-                  { name: 'Cracker Value Chain Model', href: '/economics' },
-                  { name: 'Group 9 Project Charter', href: '/project' },
-                  { name: 'Market Data Feed', href: '/market' },
-                  { name: 'Cracker Asset Register', href: '/project/capex' }
-                ].map((item, idx) => (
-                  <Link
-                    key={idx}
-                    href={item.href}
-                    className="p-3 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-2 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all group shadow-2xs"
-                  >
-                    <div className="flex items-center gap-2.5 truncate">
-                      <FileText className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                      <span className="truncate">{item.name}</span>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Quantitative Model Card */}
-            <div className="p-6 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-3.5">
-              <div className="flex items-center gap-2.5">
-                <BarChart2 className="w-4 h-4 text-neutral-800 dark:text-neutral-200" />
-                <h3 className="text-base font-bold text-neutral-900 dark:text-white font-sans">
-                  Quantitative Model
-                </h3>
-              </div>
-
-              <div className="space-y-2.5 pt-1">
-                {[
-                  'Google TimesFM',
-                  'LightGBM + AutoARIMA',
-                  'BAAI/bge-m3 (Embeddings)',
-                  '10,000-Run Monte Carlo'
-                ].map((spec, idx) => (
-                  <div key={idx} className="flex items-center gap-2.5 text-xs text-neutral-600 dark:text-neutral-400 font-medium">
-                    <span className="text-neutral-400 text-sm leading-none">✦</span>
-                    <span>{spec}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* AI for Better Decisions Card */}
-            <div className="relative rounded-[28px] overflow-hidden p-6 sm:p-7 min-h-[140px] flex flex-col justify-between shadow-xl group border border-neutral-800 select-none">
-              {/* Luxury Carbon Texture Background */}
-              <Image
-                src="/images/luxury_dark_texture.jpg"
-                alt="Luxury dark leather texture"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-              
-              <div className="relative z-10 flex items-center justify-between gap-3">
-                <div className="max-w-[170px]">
-                  <span className="text-base sm:text-lg font-bold text-white font-sans block leading-tight">
-                    AI for<br />Better Decisions
-                  </span>
-                </div>
-                <Link
-                  href="/ai"
-                  className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg cursor-pointer shrink-0"
-                  title="Launch AI Decision Engine"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              <div className="relative z-10 pt-4 flex justify-end">
-                <span className="text-[9px] tracking-[0.2em] font-mono text-neutral-400 uppercase">
-                  SMARTER TOMORROW
-                </span>
-              </div>
-            </div>
-
-          </div>
 
         </div>
 
