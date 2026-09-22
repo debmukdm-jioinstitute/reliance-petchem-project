@@ -21,6 +21,7 @@ const IntelligenceContext = createContext<IntelligenceContextType>({
 export const useIntelligence = () => useContext(IntelligenceContext);
 
 const PATH_TITLES: Record<string, string> = {
+  '/dashboard': 'Intelligence Dashboard',
   '/simulation': 'SCADA Simulation & Digital Twin',
   '/economics': 'Cracker Value Chain Economics',
   '/optimization': 'LP Feedstock Optimizer',
@@ -42,7 +43,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [auditId, setAuditId] = useState<string | null>(null);
 
-  const isSubpage = pathname !== '/' && pathname !== '/risk-sentinel';
+  const isSubpage = pathname !== '/' && pathname !== '/dashboard' && pathname !== '/risk-sentinel';
   const pageTitle = PATH_TITLES[pathname] || (pathname ? pathname.replace('/', '').replace(/-/g, ' ').toUpperCase() : 'Module');
 
   // ESC shortcut to return to home if on subpage and modals are closed

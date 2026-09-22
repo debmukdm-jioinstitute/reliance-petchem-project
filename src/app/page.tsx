@@ -1,665 +1,904 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import AppShell from '@/components/layout/AppShell';
 import {
-  Search,
   ArrowRight,
+  Zap,
+  BarChart3,
+  Brain,
+  Globe2,
+  Shield,
+  TrendingUp,
+  Shuffle,
   Activity,
-  DollarSign,
-  Cpu,
-  FileText,
   ChevronRight,
-  Sparkles,
-  BarChart2,
-  RefreshCw,
-  X,
-  Droplets,
-  Box,
-  Factory,
-  Flame,
-  CheckCircle2,
-  ExternalLink,
-  BookOpen
 } from 'lucide-react';
-import { useMarket } from '@/context/MarketContext';
-import ScadaDiagram, { ScadaState } from '@/components/scada/ScadaDiagram';
-import PriceInfoIcon from '@/components/common/PriceInfoIcon';
-import { SynthesizedAnswer } from '@/lib/searchEngine';
 
-export default function OverviewPage() {
-  const router = useRouter();
-  const { getCommodity, commodities, brentChart, refreshPrices, isSyncing } = useMarket();
+/* ─────────────────────────────────────────────
+   Particle canvas — matte-black atmosphere
+───────────────────────────────────────────── */
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let animId: number;
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
 
-  // Active time filter for benchmarks
-  const [timeFilter, setTimeFilter] = useState<'Live' | '1D' | '1W' | '1M'>('Live');
-  const brentTfKey = timeFilter === 'Live' ? '1D' : timeFilter;
-  const brentTfData = brentChart?.timeframes?.[brentTfKey];
+    const count = 120;
+    const particles = Array.from({ length: count }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.18,
+      vy: (Math.random() - 0.5) * 0.18,
+      opacity: Math.random() * 0.5 + 0.15,
+    }));
 
-  // Query state for AI Copilot
-  const [naturalQuery, setNaturalQuery] = useState('');
-  const [isSolvingInline, setIsSolvingInline] = useState(false);
-  const [inlineResult, setInlineResult] = useState<SynthesizedAnswer | null>(null);
-  const [inlineProvider, setInlineProvider] = useState<string>('RIL Intelligence Engine');
-
-  // Active deep dive view toggle (SCADA, Economics, or Hidden)
-  const [activeDeepDive, setActiveDeepDive] = useState<'none' | 'scada' | 'economics'>('none');
-
-  // SCADA state for cracker simulation
-  const [scadaState, setScadaState] = useState<ScadaState>({
-    ethaneRatio: 75,
-    naphthaRatio: 25,
-    throughputKtpa: 1850,
-    severity: 'HIGH',
-    furnaceCot: 852,
-    sorRatio: 0.40
-  });
-
-  const ethylene = getCommodity('comm-ethylene');
-  const propylene = getCommodity('comm-propylene');
-  const naphtha = getCommodity('comm-naphtha');
-  const ethane = getCommodity('comm-ethane');
-  const brent = getCommodity('comm-brent');
-
-  const runInlineSolve = async (queryToRun: string) => {
-    if (!queryToRun.trim() || isSolvingInline) return;
-    setIsSolvingInline(true);
-    setInlineResult(null);
-
-    try {
-      const res = await fetch('/api/ai/copilot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: queryToRun.trim() })
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(34,197,94,${p.opacity})`;
+        ctx.fill();
       });
-      if (!res.ok) throw new Error('API Error');
-      const data = await res.json();
-      if (data && data.answer) {
-        setInlineResult(data.answer);
-        setInlineProvider(data.provider || 'RIL Intelligence Engine');
-      } else {
-        router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
+      // Draw faint connection lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 90) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(34,197,94,${0.04 * (1 - dist / 90)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
       }
-    } catch (err) {
-      console.warn('Inline solve fallback:', err);
-      router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
-    } finally {
-      setIsSolvingInline(false);
-    }
-  };
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none"
+      style={{ zIndex: 0 }}
+    />
+  );
+}
 
-  const handlePromptSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!naturalQuery.trim()) return;
-    runInlineSolve(naturalQuery);
-  };
+/* ─────────────────────────────────────────────
+   Animated counter
+───────────────────────────────────────────── */
+function Counter({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
+  const [val, setVal] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        let start = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          start += step;
+          if (start >= target) { setVal(target); clearInterval(timer); }
+          else setVal(Math.floor(start));
+        }, 16);
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target]);
+  return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>;
+}
 
-  const quickQuestions = [
-    { label: 'Brent +20% impact', query: 'How does a +20% Brent crude oil spike impact RIL cracker EBITDA and margins?' },
-    { label: 'RIL cracks vs peers', query: 'How do Reliance dual-feed cracker economics compare against Asian naphtha peers?' },
-    { label: 'Ethane vs naphtha margin', query: 'What is the EBITDA margin advantage of ethane cracking over naphtha cracking?' },
-    { label: 'Dahej capacity limits', query: 'What is the throughput capacity of the Dahej ethane terminal and pipeline?' }
-  ];
+/* ─────────────────────────────────────────────
+   India SVG silhouette (simplified path)
+───────────────────────────────────────────── */
+function IndiaSilhouette() {
+  return (
+    <svg
+      viewBox="0 0 200 240"
+      className="w-full h-full opacity-[0.07]"
+      fill="#22c55e"
+    >
+      <path d="M95,5 L115,8 L130,15 L145,25 L155,40 L160,55 L158,70 L165,82 L170,95 
+               L168,108 L160,118 L155,130 L158,145 L162,158 L160,170 L152,182 
+               L145,190 L138,200 L130,210 L120,218 L112,225 L105,230 L100,235 
+               L95,230 L88,225 L80,218 L72,210 L62,200 L55,190 L48,182 L40,170 
+               L38,158 L42,145 L45,130 L40,118 L32,108 L30,95 L35,82 L42,70 
+               L40,55 L45,40 L55,25 L70,15 L85,8 Z" />
+      <path d="M105,230 L108,235 L100,240 L92,235 L95,230 Z" />
+    </svg>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main Landing Page
+───────────────────────────────────────────── */
+export default function LandingPage() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', move);
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
 
   return (
-    <AppShell>
-      <div className="max-w-[1680px] mx-auto space-y-6 animate-fadeIn pb-12">
-        
-        {/* MAIN BENTO GRID (MATCHING REFERENCE UI) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-          
-          {/* ================= LEFT BENTO COLUMN: ASK INTELLIGENCE ================= */}
-          <div className="lg:col-span-4">
-            <div className="rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative min-h-[640px] transition-all hover:shadow-[0_16px_48px_rgba(0,0,0,0.05)]">
-              
-              {/* Upper Section */}
-              <div className="p-6 sm:p-7 space-y-6 relative z-10">
-                <div className="space-y-1.5">
-                  <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
-                    Ask Intelligence
-                  </h2>
-                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-snug">
-                    Get quick answers from market data, cracker asset records, and live web intelligence.
-                  </p>
-                </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
-                {/* Prompt Box with Circular Black Arrow Button */}
-                <form 
-                  onSubmit={handlePromptSubmit}
-                  className="p-3.5 sm:p-4 rounded-2xl bg-[#F6F4EF]/80 dark:bg-neutral-900/80 border border-black/[0.04] dark:border-white/10 shadow-2xs space-y-3"
-                >
-                  <textarea
-                    rows={3}
-                    value={naturalQuery}
-                    onChange={(e) => setNaturalQuery(e.target.value)}
-                    placeholder="How does a +$10/bbl Brent spike impact RIL cracker EBITDA?"
-                    className="w-full bg-transparent text-xs sm:text-sm text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none resize-none font-medium leading-relaxed"
-                  />
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-[11px] font-mono text-neutral-400">
-                      {isSolvingInline ? 'Querying local model...' : 'Press Enter or Arrow'}
-                    </span>
-                    <button
-                      type="submit"
-                      disabled={isSolvingInline || !naturalQuery.trim()}
-                      className="w-8 h-8 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 cursor-pointer shadow-sm"
-                      title="Run Intelligence Query"
-                    >
-                      {isSolvingInline ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <ArrowRight className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </form>
+        * { box-sizing: border-box; }
 
-                {/* 4 Quick Pills Grid */}
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  {quickQuestions.map((q, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => {
-                        setNaturalQuery(q.query);
-                        runInlineSolve(q.query);
-                      }}
-                      disabled={isSolvingInline}
-                      className="px-3 py-2.5 rounded-full bg-[#EFECE6]/70 hover:bg-[#EAE6DF] dark:bg-neutral-900 dark:hover:bg-neutral-800 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 border border-black/[0.03] dark:border-white/5 transition-all text-center truncate disabled:opacity-50 cursor-pointer"
-                      title={q.query}
-                    >
-                      {q.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        .landing-root {
+          font-family: 'Outfit', sans-serif;
+          background: #07080A;
+          color: #fff;
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
 
-              {/* Lower Section: Golden Silk Ribbon Wave Graphic */}
-              <div className="relative w-full h-52 sm:h-56 mt-auto overflow-hidden pointer-events-none select-none">
-                <Image
-                  src="/images/golden_silk_ribbon.jpg"
-                  alt="Liquid gold fluid ribbon wave"
-                  fill
-                  className="object-cover object-bottom opacity-90 transition-opacity"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/90 dark:via-[#121218]/10 dark:to-[#121218]/90" />
-                
-                {/* Bottom tracked branding text */}
-                <div className="absolute bottom-5 left-6 z-10">
-                  <span className="text-[10px] tracking-[0.25em] font-mono font-bold text-neutral-500/80 dark:text-neutral-400 uppercase block">
-                    TURN DATA
-                  </span>
-                  <span className="text-[10px] tracking-[0.25em] font-mono font-bold text-neutral-500/80 dark:text-neutral-400 uppercase block">
-                    INTO CLARITY
-                  </span>
-                </div>
-              </div>
+        @keyframes aurora {
+          0%   { transform: translate(-50%,-50%) rotate(0deg) scale(1); }
+          50%  { transform: translate(-50%,-50%) rotate(180deg) scale(1.15); }
+          100% { transform: translate(-50%,-50%) rotate(360deg) scale(1); }
+        }
+        .aurora {
+          animation: aurora 18s linear infinite;
+        }
 
-            </div>
-          </div>
+        @keyframes float-slow {
+          0%,100% { transform: translateY(0px) rotate(0deg); }
+          50%      { transform: translateY(-12px) rotate(1deg); }
+        }
+        .float-slow { animation: float-slow 6s ease-in-out infinite; }
 
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up-0 { animation: fadeSlideUp 0.8s ease forwards; }
+        .fade-up-1 { animation: fadeSlideUp 0.8s 0.15s ease both; }
+        .fade-up-2 { animation: fadeSlideUp 0.8s 0.3s ease both; }
+        .fade-up-3 { animation: fadeSlideUp 0.8s 0.45s ease both; }
+        .fade-up-4 { animation: fadeSlideUp 0.8s 0.6s ease both; }
 
-          {/* ================= CENTER BENTO COLUMN: BENCHMARKS & GROUND TRUTH ================= */}
-          <div className="lg:col-span-8 space-y-5">
-            
-            {/* Top Center Card: Key Market Benchmarks */}
-            <div className="p-6 sm:p-7 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-5">
-              
-              {/* Header with Title & Time Range Filter */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
-                    Key Market Benchmarks
-                  </h3>
-                </div>
+        @keyframes pulse-ring {
+          0%   { transform: scale(1); opacity: 0.6; }
+          100% { transform: scale(2.4); opacity: 0; }
+        }
+        .pulse-ring {
+          animation: pulse-ring 2.2s ease-out infinite;
+        }
 
-                {/* Filter Pills matching reference UI */}
-                <div className="flex items-center gap-1 text-xs">
-                  <button
-                    onClick={() => setTimeFilter('Live')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold transition-all ${
-                      timeFilter === 'Live'
-                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-xs'
-                        : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Live</span>
-                  </button>
-                  {(['1D', '1W', '1M'] as const).map((tf) => (
-                    <button
-                      key={tf}
-                      onClick={() => setTimeFilter(tf)}
-                      className={`px-2.5 py-1 rounded-full font-medium transition-all ${
-                        timeFilter === tf
-                          ? 'bg-black dark:bg-white text-white dark:text-black font-semibold'
-                          : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-                      }`}
-                    >
-                      {tf}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        @keyframes shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .shimmer-text {
+          background: linear-gradient(90deg, #22c55e 0%, #86efac 30%, #22c55e 60%, #4ade80 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 3.5s linear infinite;
+        }
 
-              {/* 4 Benchmarks Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                
-                {/* 1. Ethylene (CFR) */}
-                <a
-                  href={ethylene?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
-                  title="Click to view live source quote on Yahoo Finance"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <Droplets className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
-                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
-                        Ethylene (CFR)
-                      </span>
-                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </div>
-                    <PriceInfoIcon commodityId="comm-ethylene" size="xs" />
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${ethylene?.currentPrice || 886}
-                      <span className="text-xs text-neutral-500 font-normal">/t</span>
-                    </div>
-                    <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5 font-mono">
-                      <span>▲</span>
-                      <span>{timeFilter === '1W' ? '+3.1%' : '+2.4%'}</span>
-                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
-                    </div>
-                  </div>
-                  {/* Green Smooth Sparkline Curve */}
-                  <div className="w-full h-9 mt-2 relative">
-                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#16A34A" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#16A34A" stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M 0,22 Q 25,28 50,16 T 75,20 T 100,8 L 100,35 L 0,35 Z"
-                        fill="url(#greenGrad)"
-                      />
-                      <path
-                        d="M 0,22 Q 25,28 50,16 T 75,20 T 100,8"
-                        fill="none"
-                        stroke="#16A34A"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
-                </a>
+        .glass-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+        }
+        .glass-card-green {
+          background: rgba(34,197,94,0.06);
+          border: 1px solid rgba(34,197,94,0.15);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+        }
 
-                {/* 2. Ethane (FOB) */}
-                <a
-                  href={ethane?.sourceUrl || 'https://finance.yahoo.com/quote/NG=F/'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
-                  title="Click to view live source quote on Yahoo Finance (Henry Hub NatGas Proxy)"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <Box className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
-                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
-                        Ethane (FOB)
-                      </span>
-                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </div>
-                    <PriceInfoIcon commodityId="comm-ethane" size="xs" />
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${ethane?.currentPrice || 157}
-                      <span className="text-xs text-neutral-500 font-normal">/t</span>
-                    </div>
-                    <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
-                      <span>▼</span>
-                      <span>{timeFilter === '1W' ? '-1.2%' : '-1.8%'}</span>
-                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
-                    </div>
-                  </div>
-                  {/* Red Smooth Sparkline Curve */}
-                  <div className="w-full h-9 mt-2 relative">
-                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="redGrad1" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#DC2626" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#DC2626" stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M 0,10 Q 30,8 55,20 T 80,18 T 100,26 L 100,35 L 0,35 Z"
-                        fill="url(#redGrad1)"
-                      />
-                      <path
-                        d="M 0,10 Q 30,8 55,20 T 80,18 T 100,26"
-                        fill="none"
-                        stroke="#DC2626"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
-                </a>
+        .card-3d {
+          transform-style: preserve-3d;
+          transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+        }
+        .card-3d:hover {
+          transform: perspective(800px) rotateX(-3deg) rotateY(3deg) translateY(-4px);
+          box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.12);
+        }
 
-                {/* 3. Naphtha (CFR) */}
-                <a
-                  href={naphtha?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
-                  title="Click to view live source quote on Yahoo Finance (ICE Brent Crack Proxy)"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <Factory className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
-                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
-                        Naphtha (CFR)
-                      </span>
-                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </div>
-                    <PriceInfoIcon commodityId="comm-naphtha" size="xs" />
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${naphtha?.currentPrice || 816}
-                      <span className="text-xs text-neutral-500 font-normal">/t</span>
-                    </div>
-                    <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-0.5 font-mono">
-                      <span>▼</span>
-                      <span>{timeFilter === '1W' ? '-1.4%' : '-2.1%'}</span>
-                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
-                    </div>
-                  </div>
-                  {/* Red Smooth Sparkline Curve */}
-                  <div className="w-full h-9 mt-2 relative">
-                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="redGrad2" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#DC2626" stopOpacity="0.25" />
-                          <stop offset="100%" stopColor="#DC2626" stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M 0,14 Q 25,12 50,24 T 80,18 T 100,28 L 100,35 L 0,35 Z"
-                        fill="url(#redGrad2)"
-                      />
-                      <path
-                        d="M 0,14 Q 25,12 50,24 T 80,18 T 100,28"
-                        fill="none"
-                        stroke="#DC2626"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
-                </a>
+        .cta-btn {
+          background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #4ade80 100%);
+          box-shadow: 0 0 40px rgba(34,197,94,0.35), 0 8px 32px rgba(0,0,0,0.4);
+          transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+          position: relative;
+          overflow: hidden;
+        }
+        .cta-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+          pointer-events: none;
+        }
+        .cta-btn:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 0 60px rgba(34,197,94,0.5), 0 16px 48px rgba(0,0,0,0.5);
+        }
+        .cta-btn:active { transform: translateY(0) scale(0.99); }
 
-                {/* 4. Brent Crude */}
-                <a
-                  href={brent?.sourceUrl || 'https://finance.yahoo.com/quote/BZ=F/'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/50 border border-black/[0.04] dark:border-white/5 flex flex-col justify-between relative overflow-hidden group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-2xs cursor-pointer block"
-                  title="Click to view live Brent Crude quote on Yahoo Finance (BZ=F)"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <Flame className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" />
-                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 truncate">
-                        Brent Crude
-                      </span>
-                      <ExternalLink className="w-2.5 h-2.5 text-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </div>
-                    <PriceInfoIcon commodityId="comm-brent" size="xs" />
-                  </div>
-                  <div>
-                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white font-mono">
-                      ${brentTfData ? brentTfData.price.toFixed(2) : (brent?.currentPrice ? brent.currentPrice.toFixed(2) : '99.85')}
-                      <span className="text-xs text-neutral-500 font-normal">/bbl</span>
-                    </div>
-                    <div className={`text-[11px] font-semibold flex items-center gap-1 mt-0.5 font-mono ${
-                      (brentTfData ? brentTfData.isUp : (brent?.change1D || 0) >= 0)
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : 'text-rose-600 dark:text-rose-400'
-                    }`}>
-                      <span>{(brentTfData ? brentTfData.isUp : (brent?.change1D || 0) >= 0) ? '▲' : '▼'}</span>
-                      <span>
-                        {brentTfData 
-                          ? `${brentTfData.changePercent >= 0 ? '+' : ''}${brentTfData.changePercent.toFixed(1)}%`
-                          : `${(brent?.change1D || 1.3) >= 0 ? '+' : ''}${(brent?.change1D || 1.3).toFixed(1)}%`}
-                      </span>
-                      <span className="text-[9px] font-normal text-neutral-400">({timeFilter})</span>
-                    </div>
-                  </div>
-                  {/* Brent Smooth Sparkline Curve */}
-                  <div className="w-full h-9 mt-2 relative">
-                    <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="brentGradHome" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'} stopOpacity="0.25" />
-                          <stop offset="100%" stopColor={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'} stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d={(brentTfData ? brentTfData.isUp : true)
-                          ? "M 0,26 Q 20,24 45,18 T 75,12 T 100,6 L 100,35 L 0,35 Z"
-                          : "M 0,8 Q 25,12 50,22 T 75,20 T 100,30 L 100,35 L 0,35 Z"}
-                        fill="url(#brentGradHome)"
-                      />
-                      <path
-                        d={(brentTfData ? brentTfData.isUp : true)
-                          ? "M 0,26 Q 20,24 45,18 T 75,12 T 100,6"
-                          : "M 0,8 Q 25,12 50,22 T 75,20 T 100,30"}
-                        fill="none"
-                        stroke={(brentTfData ? brentTfData.isUp : true) ? '#16A34A' : '#DC2626'}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
-                </a>
+        .stat-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 20px;
+          padding: 20px 24px;
+          transition: border-color 0.3s, background 0.3s;
+        }
+        .stat-card:hover {
+          background: rgba(34,197,94,0.05);
+          border-color: rgba(34,197,94,0.2);
+        }
 
-              </div>
-            </div>
+        .screenshot-glow {
+          box-shadow: 0 0 0 1px rgba(34,197,94,0.1), 0 24px 80px rgba(0,0,0,0.6), 0 0 80px rgba(34,197,94,0.06);
+        }
 
+        .tag-pill {
+          background: rgba(34,197,94,0.1);
+          border: 1px solid rgba(34,197,94,0.2);
+          color: #86efac;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          padding: 3px 10px;
+          border-radius: 100px;
+          text-transform: uppercase;
+        }
 
+        .nav-link {
+          color: rgba(255,255,255,0.5);
+          font-size: 13px;
+          font-weight: 500;
+          transition: color 0.2s;
+          letter-spacing: 0.02em;
+        }
+        .nav-link:hover { color: #fff; }
 
+        .scroll-indicator {
+          animation: float-slow 2.5s ease-in-out infinite;
+        }
 
+        @keyframes blink {
+          0%,100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .cursor-blink { animation: blink 1.1s step-end infinite; }
 
+        .india-glow {
+          filter: drop-shadow(0 0 40px rgba(34,197,94,0.15));
+        }
+      `}</style>
 
+      <div className="landing-root">
 
-            {/* Bottom Floating Bar: Ask about markets, scenarios, models */}
-            <form
-              onSubmit={handlePromptSubmit}
-              className="p-2 pl-5 rounded-full bg-white/95 dark:bg-[#121218]/95 border border-black/[0.06] dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-2xl flex items-center justify-between gap-3"
+        {/* ── Ambient spotlight following cursor ── */}
+        <div
+          className="fixed pointer-events-none"
+          style={{
+            width: 600,
+            height: 600,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)',
+            left: mousePos.x - 300,
+            top: mousePos.y - 300,
+            transition: 'left 0.15s ease, top 0.15s ease',
+            zIndex: 1,
+          }}
+        />
+
+        {/* ════════════════════════════════════
+            NAVBAR
+        ════════════════════════════════════ */}
+        <nav
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 sm:px-10"
+          style={{
+            height: 64,
+            background: 'rgba(7,8,10,0.8)',
+            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            backdropFilter: 'blur(20px)',
+          }}
+        >
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)' }}
             >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <Sparkles className="w-4 h-4 text-[#BFA161] shrink-0" />
-                <input
-                  type="text"
-                  value={naturalQuery}
-                  onChange={(e) => setNaturalQuery(e.target.value)}
-                  placeholder="Ask about markets, assets, scenarios or models..."
-                  className="w-full bg-transparent text-xs sm:text-sm text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none truncate font-sans"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSolvingInline || !naturalQuery.trim()}
-                className="w-10 h-10 rounded-full bg-[#E5DFD5] dark:bg-neutral-800 hover:bg-[#DED7CB] text-neutral-800 dark:text-white flex items-center justify-center shrink-0 transition-transform active:scale-95 disabled:opacity-50 cursor-pointer shadow-2xs"
-                title="Submit Query"
-              >
-                {isSolvingInline ? (
-                  <RefreshCw className="w-4 h-4 animate-spin text-neutral-600" />
-                ) : (
-                  <ArrowRight className="w-4 h-4 text-neutral-700 dark:text-neutral-200" />
-                )}
-              </button>
-            </form>
-
+              <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
+            </div>
+            <span className="text-white font-semibold text-sm tracking-wide">
+              Reliance Intelligence
+            </span>
           </div>
 
+          {/* Nav links */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#simulation" className="nav-link">Simulation</a>
+            <a href="#analytics" className="nav-link">Analytics</a>
+            <a href="#platform" className="nav-link">Platform</a>
+          </div>
 
+          {/* CTA */}
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 text-sm font-semibold text-black rounded-full px-5 py-2 cta-btn"
+            style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)' }}
+          >
+            Enter Platform
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </nav>
 
+        {/* ════════════════════════════════════
+            HERO SECTION
+        ════════════════════════════════════ */}
+        <section
+          className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden pt-16"
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.07) 0%, transparent 65%)' }}
+        >
+          <ParticleCanvas />
 
-        </div>
+          {/* India silhouette watermark */}
+          <div
+            className="absolute right-0 top-1/2 -translate-y-1/2 india-glow"
+            style={{ width: 380, height: 460, opacity: 0.6, right: '-4%' }}
+          >
+            <IndiaSilhouette />
+          </div>
+          <div
+            className="absolute left-0 top-1/2 -translate-y-1/2 india-glow scale-x-[-1]"
+            style={{ width: 280, height: 340, opacity: 0.3, left: '-3%' }}
+          >
+            <IndiaSilhouette />
+          </div>
 
+          {/* Aurora background blob */}
+          <div
+            className="absolute aurora"
+            style={{
+              width: 900,
+              height: 900,
+              top: '50%',
+              left: '50%',
+              background: 'conic-gradient(from 0deg, rgba(34,197,94,0.04) 0%, transparent 40%, rgba(34,197,94,0.03) 70%, transparent 100%)',
+              borderRadius: '50%',
+              zIndex: 0,
+            }}
+          />
 
-        {/* INLINE AI SOLVED RESULT ACCORDION (WHEN SOLVING QUERY) */}
-        {inlineResult && (
-          <div className="p-6 sm:p-8 rounded-[28px] bg-white dark:bg-[#121218] border border-black/[0.08] dark:border-white/15 shadow-[0_16px_50px_rgba(0,0,0,0.06)] space-y-5 animate-fadeIn text-left">
-            <div className="flex items-center justify-between pb-3 border-b border-black/[0.05] dark:border-white/10">
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <span className="px-3 py-1 text-xs font-mono font-bold rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
-                  {inlineResult.category}
-                </span>
-                <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  {inlineProvider} (Online)
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setInlineResult(null)}
-                className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-                title="Dismiss result"
+          <div className="relative z-10 flex flex-col items-center gap-6 px-6 max-w-4xl mx-auto">
+
+            {/* Badge */}
+            <div className="tag-pill fade-up-0">
+              ✦ &nbsp;Intelligence Operating System &nbsp;✦
+            </div>
+
+            {/* Headline */}
+            <h1
+              className="fade-up-1 font-black leading-none tracking-tight"
+              style={{ fontSize: 'clamp(42px, 8vw, 92px)', lineHeight: 1.0 }}
+            >
+              <span className="text-white">Where Data Meets </span>
+              <br />
+              <span className="shimmer-text">Petrochemical Strategy</span>
+            </h1>
+
+            {/* Sub */}
+            <p
+              className="fade-up-2 text-base sm:text-lg leading-relaxed max-w-xl"
+              style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 400 }}
+            >
+              10,000-run Monte Carlo simulations. Real-time market intelligence.
+              AI-powered answers. Built for India&apos;s O2C cracker business.
+            </p>
+
+            {/* CTA */}
+            <div className="fade-up-3 flex flex-col sm:flex-row items-center gap-4 mt-2">
+              <Link
+                href="/dashboard"
+                id="hero-cta-btn"
+                className="cta-btn flex items-center gap-3 text-black font-bold text-base rounded-full px-8 py-4"
               >
-                <X className="w-4 h-4" />
-              </button>
+                <div className="relative">
+                  <div className="pulse-ring absolute inset-0 rounded-full border border-black/20" />
+                  <Zap className="w-4 h-4" strokeWidth={2.5} />
+                </div>
+                Login to the World of Possibilities by Reliance
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
-            {/* Key Takeaway */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-[#FBF9F5] dark:bg-[#1A1A22] border border-black/[0.05] dark:border-white/10">
-              <span className="text-xs font-mono font-bold text-[#8F7640] dark:text-[#D4BA7B] uppercase block mb-1 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                Executive Synthesis
+            {/* Trust strip */}
+            <div
+              className="fade-up-4 flex items-center gap-6 mt-4 text-xs font-medium"
+              style={{ color: 'rgba(255,255,255,0.3)' }}
+            >
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                Live Market Data
               </span>
-              <p className="text-sm font-semibold text-neutral-900 dark:text-white leading-relaxed">
-                {inlineResult.keyTakeaway}
-              </p>
+              <span>·</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                10K Monte Carlo Runs
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                AI Grounded Answers
+              </span>
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator flex flex-col items-center gap-1.5 z-10"
+            style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10, letterSpacing: '0.1em' }}
+          >
+            <span>EXPLORE</span>
+            <div
+              className="w-px h-10"
+              style={{ background: 'linear-gradient(to bottom, rgba(34,197,94,0.4), transparent)' }}
+            />
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            STAT STRIP
+        ════════════════════════════════════ */}
+        <section
+          id="analytics"
+          className="relative z-10 py-12 px-6"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+        >
+          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { value: 10000, suffix: '+', label: 'Monte Carlo Runs', icon: <Shuffle className="w-4 h-4" /> },
+              { value: 18, suffix: '', label: 'Analytics Modules', icon: <BarChart3 className="w-4 h-4" /> },
+              { value: 7500, suffix: 'K', label: 'KTPA Feed Capacity', icon: <Activity className="w-4 h-4" /> },
+              { value: 5, suffix: '', label: 'Cracker Assets', icon: <Globe2 className="w-4 h-4" /> },
+            ].map((s, i) => (
+              <div key={i} className="stat-card text-center">
+                <div
+                  className="flex items-center justify-center gap-1.5 mb-2"
+                  style={{ color: '#22c55e' }}
+                >
+                  {s.icon}
+                  <span className="text-xs font-medium">{s.label}</span>
+                </div>
+                <div
+                  className="font-black"
+                  style={{ fontSize: 32, lineHeight: 1, color: '#fff', letterSpacing: '-0.02em' }}
+                >
+                  <Counter target={s.value} suffix={s.suffix} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            MONTE CARLO FEATURE — HERO CARD
+        ════════════════════════════════════ */}
+        <section
+          id="simulation"
+          className="relative z-10 py-24 px-6"
+        >
+          <div className="max-w-6xl mx-auto">
+            {/* Section label */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="tag-pill">Flagship Engine</div>
+              <div className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.05)' }} />
             </div>
 
-            {/* Answer Body */}
-            <div className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line p-5 rounded-2xl bg-[#FAF8F5]/80 dark:bg-neutral-900/60 border border-black/[0.04] dark:border-white/5 font-sans">
-              {inlineResult.answer}
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Left — copy */}
+              <div className="space-y-6">
+                <h2 className="font-black text-white leading-tight" style={{ fontSize: 'clamp(32px,5vw,56px)' }}>
+                  10,000-Run
+                  <br />
+                  <span className="shimmer-text">Monte Carlo</span>
+                  <br />
+                  Simulation Engine
+                </h2>
+                <p style={{ color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: 420 }}>
+                  Replace single-point estimates with full probability distributions.
+                  Every commodity price, currency swing, and project delay is modelled
+                  as a statistical distribution — linked by a Gaussian copula so correlated
+                  risks move together.
+                </p>
 
-            {/* Mandatory Evidence Citations */}
-            {inlineResult.evidence && inlineResult.evidence.length > 0 && (
-              <div className="space-y-2 pt-2 border-t border-black/[0.05] dark:border-white/10">
-                <span className="text-xs font-mono uppercase text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  Verified Citations & Audited Evidence ({inlineResult.evidence.length})
-                </span>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                  {inlineResult.evidence.map((ev, i) => (
-                    <div key={i} className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-black/[0.06] dark:border-white/10 text-xs space-y-1 shadow-2xs">
-                      <div className="flex justify-between font-mono text-neutral-800 dark:text-neutral-200 font-bold items-center gap-2">
-                        <span className="truncate">{ev.sourceTitle}</span>
-                        {ev.pageOrLine && ev.pageOrLine.startsWith('http') ? (
-                          <a
-                            href={ev.pageOrLine}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1 font-normal text-[11px] shrink-0"
-                          >
-                            <span>Source</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-neutral-400 font-normal text-[11px] shrink-0">{ev.pageOrLine}</span>
-                        )}
-                      </div>
-                      <p className="text-neutral-600 dark:text-neutral-400 italic font-sans">&ldquo;{ev.quote}&rdquo;</p>
+                {/* Feature bullets */}
+                <div className="space-y-3">
+                  {[
+                    'Triangular, Normal & Discrete distributions',
+                    'Gaussian Copula market correlation',
+                    'P10 / P50 / P90 NPV, IRR, Payback',
+                    'Tornado chart — top risk drivers ranked',
+                    'Bear / Base / Bull scenario presets',
+                  ].map((f, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
+                      <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>{f}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-        )}
 
-
-        {/* DEEP DIVE INTERACTIVE MODULE DRAWER TOGGLE (SCADA, ECONOMICS, ALLOCATION) */}
-        <div className="pt-4 border-t border-black/[0.05] dark:border-white/10 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 font-mono">
-                Advanced Engineering & Cracker Telemetry
-              </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">
-                Deep dive into hydrodynamic cracking coils, waterfall cost stacks, or feedstock LP allocations
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveDeepDive(activeDeepDive === 'scada' ? 'none' : 'scada')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${
-                  activeDeepDive === 'scada'
-                    ? 'bg-neutral-900 text-white border-neutral-900 dark:bg-white dark:text-neutral-900'
-                    : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-black/[0.06] dark:border-white/10 hover:bg-neutral-100'
-                }`}
-              >
-                <Activity className="w-3.5 h-3.5 text-cyan-500" />
-                <span>SCADA Twin Mimic</span>
-              </button>
-
-              <Link
-                href="/economics"
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-black/[0.06] dark:border-white/10 hover:bg-neutral-100 transition-all"
-              >
-                <DollarSign className="w-3.5 h-3.5 text-amber-500" />
-                <span>Economics Waterfall</span>
-              </Link>
-
-              <Link
-                href="/optimization"
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-black/[0.06] dark:border-white/10 hover:bg-neutral-100 transition-all"
-              >
-                <Cpu className="w-3.5 h-3.5 text-indigo-500" />
-                <span>LP Optimizer</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Expandable SCADA Twin View */}
-          {activeDeepDive === 'scada' && (
-            <div className="p-6 rounded-[28px] bg-white dark:bg-[#121218] border border-black/[0.06] dark:border-white/10 shadow-lg space-y-4 animate-fadeIn">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                  <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping" />
-                  <span>Cracker Hydrodynamic SCADA MIMIC (Live Telemetry)</span>
-                </div>
                 <Link
-                  href="/simulation"
-                  className="text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
+                  href="/scenarios/monte-carlo"
+                  className="inline-flex items-center gap-2 text-sm font-semibold"
+                  style={{ color: '#22c55e' }}
                 >
-                  <span>Open Full Screen Studio</span>
-                  <ExternalLink className="w-3 h-3" />
+                  Run a simulation
+                  <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
-              <ScadaDiagram onStateChange={setScadaState} initialEthaneRatio={scadaState.ethaneRatio} />
+
+              {/* Right — screenshot */}
+              <div className="card-3d float-slow">
+                <div
+                  className="rounded-2xl overflow-hidden screenshot-glow"
+                  style={{ border: '1px solid rgba(34,197,94,0.12)' }}
+                >
+                  <Image
+                    src="/images/screenshot-montecarlo.jpg"
+                    alt="Monte Carlo Simulation Engine Screenshot"
+                    width={800}
+                    height={450}
+                    className="w-full object-cover"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            BENTO FEATURE GRID
+        ════════════════════════════════════ */}
+        <section id="features" className="relative z-10 py-8 px-6 pb-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center gap-3 mb-10">
+              <div className="tag-pill">All Modules</div>
+              <div className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.05)' }} />
+            </div>
+
+            {/* Bento grid */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+              {/* LARGE — Market Intelligence */}
+              <div
+                className="md:col-span-7 rounded-3xl p-0 overflow-hidden card-3d glass-card"
+                style={{ minHeight: 360 }}
+              >
+                <div className="relative h-full">
+                  <Image
+                    src="/images/screenshot-market.jpg"
+                    alt="Market Intelligence Dashboard"
+                    width={900}
+                    height={500}
+                    className="w-full h-full object-cover opacity-80"
+                    style={{ maxHeight: 360 }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: 'linear-gradient(to top, rgba(7,8,10,0.95) 0%, rgba(7,8,10,0.4) 50%, transparent 100%)' }}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="tag-pill mb-2" style={{ display: 'inline-block' }}>Live Feed</div>
+                    <h3 className="text-white font-bold text-xl mt-1">Market Intelligence</h3>
+                    <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, marginTop: 4 }}>
+                      Brent · Naphtha · Ethane · Ethylene · USD/INR in real time
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT stack */}
+              <div className="md:col-span-5 flex flex-col gap-4">
+
+                {/* AI Copilot */}
+                <div
+                  className="rounded-3xl p-0 overflow-hidden card-3d glass-card flex-1"
+                  style={{ minHeight: 170 }}
+                >
+                  <div className="relative h-full">
+                    <Image
+                      src="/images/screenshot-ai.jpg"
+                      alt="AI Copilot Studio"
+                      width={600}
+                      height={340}
+                      className="w-full h-full object-cover opacity-75"
+                      style={{ maxHeight: 170 }}
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(to top, rgba(7,8,10,0.92) 0%, rgba(7,8,10,0.35) 60%, transparent 100%)' }}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
+                      <div className="tag-pill mb-1.5" style={{ display: 'inline-block' }}>AI Native</div>
+                      <h3 className="text-white font-bold text-base">AI Copilot Studio</h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Small cards row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { icon: <Shield className="w-5 h-5" />, title: 'Risk Sentinel', desc: 'Macro threat matrix' },
+                    { icon: <TrendingUp className="w-5 h-5" />, title: 'Price Forecasts', desc: 'AutoARIMA + LightGBM' },
+                  ].map((c, i) => (
+                    <div
+                      key={i}
+                      className="rounded-2xl p-4 glass-card-green card-3d flex flex-col gap-3"
+                    >
+                      <div style={{ color: '#22c55e' }}>{c.icon}</div>
+                      <div>
+                        <div className="text-white font-semibold text-sm">{c.title}</div>
+                        <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 2 }}>{c.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom row of 3 */}
+              {[
+                {
+                  icon: <Activity className="w-6 h-6" />,
+                  title: 'SCADA Digital Twin',
+                  desc: 'Real-time cracker furnace simulation with yield modelling',
+                  col: 4,
+                  tag: 'Simulation',
+                },
+                {
+                  icon: <Brain className="w-6 h-6" />,
+                  title: 'LP Feedstock Optimizer',
+                  desc: 'Linear programming feedstock allocation for max margin',
+                  col: 4,
+                  tag: 'Optimization',
+                },
+                {
+                  icon: <Globe2 className="w-6 h-6" />,
+                  title: 'Competitive Intelligence',
+                  desc: 'Global peer benchmarking across ExxonMobil, BASF, Dow, SABIC',
+                  col: 4,
+                  tag: 'Benchmarks',
+                },
+              ].map((c, i) => (
+                <div
+                  key={i}
+                  className={`md:col-span-${c.col} rounded-3xl p-6 glass-card card-3d flex flex-col gap-4`}
+                  style={{ minHeight: 180 }}
+                >
+                  <div className="flex items-start justify-between">
+                    <div
+                      className="w-11 h-11 rounded-2xl flex items-center justify-center"
+                      style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}
+                    >
+                      {c.icon}
+                    </div>
+                    <div className="tag-pill">{c.tag}</div>
+                  </div>
+                  <div className="mt-auto">
+                    <h3 className="text-white font-bold text-base">{c.title}</h3>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginTop: 4, lineHeight: 1.5 }}>{c.desc}</p>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            INDIA + GREEN ENERGY BAND
+        ════════════════════════════════════ */}
+        <section
+          id="platform"
+          className="relative z-10 py-24 px-6 overflow-hidden"
+          style={{
+            background: 'radial-gradient(ellipse 70% 80% at 50% 50%, rgba(34,197,94,0.06) 0%, transparent 70%)',
+            borderTop: '1px solid rgba(255,255,255,0.04)',
+          }}
+        >
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* India card */}
+            <div
+              className="lg:col-span-1 rounded-3xl p-8 glass-card-green card-3d flex flex-col items-center justify-center relative overflow-hidden"
+              style={{ minHeight: 280 }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                <div style={{ width: 200, height: 240 }}>
+                  <IndiaSilhouette />
+                </div>
+              </div>
+              <div className="relative z-10 text-center space-y-3">
+                <div className="tag-pill">India First</div>
+                <h3 className="text-white font-black text-2xl">Built for<br />Bharat</h3>
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, lineHeight: 1.6 }}>
+                  INR ↔ USD dual currency. India-specific feedstock economics. Powered by RIL&apos;s O2C asset network.
+                </p>
+              </div>
+            </div>
+
+            {/* Green energy card */}
+            <div
+              className="lg:col-span-2 rounded-3xl p-8 glass-card card-3d relative overflow-hidden"
+              style={{ minHeight: 280 }}
+            >
+              {/* Decorative gradient orb */}
+              <div
+                className="absolute -right-20 -top-20 rounded-full"
+                style={{
+                  width: 300,
+                  height: 300,
+                  background: 'radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)',
+                }}
+              />
+              <div className="relative z-10 h-full flex flex-col justify-between">
+                <div>
+                  <div className="tag-pill mb-4" style={{ display: 'inline-block' }}>Green Energy Transition</div>
+                  <h3 className="text-white font-black text-3xl leading-tight">
+                    Ethane over Naphtha.
+                    <br />
+                    <span className="shimmer-text">The Future of O2C.</span>
+                  </h3>
+                </div>
+                <div className="grid grid-cols-3 gap-4 mt-8">
+                  {[
+                    { label: 'Lower CO₂', value: '~30%', sub: 'vs naphtha cracking' },
+                    { label: 'Ethylene Yield', value: '79.5%', sub: 'from ethane feed' },
+                    { label: 'Cost Advantage', value: '~10×', sub: 'ethane vs naphtha/t' },
+                  ].map((m, i) => (
+                    <div key={i} className="space-y-1">
+                      <div
+                        className="font-black"
+                        style={{ fontSize: 28, color: '#22c55e', letterSpacing: '-0.02em' }}
+                      >
+                        {m.value}
+                      </div>
+                      <div className="text-white font-semibold text-xs">{m.label}</div>
+                      <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{m.sub}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            BIG CTA SECTION
+        ════════════════════════════════════ */}
+        <section
+          className="relative z-10 py-32 px-6 text-center overflow-hidden"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        >
+          {/* Background radial */}
+          <div
+            className="absolute inset-0"
+            style={{ background: 'radial-gradient(ellipse 60% 70% at 50% 100%, rgba(34,197,94,0.08) 0%, transparent 70%)' }}
+          />
+
+          <div className="relative z-10 max-w-3xl mx-auto space-y-8">
+            <div className="tag-pill" style={{ display: 'inline-block' }}>
+              Ready to Begin
+            </div>
+
+            <h2
+              className="font-black text-white leading-none"
+              style={{ fontSize: 'clamp(36px,7vw,80px)', letterSpacing: '-0.03em' }}
+            >
+              A new era of
+              <br />
+              <span className="shimmer-text">petrochemical intelligence</span>
+              <br />
+              starts here.
+            </h2>
+
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 17, lineHeight: 1.7, maxWidth: 500, margin: '0 auto' }}>
+              Step into the platform where simulations run in milliseconds, markets
+              refresh in real time, and AI answers with evidence.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+              <Link
+                href="/dashboard"
+                id="bottom-cta-btn"
+                className="cta-btn flex items-center gap-3 text-black font-black text-lg rounded-full px-10 py-5"
+              >
+                <Zap className="w-5 h-5" strokeWidth={2.5} />
+                Login to the World of Possibilities by Reliance
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+
+            {/* Features quick list */}
+            <div
+              className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-4"
+              style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}
+            >
+              {['18 Modules', 'Monte Carlo Engine', 'Live Market Data', 'AI Copilot', 'SCADA Simulator', 'Knowledge Graph'].map((f) => (
+                <span key={f} className="flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-green-500 opacity-60" />
+                  {f}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════
+            FOOTER
+        ════════════════════════════════════ */}
+        <footer
+          className="relative z-10 py-8 px-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+        >
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-6 h-6 rounded-md flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)' }}
+            >
+              <Zap className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+            </div>
+            <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13 }}>
+              Reliance Intelligence Platform
+            </span>
+          </div>
+
+          <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>
+            Academic project · Jio Institute PGP Management Finance · 2026
+          </p>
+
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-400" style={{ boxShadow: '0 0 6px #22c55e' }} />
+            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>Live on Vercel</span>
+          </div>
+        </footer>
 
       </div>
-    </AppShell>
+    </>
   );
 }

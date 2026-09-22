@@ -24,7 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: 'dashboard',
     name: 'Dashboard',
-    href: '/',
+    href: '/dashboard',
     icon: Home,
   },
   {
@@ -86,8 +86,8 @@ export default function Sidebar() {
         <nav className="mt-4 space-y-1">
           {NAV_ITEMS.map((item) => {
             const isActive =
-              item.href === '/'
-                ? pathname === '/'
+              item.href === '/dashboard'
+                ? pathname === '/dashboard' || pathname === '/'
                 : pathname === item.href || pathname.startsWith(item.href + '/');
 
             const IconComponent = item.icon;
