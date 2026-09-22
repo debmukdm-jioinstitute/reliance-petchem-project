@@ -5,13 +5,7 @@ import { performHybridSearch, SynthesizedAnswer } from '@/lib/searchEngine';
 import { searchTinyFish, buildAnswerFromTinyFish, TinyFishSearchResultItem } from '@/lib/tinyfish';
 
 export const dynamic = 'force-dynamic';
-// Generous ceiling for the local-model path: on Vercel, Ollama is
-// unreachable and fails in well under a second, so this only matters when
-// running locally against a real (often CPU-bound) Ollama instance.
-export const maxDuration = 60;
-
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:1.5b';
+export const maxDuration = 25;
 
 interface CopilotRequestBody {
   query: string;
@@ -24,7 +18,7 @@ function buildSystemPrompt(
   marketSnapshot: string,
   assetSummary: string
 ) {
-  return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard.
+  return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard powered by TinyFish.
 You have domain knowledge over:
 1. Reliance Industries Limited (RIL) O2C Business: Jamnagar, Dahej Cryogenic Terminal, Hazira, Nagothane, Vadodara, a VLEC fleet importing US ethane, and downstream polymer assets.
 2. Macroeconomics: Brent crude, US Mont Belvieu ethane prices, Asian Naphtha CFR, USD/INR, shipping freight rates, global petchem supply additions.
@@ -116,37 +110,7 @@ function toSynthesizedAnswer(
   };
 }
 
-async function tryOllama(systemPrompt: string, query: string): Promise<{ text: string } | null> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 55000);
-  try {
-    const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: query }
-        ],
-        format: 'json',
-        stream: false,
-        options: { temperature: 0.2, num_predict: 500 }
-      }),
-      signal: controller.signal
-    });
-    if (!response.ok) return null;
-    const data = await response.json();
-    const text = data?.message?.content;
-    return typeof text === 'string' ? { text } : null;
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-async function tryPollinations(systemPrompt: string, query: string): Promise<{ text: string } | null> {
+async function tryOnlineLLM(systemPrompt: string, query: string): Promise<{ text: string } | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 12000);
   try {
@@ -225,14 +189,9 @@ export async function POST(req: Request) {
 
     const systemPrompt = buildSystemPrompt(contextSnippets, tinyFishSnippets, marketSnapshot, assetSummary);
 
-    // 2. Try LLM generation with TinyFish live web context
-    let providerUsed = `TinyFish AI Agent + Ollama (${OLLAMA_MODEL})`;
-    let raw = await tryOllama(systemPrompt, trimmedQuery);
-
-    if (!raw) {
-      providerUsed = 'TinyFish AI Agent + Online LLM';
-      raw = await tryPollinations(systemPrompt, trimmedQuery);
-    }
+    // 2. Query cloud intelligence with TinyFish live web context
+    let providerUsed = 'TinyFish AI Agent + Cloud Intelligence';
+    let raw = await tryOnlineLLM(systemPrompt, trimmedQuery);
 
     let synthesizedResult: SynthesizedAnswer | null = null;
     if (raw) {
@@ -244,7 +203,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. Fallback: If neither LLM responds, synthesize directly from TinyFish Live Web Intelligence
+    // 3. Fallback: Synthesize directly from TinyFish Live Web Intelligence
     if (!synthesizedResult) {
       providerUsed = 'TinyFish AI Agent (Live Web Search)';
       synthesizedResult = buildAnswerFromTinyFish(trimmedQuery, tinyFishHits);

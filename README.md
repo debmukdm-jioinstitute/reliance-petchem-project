@@ -52,7 +52,7 @@ All facts, numbers, quotes, and assumptions are grounded in verified source docu
 14. **`14 ACTION CENTER` (`/actions`)**: Extracted action items, owners, deadlines, priority levels, and execution evidence.
 15. **`15 KNOWLEDGE GRAPH` (`/knowledge-graph`)**: Palantir-grade interactive force-directed network graph connecting entities, plants, commodities, decisions, and relationships.
 16. **`16 AI COPILOT` (`/ai`)**: 3-column multi-agent conversational reasoning engine with live context panel, classification tags (FACT, MODEL OUTPUT, INFERENCE), and "Why Did AI Say This?" audit trail.
-17. **`17 SETTINGS` (`/settings`)**: Open-source first `ModelRouter` configuration (Ollama, vLLM, BGE-M3, TimesFM) and role-based access control.
+17. **`17 SETTINGS` (`/settings`)**: `ModelRouter` configuration (TinyFish, vLLM, BGE-M3, TimesFM) and role-based access control.
 
 ---
 

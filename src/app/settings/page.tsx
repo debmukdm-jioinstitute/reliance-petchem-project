@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const [llmProvider, setLlmProvider] = useState<string>('ollama');
+  const [llmProvider, setLlmProvider] = useState<string>('tinyfish');
   const [embeddingModel, setEmbeddingModel] = useState<string>('bge-m3');
   const [forecastEngine, setForecastEngine] = useState<string>('timesfm');
   const [activeRole, setActiveRole] = useState<string>('Leadership');
@@ -44,7 +44,7 @@ export default function SettingsPage() {
               PLATFORM SETTINGS & MODEL ROUTER
             </h1>
             <p className="text-sm text-[#94A3B8] mt-1 font-light max-w-2xl">
-              Open-source first model routing, local LLM provider abstraction, embedding models, and enterprise role-based access control.
+              TinyFish agent routing, cloud model abstraction, embedding models, and enterprise role-based access control.
             </p>
           </div>
 
@@ -79,13 +79,13 @@ export default function SettingsPage() {
                 onChange={(e) => setLlmProvider(e.target.value)}
                 className="w-full h-10 px-3 rounded-lg bg-[#0A0E17] border border-[#242F44] text-[#F8FAFC] focus:border-[#BFA161] focus:outline-none font-mono"
               >
-                <option value="ollama">Ollama (Local Qwen / Llama-3)</option>
+                <option value="tinyfish">TinyFish Web Agent & Search</option>
                 <option value="vllm">vLLM High-Throughput Server</option>
                 <option value="huggingface">Hugging Face Transformers</option>
                 <option value="api">Enterprise API Fallback</option>
               </select>
               <p className="text-[11px] text-[#64748B]">
-                Permissively licensed open-source models running locally on premise.
+                Autonomous web agents and real-time intelligence search.
               </p>
             </div>
 
