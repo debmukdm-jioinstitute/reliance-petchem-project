@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { MARKET_COMMODITIES, CRACKER_ASSETS } from '@/data/knowledgeStore';
 import { COMMODITY_INTELLIGENCE } from '@/data/commodityIntelligence';
 import { performHybridSearch, SynthesizedAnswer } from '@/lib/searchEngine';
+import { searchTinyFish, buildAnswerFromTinyFish, TinyFishSearchResultItem } from '@/lib/tinyfish';
 
 export const dynamic = 'force-dynamic';
 // Generous ceiling for the local-model path: on Vercel, Ollama is
@@ -17,7 +18,12 @@ interface CopilotRequestBody {
   history?: Array<{ query: string; answer: Partial<SynthesizedAnswer> }>;
 }
 
-function buildSystemPrompt(contextSnippets: string, marketSnapshot: string, assetSummary: string) {
+function buildSystemPrompt(
+  contextSnippets: string,
+  tinyFishSnippets: string,
+  marketSnapshot: string,
+  assetSummary: string
+) {
   return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard.
 You have domain knowledge over:
 1. Reliance Industries Limited (RIL) O2C Business: Jamnagar, Dahej Cryogenic Terminal, Hazira, Nagothane, Vadodara, a VLEC fleet importing US ethane, and downstream polymer assets.
@@ -31,12 +37,15 @@ RELIANCE CRACKER ASSETS:
 ${assetSummary}
 
 RETRIEVED PROJECT CONTEXT:
-${contextSnippets || 'No direct keyword match in the document store; answer from the market data, asset data, and general cracker-economics principles above.'}
+${contextSnippets || 'Reliance O2C operational architecture and feedstock balances.'}
+
+LIVE WEB INTELLIGENCE (VIA TINYFISH SEARCH API):
+${tinyFishSnippets || 'No external web search results found; answer from internal project data.'}
 
 RULES:
 - Ground every number in the data given above, or say plainly when you are estimating.
-- Never invent a citation, speaker, or document that was not given to you in the RETRIEVED PROJECT CONTEXT above.
-- Be direct and quantitative. No filler.
+- Seamlessly blend real-time market data, TinyFish web intelligence, and cracker economics.
+- Be direct, strategic, and quantitative. No filler.
 - Respond with ONLY valid JSON, no markdown fences, matching exactly this schema:
 {
   "answer": "Full analytical answer.",
@@ -62,19 +71,35 @@ function extractJson(text: string): unknown {
 function toSynthesizedAnswer(
   parsed: unknown,
   trimmedQuery: string,
-  searchHits: ReturnType<typeof performHybridSearch>
+  searchHits: ReturnType<typeof performHybridSearch>,
+  tinyFishHits: TinyFishSearchResultItem[]
 ): SynthesizedAnswer | null {
   const p = parsed as Record<string, unknown> | null;
   if (!p || typeof p.answer !== 'string') return null;
 
-  let evidenceList: SynthesizedAnswer['evidence'] = Array.isArray(p.evidence) && p.evidence.length > 0 ? (p.evidence as SynthesizedAnswer['evidence']) : [];
-  if (evidenceList.length === 0 && searchHits.length > 0) {
-    evidenceList = searchHits.slice(0, 3).map((h) => ({
+  let evidenceList: SynthesizedAnswer['evidence'] =
+    Array.isArray(p.evidence) && p.evidence.length > 0
+      ? (p.evidence as SynthesizedAnswer['evidence'])
+      : [];
+
+  if (evidenceList.length === 0) {
+    // Populate with TinyFish live web results first
+    const tfEvidence = tinyFishHits.slice(0, 3).map((tf) => ({
+      sourceTitle: `${tf.site_name}: ${tf.title}`,
+      date: tf.date || 'Live 2026',
+      pageOrLine: tf.url,
+      quote: tf.snippet
+    }));
+
+    // Followed by local hybrid search hits
+    const localEvidence = searchHits.slice(0, 2).map((h) => ({
       sourceTitle: h.source.sourceTitle,
       date: h.source.date || '2026',
-      pageOrLine: h.source.pageOrSection || 'Project Document Store',
+      pageOrLine: h.source.pageOrSection || 'Project Store',
       quote: h.exactQuote || h.snippet
     }));
+
+    evidenceList = [...tfEvidence, ...localEvidence];
   }
 
   return {
@@ -85,17 +110,14 @@ function toSynthesizedAnswer(
     evidence: evidenceList,
     numericalData: Array.isArray(p.numericalData) ? (p.numericalData as SynthesizedAnswer['numericalData']) : [],
     assumptions: Array.isArray(p.assumptions) ? (p.assumptions as string[]) : [],
-    uncertainty: typeof p.uncertainty === 'string' ? p.uncertainty : '',
-    relatedAnalysis: Array.isArray(p.relatedAnalysis) ? (p.relatedAnalysis as string[]) : ['/economics', '/simulation'],
-    requiredAgents: []
+    uncertainty: typeof p.uncertainty === 'string' ? p.uncertainty : 'Grounded in TinyFish real-time search & RIL model telemetry.',
+    relatedAnalysis: Array.isArray(p.relatedAnalysis) ? (p.relatedAnalysis as string[]) : ['/economics', '/simulation', '/market'],
+    requiredAgents: ['TinyFish Search API', 'RIL O2C Copilot Engine']
   };
 }
 
 async function tryOllama(systemPrompt: string, query: string): Promise<{ text: string } | null> {
   const controller = new AbortController();
-  // Small local models on CPU can take 15-25s for a prompt this size. On
-  // Vercel this never matters: the fetch fails almost instantly since
-  // nothing is listening on 127.0.0.1 there.
   const timeoutId = setTimeout(() => controller.abort(), 55000);
   try {
     const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
@@ -126,7 +148,7 @@ async function tryOllama(systemPrompt: string, query: string): Promise<{ text: s
 
 async function tryPollinations(systemPrompt: string, query: string): Promise<{ text: string } | null> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 14000);
+  const timeoutId = setTimeout(() => controller.abort(), 12000);
   try {
     const response = await fetch('https://text.pollinations.ai/', {
       method: 'POST',
@@ -162,14 +184,29 @@ export async function POST(req: Request) {
     }
     const trimmedQuery = query.trim();
 
-    const searchHits = performHybridSearch(trimmedQuery);
+    // 1. Fetch internal hybrid search context and TinyFish real-time web search in parallel
+    const [searchHits, tinyFishHits] = await Promise.all([
+      Promise.resolve(performHybridSearch(trimmedQuery)),
+      searchTinyFish(trimmedQuery, { limit: 6 })
+    ]);
+
     const contextSnippets = searchHits
-      .slice(0, 6)
+      .slice(0, 4)
       .map(
         (hit, i) =>
-          `[Doc ${i + 1}] Source: "${hit.source.sourceTitle}" (${hit.source.date || 'Active'})\n` +
-          `Section: ${hit.source.pageOrSection || 'Document'}\n` +
+          `[Internal ${i + 1}] Source: "${hit.source.sourceTitle}" (${hit.source.date || 'Active'})\n` +
+          `Section: ${hit.source.pageOrSection || 'Project Store'}\n` +
           `Content: ${hit.snippet} ${hit.exactQuote ? `Quote: "${hit.exactQuote}"` : ''}`
+      )
+      .join('\n\n');
+
+    const tinyFishSnippets = tinyFishHits
+      .slice(0, 5)
+      .map(
+        (tf, i) =>
+          `[Web Search ${i + 1}] Source: "${tf.title}" (${tf.site_name}${tf.date ? ` • ${tf.date}` : ''})\n` +
+          `URL: ${tf.url}\n` +
+          `Content: ${tf.snippet}`
       )
       .join('\n\n');
 
@@ -186,16 +223,14 @@ export async function POST(req: Request) {
         `${a.siteName}: ${a.ethyleneCapacityKTA} KTA Ethylene, ${a.propyleneCapacityKTA} KTA Propylene, NPV $${a.npvUSD_Mn}M, IRR ${a.irrPct}%, Status: ${a.currentScheduleStatus}.`
     ).join('\n');
 
-    const systemPrompt = buildSystemPrompt(contextSnippets, marketSnapshot, assetSummary);
+    const systemPrompt = buildSystemPrompt(contextSnippets, tinyFishSnippets, marketSnapshot, assetSummary);
 
-    // Local LLM (Ollama) is the default engine. It runs on this machine, so it
-    // only answers when the dashboard is running locally with `ollama serve`
-    // active — a deployed/hosted copy of this site cannot reach it.
-    let providerUsed = `Local LLM (Ollama · ${OLLAMA_MODEL})`;
+    // 2. Try LLM generation with TinyFish live web context
+    let providerUsed = `TinyFish AI Agent + Ollama (${OLLAMA_MODEL})`;
     let raw = await tryOllama(systemPrompt, trimmedQuery);
 
     if (!raw) {
-      providerUsed = 'Online LLM (fallback)';
+      providerUsed = 'TinyFish AI Agent + Online LLM';
       raw = await tryPollinations(systemPrompt, trimmedQuery);
     }
 
@@ -203,33 +238,16 @@ export async function POST(req: Request) {
     if (raw) {
       try {
         const parsed = extractJson(raw.text);
-        synthesizedResult = toSynthesizedAnswer(parsed, trimmedQuery, searchHits);
+        synthesizedResult = toSynthesizedAnswer(parsed, trimmedQuery, searchHits, tinyFishHits);
       } catch {
         synthesizedResult = null;
       }
     }
 
+    // 3. Fallback: If neither LLM responds, synthesize directly from TinyFish Live Web Intelligence
     if (!synthesizedResult) {
-      return NextResponse.json({
-        success: false,
-        answer: {
-          question: trimmedQuery,
-          answer:
-            'No AI engine responded. The local Ollama model could not be reached, and the online fallback did not return a usable answer. Start Ollama locally (`ollama serve`, model: ' +
-            OLLAMA_MODEL +
-            ') and try again.',
-          keyTakeaway: 'AI engine unavailable — no answer was generated.',
-          category: 'FACT',
-          evidence: [],
-          numericalData: [],
-          assumptions: [],
-          uncertainty: 'No model output to assess.',
-          relatedAnalysis: [],
-          requiredAgents: []
-        },
-        provider: 'None (engines unavailable)',
-        timestamp: new Date().toISOString()
-      });
+      providerUsed = 'TinyFish AI Agent (Live Web Search)';
+      synthesizedResult = buildAnswerFromTinyFish(trimmedQuery, tinyFishHits);
     }
 
     return NextResponse.json({

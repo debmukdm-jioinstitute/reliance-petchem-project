@@ -43,7 +43,7 @@ export default function OverviewPage() {
   const [naturalQuery, setNaturalQuery] = useState('');
   const [isSolvingInline, setIsSolvingInline] = useState(false);
   const [inlineResult, setInlineResult] = useState<SynthesizedAnswer | null>(null);
-  const [inlineProvider, setInlineProvider] = useState<string>('Local LLM (Ollama)');
+  const [inlineProvider, setInlineProvider] = useState<string>('TinyFish AI Agent');
 
   // Active deep dive view toggle (SCADA, Economics, or Hidden)
   const [activeDeepDive, setActiveDeepDive] = useState<'none' | 'scada' | 'economics'>('none');
@@ -79,7 +79,7 @@ export default function OverviewPage() {
       const data = await res.json();
       if (data && data.answer) {
         setInlineResult(data.answer);
-        setInlineProvider(data.provider || 'Local LLM (Ollama)');
+        setInlineProvider(data.provider || 'TinyFish AI Agent');
       } else {
         router.push(`/ai?q=${encodeURIComponent(queryToRun)}`);
       }
@@ -122,7 +122,7 @@ export default function OverviewPage() {
                     Ask Intelligence
                   </h2>
                   <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-normal leading-snug">
-                    Get quick answers from market data, cracker asset records, and project research.
+                    Get quick answers from market data, cracker asset records, and TinyFish live web intelligence.
                   </p>
                 </div>
 
@@ -758,9 +758,21 @@ export default function OverviewPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                   {inlineResult.evidence.map((ev, i) => (
                     <div key={i} className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-black/[0.06] dark:border-white/10 text-xs space-y-1 shadow-2xs">
-                      <div className="flex justify-between font-mono text-neutral-800 dark:text-neutral-200 font-bold">
-                        <span>{ev.sourceTitle}</span>
-                        <span className="text-neutral-400 font-normal">{ev.pageOrLine}</span>
+                      <div className="flex justify-between font-mono text-neutral-800 dark:text-neutral-200 font-bold items-center gap-2">
+                        <span className="truncate">{ev.sourceTitle}</span>
+                        {ev.pageOrLine && ev.pageOrLine.startsWith('http') ? (
+                          <a
+                            href={ev.pageOrLine}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1 font-normal text-[11px] shrink-0"
+                          >
+                            <span>Source</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="text-neutral-400 font-normal text-[11px] shrink-0">{ev.pageOrLine}</span>
+                        )}
                       </div>
                       <p className="text-neutral-600 dark:text-neutral-400 italic font-sans">&ldquo;{ev.quote}&rdquo;</p>
                     </div>

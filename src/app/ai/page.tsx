@@ -40,7 +40,7 @@ function AICopilotContent() {
   const [inputQuery, setInputQuery] = useState(initialQuery);
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<SynthesizedAnswer | null>(null);
-  const [currentProvider, setCurrentProvider] = useState<string>('Local LLM (Ollama)');
+  const [currentProvider, setCurrentProvider] = useState<string>('TinyFish AI Agent');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingStage, setLoadingStage] = useState<string>('Connecting to local model...');
 
@@ -48,7 +48,7 @@ function AICopilotContent() {
     if (!q.trim() || isLoading) return;
     const queryText = q.trim();
     setIsLoading(true);
-    setLoadingStage('Querying local Ollama model & searching document store...');
+    setLoadingStage('Querying TinyFish web intelligence & internal cracker models...');
 
     try {
       const stageTimer = setTimeout(() => {
@@ -372,7 +372,21 @@ function AICopilotContent() {
                               </span>
                               <div className="flex items-center gap-2 text-neutral-300">
                                 {ev.date && <span>[{ev.date}]</span>}
-                                {ev.pageOrLine && <span className="text-neutral-400">• {ev.pageOrLine}</span>}
+                                {ev.pageOrLine && (
+                                  ev.pageOrLine.startsWith('http') ? (
+                                    <a
+                                      href={ev.pageOrLine}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1 transition-colors"
+                                    >
+                                      <span>Source Link</span>
+                                      <ExternalLink className="w-3 h-3 inline" />
+                                    </a>
+                                  ) : (
+                                    <span className="text-neutral-400">• {ev.pageOrLine}</span>
+                                  )
+                                )}
                               </div>
                             </div>
 
@@ -501,16 +515,16 @@ function AICopilotContent() {
             </span>
             <div className="space-y-1.5 text-xs text-neutral-300">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Local LLM Engine: Active</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>TinyFish Web Agent & Search: Active</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Mandatory References: Enforced</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Local / Online LLM Router: Active</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                <span>Local RAG Fallback: Ready</span>
+                <span>Real-Time Web Grounding: Enabled</span>
               </div>
             </div>
           </div>
