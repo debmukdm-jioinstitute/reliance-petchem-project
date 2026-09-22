@@ -172,10 +172,8 @@ function AICopilotContent() {
   return (
     <div className="w-full min-h-[calc(100vh-5rem)] space-y-4">
 
-      {/* ── Top section: Hero + Market Snapshot side-by-side ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-4">
-
-        {/* ── Hero Card ── */}
+      {/* ── Hero Card ── */}
+      <div>
         <div
           className="relative rounded-3xl overflow-hidden min-h-[340px] flex flex-col justify-between"
           style={{ background: 'linear-gradient(135deg, #f5f0e8 0%, #e8dece 100%)' }}
@@ -268,84 +266,6 @@ function AICopilotContent() {
               )}
             </form>
           </div>
-        </div>
-
-        {/* ── Market Snapshot Panel ── */}
-        <div className="rounded-3xl bg-white border border-black/[0.05] shadow-[0_4px_24px_rgba(0,0,0,0.04)] p-6 flex flex-col">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-bold text-neutral-900 font-serif">Market Snapshot</h2>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Live
-            </span>
-          </div>
-
-          <div className="flex-1 space-y-3">
-            {MARKET_TICKERS.map((ticker) => (
-              <div
-                key={ticker.id}
-                className="flex items-center gap-3 p-3 rounded-2xl hover:bg-neutral-50 transition-colors group"
-              >
-                {/* Icon */}
-                <div className="w-9 h-9 rounded-xl bg-neutral-100 group-hover:bg-neutral-200 flex items-center justify-center transition-colors shrink-0">
-                  {ticker.id === 'comm-ethylene' && (
-                    <svg className="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 3v18M18 3v18M6 12h12" />
-                    </svg>
-                  )}
-                  {ticker.id === 'comm-ethane' && (
-                    <svg className="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="12" cy="12" r="8" />
-                      <path d="M12 8v8M8 12h8" />
-                    </svg>
-                  )}
-                  {ticker.id === 'comm-naphtha' && (
-                    <svg className="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="4" y="4" width="16" height="16" rx="2" />
-                      <path d="M4 9h16M9 4v16" />
-                    </svg>
-                  )}
-                  {ticker.id === 'comm-brent' && (
-                    <svg className="w-4 h-4 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13s-7-8-7-13a7 7 0 0 1 7-7z" />
-                      <circle cx="12" cy="9" r="2" />
-                    </svg>
-                  )}
-                </div>
-
-                {/* Label + value */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-neutral-500 font-medium truncate">{ticker.label}</div>
-                  <div className="text-sm font-bold text-neutral-900 mt-0.5">{ticker.value}</div>
-                </div>
-
-                {/* Change badge */}
-                <div
-                  className={`flex items-center gap-0.5 px-2.5 py-1 rounded-xl text-xs font-bold ${
-                    ticker.positive
-                      ? 'bg-emerald-50 text-emerald-600'
-                      : 'bg-red-50 text-red-500'
-                  }`}
-                >
-                  {ticker.positive ? (
-                    <ChevronUp className="w-3 h-3" />
-                  ) : (
-                    <ChevronDown className="w-3 h-3" />
-                  )}
-                  {ticker.change}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* View full market link */}
-          <Link
-            href="/market"
-            className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors font-medium"
-          >
-            Full Market Dashboard
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
       </div>
 
@@ -504,44 +424,7 @@ function AICopilotContent() {
         </div>
       )}
 
-      {/* ── 4 Action Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {ACTION_CARDS.map((card) => {
-          const IconComponent = card.icon;
-          const isCurrent = card.id === 'solve';
-          return (
-            <Link
-              key={card.id}
-              href={card.href}
-              id={`action-card-${card.id}`}
-              className="group relative rounded-3xl bg-white border border-black/[0.05] shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-5 sm:p-6 flex flex-col gap-4 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200"
-            >
-              {/* Icon */}
-              <div className={`w-12 h-12 rounded-2xl ${card.iconBg} flex items-center justify-center`}>
-                <IconComponent className={`w-6 h-6 ${card.iconColor}`} />
-              </div>
 
-              {/* Label + subtitle */}
-              <div className="flex-1">
-                <h3 className="text-sm sm:text-base font-bold text-neutral-900 mb-0.5 font-serif">{card.title}</h3>
-                <p className="text-xs text-neutral-500">{card.subtitle}</p>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex items-center justify-end">
-                <div className="w-8 h-8 rounded-full border border-neutral-200 group-hover:border-neutral-300 group-hover:bg-neutral-50 flex items-center justify-center transition-all">
-                  <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors" />
-                </div>
-              </div>
-
-              {/* Active indicator */}
-              {isCurrent && (
-                <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              )}
-            </Link>
-          );
-        })}
-      </div>
 
       {/* ── Bottom Recommended Queries Strip ── */}
       {!showAnswerPanel && (
