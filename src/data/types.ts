@@ -220,3 +220,17 @@ export interface AuditRecord {
   uncertaintyDisclosures: string[];
   timestamp: string;
 }
+
+export interface NewsWireItem {
+  id: string;
+  title: string;
+  link: string;
+  source: string;
+  pubDate: string;
+  isoDate?: string;
+  category: 'RELIANCE' | 'PETCHEM' | 'ENERGY' | 'GEOPOLITICAL';
+  impactTag: string;
+  imageUrl: string;
+  summary?: string;
+}
+
