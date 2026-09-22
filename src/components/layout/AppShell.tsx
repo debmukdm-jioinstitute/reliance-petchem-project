@@ -67,32 +67,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <IntelligenceContext.Provider value={{ openAuditModal, openCommandPalette }}>
-      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[#09090B] text-neutral-900 dark:text-neutral-100 font-sans p-3 sm:p-4 lg:p-5 flex flex-col transition-colors duration-200">
-        <div className="flex flex-col md:flex-row gap-4 lg:gap-5 flex-1 w-full max-w-[1720px] mx-auto items-start">
-          {/* Left Floating Sidebar */}
+      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[#09090B] text-neutral-900 dark:text-neutral-100 font-sans p-2 sm:p-4 lg:p-5 flex flex-col transition-colors duration-200 overflow-x-hidden">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-4 lg:gap-5 flex-1 w-full max-w-[1720px] mx-auto items-start">
+          {/* Left Sidebar (Mobile Top Header + Drawer & Desktop Sticky Sidebar) */}
           <Sidebar />
 
           {/* Right Main Content Viewport */}
-          <main className="flex-1 min-w-0 w-full">
+          <main className="flex-1 min-w-0 w-full overflow-hidden">
             {/* Optional Breadcrumb for nested module pages */}
             {isSubpage && (
-              <div className="mb-4 flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl bg-white dark:bg-[#121217] border border-black/[0.05] dark:border-white/10 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-                <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
-                  <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center gap-1">
+              <div className="mb-3 sm:mb-4 flex flex-wrap items-center justify-between gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-white dark:bg-[#121217] border border-black/[0.05] dark:border-white/10 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-neutral-500 dark:text-neutral-400 min-w-0">
+                  <Link href="/dashboard" className="hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center gap-1 shrink-0">
                     <Home className="w-3.5 h-3.5" />
-                    <span>Home</span>
+                    <span className="hidden sm:inline">Home</span>
                   </Link>
-                  <ChevronRight className="w-3 h-3 text-neutral-400" />
-                  <span className="font-semibold text-neutral-900 dark:text-white">
+                  <ChevronRight className="w-3 h-3 text-neutral-400 shrink-0" />
+                  <span className="font-semibold text-neutral-900 dark:text-white truncate">
                     {pageTitle}
                   </span>
                 </div>
                 <Link
-                  href="/"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-semibold transition-all"
+                  href="/dashboard"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-[11px] sm:text-xs font-semibold transition-all shrink-0 ml-auto"
                 >
                   <ArrowLeft className="w-3 h-3" />
-                  <span>Back to Dashboard</span>
+                  <span>Dashboard</span>
                 </Link>
               </div>
             )}
