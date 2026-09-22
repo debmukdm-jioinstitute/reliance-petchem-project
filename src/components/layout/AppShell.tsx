@@ -29,7 +29,6 @@ const PATH_TITLES: Record<string, string> = {
   '/operations': 'Cracker Logistics & VLEC Fleet',
   '/scenarios': 'Dual Simulation & Monte Carlo',
   '/forecasts': 'Price Forecasts & TimesFM',
-  '/executive': 'Executive Briefing & Reports',
   '/settings': 'System Settings',
   '/ai': 'AI Copilot Studio',
   '/alerts': 'Active System Alerts',

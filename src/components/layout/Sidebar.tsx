@@ -52,12 +52,6 @@ const NAV_ITEMS: NavItem[] = [
     icon: TrendingUp,
   },
   {
-    id: 'reports',
-    name: 'Reports',
-    href: '/executive',
-    icon: ClipboardList,
-  },
-  {
     id: 'settings',
     name: 'Settings',
     href: '/settings',

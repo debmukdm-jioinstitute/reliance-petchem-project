@@ -74,7 +74,7 @@ export default function CommandPaletteModal({
     } else if (item.type === 'SCENARIO') {
       router.push('/scenarios');
     } else if (item.type === 'DECISION' || item.type === 'ASSUMPTION') {
-      router.push('/executive');
+      router.push('/ai');
     } else {
       router.push(`/ai?q=${encodeURIComponent(item.title)}`);
     }
@@ -192,7 +192,6 @@ export default function CommandPaletteModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {[
                   { name: 'AI Copilot', desc: 'Ask questions grounded in project data', href: '/ai', icon: Sparkles },
-                  { name: 'Executive Briefing', desc: '60-second briefing & decisions register', href: '/executive', icon: FileText },
                   { name: 'Cracker Value Chain & Spreads', desc: 'Ethane vs Naphtha Economics', href: '/market?tab=cracker', icon: TrendingUp },
                   { name: '10,000-Run Monte Carlo Simulation', desc: 'NPV / IRR probability curve', href: '/scenarios/monte-carlo', icon: SlidersHorizontal },
                   { name: 'RIL Asset DCF Valuation Model', desc: 'Jamnagar, Dahej, Hazira', href: '/financial', icon: DollarSign },

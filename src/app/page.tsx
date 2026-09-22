@@ -476,108 +476,11 @@ export default function OverviewPage() {
               </div>
             </div>
 
-            {/* Bottom Center Card: Ground Truth Highlights */}
-            <div className="p-6 sm:p-7 rounded-[28px] bg-white/95 dark:bg-[#121218]/95 border border-black/[0.05] dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.03)] backdrop-blur-2xl space-y-4">
-              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-neutral-900 dark:text-white font-sans">
-                Ground Truth Highlights
-              </h3>
 
-              <div className="space-y-2.5">
-                {/* Highlight Item 1 */}
-                <Link
-                  href="/economics"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
-                      <FileText className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
-                        AI Cracker Industry Analysis
-                      </h4>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
-                        &ldquo;Ethane route: ~$250/t vs naphtha: ~$2,629/t...&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0 text-right">
-                    <div>
-                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
-                        Industry Analysis
-                      </span>
-                      <span className="text-[11px] text-neutral-400 block font-mono">
-                        Aug 2026
-                      </span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                </Link>
 
-                {/* Highlight Item 2 */}
-                <Link
-                  href="/project"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
-                      <FileText className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
-                        Beyond Naphtha: Capital Allocation
-                      </h4>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
-                        &ldquo;The pivot is being built right now...&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0 text-right">
-                    <div>
-                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
-                        Project Report
-                      </span>
-                      <span className="text-[11px] text-neutral-400 block font-mono">
-                        Jul 2026
-                      </span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                </Link>
 
-                {/* Highlight Item 3 */}
-                <Link
-                  href="/project"
-                  className="p-4 rounded-2xl bg-[#FAF8F5]/80 hover:bg-[#F3EFEA] dark:bg-neutral-900/50 dark:hover:bg-neutral-900 border border-black/[0.04] dark:border-white/5 flex items-center justify-between gap-4 transition-all group shadow-2xs"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 shadow-2xs">
-                      <FileText className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate">
-                        Group 9 Project Proposal
-                      </h4>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 italic truncate mt-0.5">
-                        &ldquo;AI live dashboard and two simulation tiers...&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0 text-right">
-                    <div>
-                      <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 block">
-                        Team
-                      </span>
-                      <span className="text-[11px] text-neutral-400 block font-mono">
-                        Project Doc
-                      </span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                </Link>
-              </div>
 
-            </div>
+
 
             {/* Bottom Floating Bar: Ask about markets, scenarios, models */}
             <form
