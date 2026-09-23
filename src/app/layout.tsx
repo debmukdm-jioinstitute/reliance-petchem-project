@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RIL Intelligence OS — Petchem SCADA, Economics & Optimization",
+  title: "RIL Intelligence OS — Petchem Economics & Optimization",
   description:
     "Executive-grade institutional intelligence operating system for Reliance Industries Limited (O2C / Petrochemicals & Cracker Business).",
   icons: {

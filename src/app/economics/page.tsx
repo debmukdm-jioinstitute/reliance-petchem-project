@@ -156,7 +156,7 @@ export default function CrackerEconomicsPage() {
             href="/simulation"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-xs font-mono font-bold text-white transition-all active:scale-95"
           >
-            <span>SCADA SIMULATION</span>
+            <span>MARGIN CALCULATOR</span>
             <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
           </Link>
         </div>

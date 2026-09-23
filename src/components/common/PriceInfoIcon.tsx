@@ -473,7 +473,7 @@ export default function PriceInfoIcon({
                 onClick={() => handleClose()}
                 className="hover:text-cyan-300 underline underline-offset-4 flex items-center gap-1 text-cyan-400"
               >
-                SCADA Sim <ArrowRight className="w-3 h-3" />
+                Margin Calc <ArrowRight className="w-3 h-3" />
               </Link>
               <span className="text-neutral-600">•</span>
               <Link

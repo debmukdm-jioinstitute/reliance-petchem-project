@@ -706,25 +706,25 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Bento Card 4: SCADA Digital Twin */}
+              {/* Bento Card 4: Feed-Mix Margin Calculator */}
               <div className="glass-dark-card rounded-3xl p-6 flex flex-col justify-between group overflow-hidden relative">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                       <Cpu className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full uppercase">Digital Twin</span>
+                    <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full uppercase">Margin Calculator</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">SCADA Cracker Simulator</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">Feed-Mix Margin Calculator</h3>
                   <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-                    Interactive furnace COT control, ethane/naphtha ratio tuning, and real-time yield optimization.
+                    Ethane/naphtha ratio tuning against live spot prices to see the EBITDA impact in real time.
                   </p>
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-xs text-neutral-400 font-mono">852°C Furnace COT</span>
+                  <span className="text-xs text-neutral-400 font-mono">Live Feed Economics</span>
                   <Link href="/simulation" className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
-                    <span>Simulate Cracker</span>
+                    <span>Run Calculator</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>

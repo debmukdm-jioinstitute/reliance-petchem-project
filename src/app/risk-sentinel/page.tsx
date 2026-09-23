@@ -317,7 +317,7 @@ export default function PriceRiskSentinelPage() {
                 href="/simulation"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#FF2B44] via-[#F43F5E] to-[#F97316] hover:from-[#E11D48] hover:to-[#EA580C] text-xs sm:text-sm font-bold text-white transition-all shadow-md shadow-red-500/25 active:scale-95"
               >
-                <span>Test Mitigation in SCADA</span>
+                <span>Test Mitigation in Margin Calculator</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

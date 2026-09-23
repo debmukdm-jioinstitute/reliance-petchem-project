@@ -159,7 +159,7 @@ export default function FeedstockOptimizationPage() {
             href="/simulation"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-xs font-mono text-neutral-200 transition-all active:scale-95"
           >
-            <span>SCADA MIMIC</span>
+            <span>MARGIN CALCULATOR</span>
             <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
           </Link>
         </div>

@@ -216,10 +216,3 @@ input[type="range"]::-moz-range-thumb {
 .live-pulse-anim {
   animation: live-pulse 2s infinite ease-in-out;
 }
-
-/* SCADA animated pipe flow animation */
-@keyframes dash {
-  to {
-    stroke-dashoffset: -100;
-  }
-}

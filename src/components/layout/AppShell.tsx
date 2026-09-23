@@ -22,7 +22,7 @@ export const useIntelligence = () => useContext(IntelligenceContext);
 
 const PATH_TITLES: Record<string, string> = {
   '/dashboard': 'Intelligence Dashboard',
-  '/simulation': 'SCADA Simulation & Digital Twin',
+  '/simulation': 'Feed-Mix Margin Calculator',
   '/economics': 'Cracker Value Chain Economics',
   '/optimization': 'LP Feedstock Optimizer',
   '/risk-sentinel': 'Energy Price Risk & Shock Sentinel',

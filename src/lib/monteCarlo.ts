@@ -1,8 +1,8 @@
 // Monte Carlo simulation engine for the RIL cracker capacity expansion decision.
 //
 // The economics (feed mix -> product yield -> cash margin) reuse the same
-// formulas as the live SCADA simulator (src/app/simulation/page.tsx) so numbers
-// stay consistent across the site. This file adds the part SCADA does not do:
+// formulas as the live feed-mix margin calculator (src/app/simulation/page.tsx) so
+// numbers stay consistent across the site. This file adds the part that page does not do:
 // treat every price and delay as a range instead of one fixed number, run the
 // model thousands of times, and read off the spread of possible outcomes.
 
@@ -124,7 +124,7 @@ export interface ProjectAssumptions {
 }
 
 // Defaults grounded in the site's own cracker asset register (CRACKER_ASSETS)
-// and the SCADA simulator's price levels, so this tool tells the same story
+// and the feed-mix margin calculator's price levels, so this tool tells the same story
 // as the rest of the dashboard. Feed capacity is the sum of naphtha+ethane+
 // propane feed capacity across all 5 sites (Jamnagar, Dahej, Hazira,
 // Nagothane, Vadodara). Total capex is an independent, bottom-up estimate for
@@ -353,7 +353,7 @@ export function runEconomicModel(sample: IterationSample, assumptions: ProjectAs
   const ethaneMix = sample.ethaneMixPct / 100;
   const naphthaMix = 1 - ethaneMix;
 
-  // Same feed -> yield -> margin formulas as the SCADA simulator page.
+  // Same feed -> yield -> margin formulas as the feed-mix margin calculator page.
   const weightedFeedCost = ethaneMix * (sample.ethanePrice + sample.freightCost) + naphthaMix * sample.naphthaPrice;
   const ethyleneYield = ethaneMix * 0.795 + naphthaMix * 0.332;
   const propyleneYield = ethaneMix * 0.024 + naphthaMix * 0.168;
