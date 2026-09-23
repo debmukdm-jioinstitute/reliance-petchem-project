@@ -173,7 +173,7 @@ function parseToSynthesized(
     assumptions: [],
     uncertainty:
       'Based on Groq AI analysis, live market data, and TinyFish real-time web intelligence. Verify critical decisions against primary sources.',
-    relatedAnalysis: ['/economics', '/simulation', '/market', '/financial', '/risk-sentinel'],
+    relatedAnalysis: ['/economics', '/simulation', '/feedstock-tracker', '/financial', '/risk-sentinel'],
     requiredAgents: ['Groq Intelligence Engine', 'TinyFish Real-Time Search'],
   };
 }

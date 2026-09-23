@@ -171,7 +171,7 @@ export function buildAnswerFromTinyFish(
     numericalData,
     assumptions: ['Live industry data retrieved dynamically via real-time web telemetry'],
     uncertainty: 'Real-time search results reflecting current live public intelligence.',
-    relatedAnalysis: ['/market', '/economics', '/simulation', '/risk-sentinel'],
+    relatedAnalysis: ['/feedstock-tracker', '/economics', '/simulation', '/risk-sentinel'],
     requiredAgents: ['Live Market Intelligence Engine', 'RIL Petrochemical Analytics Engine']
   };
 }

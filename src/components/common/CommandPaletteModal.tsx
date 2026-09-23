@@ -70,7 +70,7 @@ export default function CommandPaletteModal({
   const handleSelectResult = (item: SearchResultItem) => {
     onClose();
     if (item.type === 'MARKET') {
-      router.push('/market');
+      router.push('/feedstock-tracker');
     } else if (item.type === 'SCENARIO') {
       router.push('/scenarios');
     } else if (item.type === 'DECISION' || item.type === 'ASSUMPTION') {
@@ -192,7 +192,7 @@ export default function CommandPaletteModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {[
                   { name: 'AI Copilot', desc: 'Ask questions grounded in project data', href: '/ai', icon: Sparkles },
-                  { name: 'Cracker Value Chain & Spreads', desc: 'Ethane vs Naphtha Economics', href: '/market?tab=cracker', icon: TrendingUp },
+                  { name: 'Cracker Value Chain & Spreads', desc: 'Ethane vs Naphtha Economics', href: '/economics', icon: TrendingUp },
                   { name: '10,000-Run Monte Carlo Simulation', desc: 'NPV / IRR probability curve', href: '/scenarios/monte-carlo', icon: SlidersHorizontal },
                   { name: 'RIL Asset DCF Valuation Model', desc: 'Jamnagar, Dahej, Hazira', href: '/financial', icon: DollarSign },
                   { name: 'Interactive Knowledge Graph', desc: 'Palantir-grade relational network', href: '/knowledge-graph', icon: Sparkles },

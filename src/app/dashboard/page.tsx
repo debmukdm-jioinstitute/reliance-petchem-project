@@ -573,7 +573,7 @@ function DashboardContent() {
         <div className="lg:col-span-3 bg-white rounded-2xl border border-neutral-100 shadow-sm p-5">
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-base font-bold text-neutral-900">Latest Insights</h2>
-            <Link href="/market" className="text-xs text-neutral-400 hover:text-neutral-700 font-semibold transition-colors">
+            <Link href="/feedstock-tracker" className="text-xs text-neutral-400 hover:text-neutral-700 font-semibold transition-colors">
               View All
             </Link>
           </div>

@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import {
   Home,
   Globe2,
-  BarChart2,
   Ship,
   TrendingUp,
   Settings,
@@ -39,12 +38,6 @@ const NAV_ITEMS: NavItem[] = [
     name: 'Risk Radar',
     href: '/risk-sentinel',
     icon: Globe2,
-  },
-  {
-    id: 'price-monitor',
-    name: 'Price Monitor',
-    href: '/market',
-    icon: BarChart2,
   },
   {
     id: 'feedstock-tracker',

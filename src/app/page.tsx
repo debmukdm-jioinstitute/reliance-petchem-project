@@ -651,7 +651,7 @@ export default function LandingPage() {
                 
                 <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
                   <span className="text-xs text-neutral-400 font-mono">Yahoo Finance + ICIS feeds</span>
-                  <Link href="/market" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                  <Link href="/feedstock-tracker" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
                     <span>View Markets</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
