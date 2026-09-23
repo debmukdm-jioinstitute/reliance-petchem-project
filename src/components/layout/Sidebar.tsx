@@ -8,7 +8,6 @@ import {
   Globe2,
   Ship,
   TrendingUp,
-  Settings,
   Menu,
   X,
   Zap,
@@ -64,12 +63,6 @@ const NAV_ITEMS: NavItem[] = [
     href: '/ai',
     icon: Brain,
     badge: 'AI',
-  },
-  {
-    id: 'settings',
-    name: 'Settings',
-    href: '/settings',
-    icon: Settings,
   },
 ];
 
