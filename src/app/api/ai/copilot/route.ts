@@ -1,225 +1,379 @@
 import { NextResponse } from 'next/server';
+import Groq from 'groq-sdk';
 import { MARKET_COMMODITIES, CRACKER_ASSETS } from '@/data/knowledgeStore';
 import { COMMODITY_INTELLIGENCE } from '@/data/commodityIntelligence';
 import { performHybridSearch, SynthesizedAnswer } from '@/lib/searchEngine';
 import { searchTinyFish, buildAnswerFromTinyFish, TinyFishSearchResultItem } from '@/lib/tinyfish';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 15;
+export const maxDuration = 60;
 
+// ─── Groq client ────────────────────────────────────────────────────────────
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
+
+// Primary: 120B flagship model on this Groq key
+const GROQ_PRIMARY   = 'openai/gpt-oss-120b';
+// Fallback: fast 20B model
+const GROQ_FALLBACK  = 'openai/gpt-oss-20b';
+
+// ─── Request body ────────────────────────────────────────────────────────────
 interface CopilotRequestBody {
-  query: string;
-  history?: Array<{ query: string; answer: Partial<SynthesizedAnswer> }>;
+  query:   string;
+  history?: Array<{ role: 'user' | 'assistant'; content: string }>;
+  stream?:  boolean;
 }
 
+// ─── System prompt builder ───────────────────────────────────────────────────
 function buildSystemPrompt(
   contextSnippets: string,
   liveWebSnippets: string,
-  marketSnapshot: string,
-  assetSummary: string
-) {
-  return `You are the Reliance Petrochemicals & O2C analytics copilot embedded in an internal decision-support dashboard.
-You have domain knowledge over:
-1. Reliance Industries Limited (RIL) O2C Business: Jamnagar, Dahej Cryogenic Terminal, Hazira, Nagothane, Vadodara, a VLEC fleet importing US ethane, and downstream polymer assets.
-2. Macroeconomics: Brent crude, US Mont Belvieu ethane prices, Asian Naphtha CFR, USD/INR, shipping freight rates, global petchem supply additions.
-3. Cracker economics: ethane cracking yields ~79.5% ethylene vs ~33.2% for naphtha; ethane is priced off US gas fundamentals and is largely decoupled from Brent, while naphtha tracks Brent closely.
+  marketSnapshot:  string,
+  assetSummary:    string
+): string {
+  return `You are RIL Intelligence — the elite AI copilot for Reliance Industries Limited's O2C & Petrochemicals division, embedded inside an executive intelligence dashboard.
 
-CURRENT LIVE MARKET DATA:
+## Scope
+You are an expert on ALL topics — petrochemicals, macroeconomics, geopolitics, finance, science, technology, business strategy, and general knowledge. No question is out of scope.
+
+## Core RIL Domain Knowledge
+• **Assets**: Jamnagar (~1.24 MMTPA ethylene), Dahej Cryogenic Terminal (US ethane import hub), Hazira, Nagothane, Vadodara, VLEC fleet, downstream polymer & MEG assets.
+• **Cracker economics**: Ethane → ~79.5% ethylene yield vs ~33.2% naphtha. Ethane priced off Mont Belvieu (US gas fundamentals, Brent-decoupled). Naphtha tracks Brent tightly. RIL structural margin advantage = $150–250/t over naphtha crackers.
+• **Macro drivers**: Brent crude, Mont Belvieu ethane, Asian Naphtha CFR, USD/INR FX, VLCC freight, global petchem capacity additions, China demand cycle.
+
+## Live Market Data (Use For All Calculations)
 ${marketSnapshot}
 
-RELIANCE CRACKER ASSETS:
+## RIL Cracker Asset Portfolio
 ${assetSummary}
 
-RETRIEVED PROJECT CONTEXT:
-${contextSnippets || 'Reliance O2C operational architecture and feedstock balances.'}
+## Internal Project Intelligence (RAG)
+${contextSnippets || 'No direct keyword match — answer from market data, asset data, and domain expertise.'}
 
-REAL-TIME WEB INTELLIGENCE:
-${liveWebSnippets || 'No external web search results found; answer from internal project data.'}
+## Real-Time Web Intelligence (TinyFish)
+${liveWebSnippets || 'No live web results — answering from internal knowledge and market data.'}
 
-RULES:
-- Ground every number in the data given above, or say plainly when you are estimating.
-- Seamlessly blend real-time market data, web intelligence, and cracker economics.
-- Be direct, strategic, and quantitative. No filler.
-- Respond with ONLY valid JSON, no markdown fences, matching exactly this schema:
-{
-  "answer": "Full analytical answer.",
-  "keyTakeaway": "1-2 sentence bottom line.",
-  "category": "FACT" | "OPTIMIZATION" | "MACRO" | "MICRO" | "MODEL OUTPUT",
-  "evidence": [{ "sourceTitle": "string", "date": "string", "pageOrLine": "string", "quote": "string" }],
-  "numericalData": [{ "label": "string", "value": "string", "context": "string" }],
-  "assumptions": ["string"],
-  "uncertainty": "string",
-  "relatedAnalysis": ["/economics", "/simulation", "/market", "/financial"]
-}`;
+## Response Format
+Respond in **clean, well-structured Markdown**:
+1. **Executive Summary** — 2-3 sentence bottom line with the decisive answer
+2. **Detailed Analysis** — full reasoning with quantitative data
+3. **Key Metrics** — table of the most important numbers (if applicable)
+4. **Strategic Implication** — what RIL should do / what this means
+
+## Rules
+- Be **direct and quantitative** — cite every number's source
+- **Any topic is welcome** — answer general questions as a world-class expert
+- For calculations, show your working
+- Never fabricate citations not present in context above`;
 }
 
-function extractJson(text: string): unknown {
-  const cleaned = text
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim();
-  return JSON.parse(cleaned);
+// ─── Helper: market data strings ─────────────────────────────────────────────
+function buildMarketSnapshot(): string {
+  return MARKET_COMMODITIES.slice(0, 10)
+    .map((c) => {
+      const intel = COMMODITY_INTELLIGENCE[c.id];
+      const note = intel ? ` — ${intel.relianceImpact}` : '';
+      return `• ${c.name} (${c.symbol}): **$${c.currentPrice} ${c.currency}/${c.unit}** | 1D: ${c.change1D > 0 ? '+' : ''}${c.change1D}% | 1Y: ${c.change1Y}%${note}`;
+    })
+    .join('\n');
 }
 
-function toSynthesizedAnswer(
-  parsed: unknown,
-  trimmedQuery: string,
+function buildAssetSummary(): string {
+  return CRACKER_ASSETS.map(
+    (a) =>
+      `• ${a.siteName}: ${a.ethyleneCapacityKTA} KTA ethylene, ${a.propyleneCapacityKTA} KTA propylene | NPV $${a.npvUSD_Mn}M | IRR ${a.irrPct}% | ${a.currentScheduleStatus}`
+  ).join('\n');
+}
+
+// ─── Helper: RAG context + web context ───────────────────────────────────────
+function buildContext(query: string): {
+  contextSnippets: string;
+  searchHits: ReturnType<typeof performHybridSearch>;
+} {
+  const searchHits = performHybridSearch(query);
+  const contextSnippets = searchHits
+    .slice(0, 5)
+    .map(
+      (hit, i) =>
+        `[Doc ${i + 1}: "${hit.source.sourceTitle}" — ${hit.source.pageOrSection || 'Document'}]\n${hit.snippet}${hit.exactQuote ? `\n→ "${hit.exactQuote}"` : ''}`
+    )
+    .join('\n\n');
+  return { contextSnippets, searchHits };
+}
+
+function buildWebSnippets(webHits: TinyFishSearchResultItem[]): string {
+  return webHits
+    .slice(0, 5)
+    .map(
+      (w, i) =>
+        `[Web ${i + 1}: "${w.title}" via ${w.site_name}${w.date ? ` (${w.date})` : ''}]\n${w.snippet}\nURL: ${w.url}`
+    )
+    .join('\n\n');
+}
+
+// ─── Parse markdown text into SynthesizedAnswer ───────────────────────────────
+function parseToSynthesized(
+  markdownText: string,
+  query: string,
   searchHits: ReturnType<typeof performHybridSearch>,
   webHits: TinyFishSearchResultItem[]
-): SynthesizedAnswer | null {
-  const p = parsed as Record<string, unknown> | null;
-  if (!p || typeof p.answer !== 'string') return null;
+): SynthesizedAnswer {
+  // Extract executive summary as key takeaway
+  const execMatch = markdownText.match(
+    /##?\s*\*?\*?Executive Summary\*?\*?[\s\S]*?\n+([\s\S]*?)(?=\n##|\n\*\*[A-Z]|$)/i
+  );
+  const rawTakeaway = execMatch
+    ? execMatch[1].replace(/\*\*/g, '').replace(/^[-•]\s*/gm, '').trim()
+    : markdownText.slice(0, 250).replace(/#+\s*/g, '').replace(/\*\*/g, '').trim();
+  const keyTakeaway = rawTakeaway.slice(0, 350);
 
-  let evidenceList: SynthesizedAnswer['evidence'] =
-    Array.isArray(p.evidence) && p.evidence.length > 0
-      ? (p.evidence as SynthesizedAnswer['evidence'])
-      : [];
+  // Category detection
+  const lower = query.toLowerCase();
+  let category: SynthesizedAnswer['category'] = 'FACT';
+  if (lower.match(/optim|allocat|best|switch|hedg/)) category = 'OPTIMIZATION';
+  else if (lower.match(/brent|crude|macro|geopolit|opec|fed|inflation|gdp/)) category = 'MACRO';
+  else if (lower.match(/margin|ebitda|spread|cost|yield|profit|revenue/)) category = 'MICRO';
+  else if (lower.match(/model|scenario|forecast|simulation|monte carlo|predict/)) category = 'MODEL OUTPUT';
 
-  if (evidenceList.length === 0) {
-    // Populate with live web results first
-    const webEvidence = webHits.slice(0, 3).map((w) => ({
+  // Extract numerical metrics (bold pattern: **value**)
+  const numericalData: SynthesizedAnswer['numericalData'] = [];
+  const numRe = /([A-Za-z][^|*\n]{3,50}?):\s*\*\*([^*\n]+)\*\*/g;
+  let m;
+  let count = 0;
+  while ((m = numRe.exec(markdownText)) !== null && count < 8) {
+    const val = m[2].trim();
+    if (/[\d$₹€£%]/.test(val)) {
+      numericalData.push({ label: m[1].trim(), value: val, context: '' });
+      count++;
+    }
+  }
+
+  // Build evidence: web hits first, then RAG hits
+  const evidence: SynthesizedAnswer['evidence'] = [
+    ...webHits.slice(0, 3).map((w) => ({
       sourceTitle: `${w.site_name}: ${w.title}`,
       date: w.date || 'Live 2026',
       pageOrLine: w.url,
-      quote: w.snippet
-    }));
-
-    // Followed by local hybrid search hits
-    const localEvidence = searchHits.slice(0, 2).map((h) => ({
+      quote: w.snippet.slice(0, 200),
+    })),
+    ...searchHits.slice(0, 2).map((h) => ({
       sourceTitle: h.source.sourceTitle,
       date: h.source.date || '2026',
-      pageOrLine: h.source.pageOrSection || 'Project Store',
-      quote: h.exactQuote || h.snippet
-    }));
-
-    evidenceList = [...webEvidence, ...localEvidence];
-  }
+      pageOrLine: h.source.pageOrSection || 'Project Document Store',
+      quote: (h.exactQuote || h.snippet).slice(0, 200),
+    })),
+  ];
 
   return {
-    question: trimmedQuery,
-    answer: p.answer,
-    keyTakeaway: typeof p.keyTakeaway === 'string' ? p.keyTakeaway : '',
-    category: (p.category as SynthesizedAnswer['category']) || 'FACT',
-    evidence: evidenceList,
-    numericalData: Array.isArray(p.numericalData) ? (p.numericalData as SynthesizedAnswer['numericalData']) : [],
-    assumptions: Array.isArray(p.assumptions) ? (p.assumptions as string[]) : [],
-    uncertainty: typeof p.uncertainty === 'string' ? p.uncertainty : 'Grounded in real-time market search & RIL model telemetry.',
-    relatedAnalysis: Array.isArray(p.relatedAnalysis) ? (p.relatedAnalysis as string[]) : ['/economics', '/simulation', '/market'],
-    requiredAgents: ['Real-Time Search Engine', 'RIL O2C Copilot Engine']
+    question: query,
+    answer: markdownText,
+    keyTakeaway,
+    category,
+    evidence,
+    numericalData,
+    assumptions: [],
+    uncertainty:
+      'Based on Groq AI analysis, live market data, and TinyFish real-time web intelligence. Verify critical decisions against primary sources.',
+    relatedAnalysis: ['/economics', '/simulation', '/market', '/financial', '/risk-sentinel'],
+    requiredAgents: ['Groq Intelligence Engine', 'TinyFish Real-Time Search'],
   };
 }
 
-async function tryOnlineLLM(systemPrompt: string, query: string): Promise<{ text: string } | null> {
-  const controller = new AbortController();
-  // Fast 5.5s timeout for snappy responses
-  const timeoutId = setTimeout(() => controller.abort(), 5500);
-  try {
-    const response = await fetch('https://text.pollinations.ai/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: query }
-        ],
-        model: 'openai',
-        jsonMode: true,
-        seed: 42
-      }),
-      signal: controller.signal
-    });
-    if (!response.ok) return null;
-    const text = await response.text();
-    return { text };
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
+// ─── Main POST handler ────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   try {
     const body: CopilotRequestBody = await req.json();
-    const { query } = body;
+    const { query, history = [], stream: requestStream = false } = body;
 
     if (!query || typeof query !== 'string' || !query.trim()) {
       return NextResponse.json({ error: 'A query string is required.' }, { status: 400 });
     }
     const trimmedQuery = query.trim();
 
-    // 1. Fetch internal hybrid search context and backend real-time web search in parallel
-    const [searchHits, webHits] = await Promise.all([
-      Promise.resolve(performHybridSearch(trimmedQuery)),
-      searchTinyFish(trimmedQuery, { limit: 5 })
-    ]);
+    const hasGroqKey = !!process.env.GROQ_API_KEY;
 
-    const contextSnippets = searchHits
-      .slice(0, 4)
-      .map(
-        (hit, i) =>
-          `[Internal ${i + 1}] Source: "${hit.source.sourceTitle}" (${hit.source.date || 'Active'})\n` +
-          `Section: ${hit.source.pageOrSection || 'Project Store'}\n` +
-          `Content: ${hit.snippet} ${hit.exactQuote ? `Quote: "${hit.exactQuote}"` : ''}`
-      )
-      .join('\n\n');
+    // ── Build RAG context + fire TinyFish search in parallel ──────────────────
+    const { contextSnippets, searchHits } = buildContext(trimmedQuery);
+    const marketSnapshot = buildMarketSnapshot();
+    const assetSummary   = buildAssetSummary();
 
-    const liveWebSnippets = webHits
-      .slice(0, 4)
-      .map(
-        (w, i) =>
-          `[Web Search ${i + 1}] Source: "${w.title}" (${w.site_name}${w.date ? ` • ${w.date}` : ''})\n` +
-          `URL: ${w.url}\n` +
-          `Content: ${w.snippet}`
-      )
-      .join('\n\n');
+    // TinyFish web search runs concurrently while we prepare the prompt
+    const webHitsPromise = searchTinyFish(trimmedQuery, { limit: 6 });
 
-    const marketSnapshot = MARKET_COMMODITIES.slice(0, 8)
-      .map((c) => {
-        const intel = COMMODITY_INTELLIGENCE[c.id];
-        const note = intel ? ` — ${intel.relianceImpact}` : '';
-        return `${c.name} (${c.symbol}): $${c.currentPrice} ${c.currency}/${c.unit} (1D: ${c.change1D > 0 ? '+' : ''}${c.change1D}%)${note}`;
-      })
-      .join('\n');
+    // ── No Groq key: return TinyFish-only answer immediately ──────────────────
+    if (!hasGroqKey) {
+      const webHits = await webHitsPromise;
+      const fallback = buildAnswerFromTinyFish(trimmedQuery, webHits);
+      return NextResponse.json({
+        success: true,
+        answer: {
+          ...fallback,
+          answer:
+            '⚠️ **Groq API key not configured.**\n\nAdd `GROQ_API_KEY` to your Vercel environment variables (or `.env.local` for local dev) to unlock full AI power.\n\nGet a **free key** at [console.groq.com](https://console.groq.com) in under 30 seconds.\n\n---\n\n**Live TinyFish Web Results for your query:**\n\n' +
+            fallback.answer,
+        },
+        provider: 'TinyFish Live Search (Groq not configured)',
+        webSearchUsed: webHits.length > 0,
+        timestamp: new Date().toISOString(),
+      });
+    }
 
-    const assetSummary = CRACKER_ASSETS.map(
-      (a) =>
-        `${a.siteName}: ${a.ethyleneCapacityKTA} KTA Ethylene, ${a.propyleneCapacityKTA} KTA Propylene, NPV $${a.npvUSD_Mn}M, IRR ${a.irrPct}%, Status: ${a.currentScheduleStatus}.`
-    ).join('\n');
+    // ── Groq path ─────────────────────────────────────────────────────────────
+    const webHits = await webHitsPromise;
+    const liveWebSnippets = buildWebSnippets(webHits);
 
-    const systemPrompt = buildSystemPrompt(contextSnippets, liveWebSnippets, marketSnapshot, assetSummary);
+    const systemPrompt = buildSystemPrompt(
+      contextSnippets,
+      liveWebSnippets,
+      marketSnapshot,
+      assetSummary
+    );
 
-    // 2. Query cloud intelligence with real-time web context
-    let providerUsed = 'RIL Intelligence Engine (Live Web + Cloud)';
-    let raw = await tryOnlineLLM(systemPrompt, trimmedQuery);
+    // Multi-turn conversation messages
+    const messages: Groq.Chat.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
+      ...history.slice(-8),
+      { role: 'user', content: trimmedQuery },
+    ];
 
-    let synthesizedResult: SynthesizedAnswer | null = null;
-    if (raw) {
+    // ── STREAMING MODE ────────────────────────────────────────────────────────
+    if (requestStream) {
+      const encoder = new TextEncoder();
+
+      const readable = new ReadableStream({
+        async start(controller) {
+          const send = (data: object) =>
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+
+          let fullText = '';
+          let providerUsed = '';
+
+          try {
+            // Try compound-beta first (has native web search)
+            let stream: AsyncIterable<Groq.Chat.ChatCompletionChunk>;
+            try {
+              stream = await groq.chat.completions.create({
+                model: GROQ_PRIMARY,
+                messages,
+                stream: true,
+                temperature: 0.25,
+                max_tokens: 2048,
+              });
+              providerUsed = 'Groq gpt-oss-120b · TinyFish web search';
+            } catch {
+              // Fallback to llama-3.3-70b
+              stream = await groq.chat.completions.create({
+                model: GROQ_FALLBACK,
+                messages,
+                stream: true,
+                temperature: 0.25,
+                max_tokens: 2048,
+              });
+              providerUsed = 'Groq gpt-oss-20b · TinyFish web search';
+            }
+
+            for await (const chunk of stream) {
+              const delta = chunk.choices[0]?.delta?.content || '';
+              if (delta) {
+                fullText += delta;
+                send({ type: 'delta', content: delta, provider: providerUsed });
+              }
+            }
+
+            // Finalize with structured answer
+            const synthesized = parseToSynthesized(fullText, trimmedQuery, searchHits, webHits);
+            send({
+              type: 'done',
+              answer: synthesized,
+              provider: providerUsed,
+              webSearchUsed: webHits.length > 0,
+              timestamp: new Date().toISOString(),
+            });
+          } catch (err) {
+            // Groq failed — fall back to TinyFish-only structured answer
+            const fallback = buildAnswerFromTinyFish(trimmedQuery, webHits);
+            send({
+              type: 'done',
+              answer: fallback,
+              provider: 'TinyFish Live Search (Groq fallback)',
+              webSearchUsed: webHits.length > 0,
+              error: err instanceof Error ? err.message : 'Groq unavailable',
+              timestamp: new Date().toISOString(),
+            });
+          } finally {
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(readable, {
+        headers: {
+          'Content-Type':  'text/event-stream',
+          'Cache-Control': 'no-cache, no-transform',
+          Connection:      'keep-alive',
+          'X-Accel-Buffering': 'no',
+        },
+      });
+    }
+
+    // ── NON-STREAMING MODE (fallback for clients that don't support SSE) ──────
+    let fullText = '';
+    let providerUsed = '';
+    let webSearchUsed = webHits.length > 0;
+
+    try {
+      let completion: Groq.Chat.ChatCompletion;
       try {
-        const parsed = extractJson(raw.text);
-        synthesizedResult = toSynthesizedAnswer(parsed, trimmedQuery, searchHits, webHits);
+        completion = await groq.chat.completions.create({
+          model: GROQ_PRIMARY,
+          messages,
+          stream: false,
+          temperature: 0.25,
+          max_tokens: 2048,
+        });
+        providerUsed = 'Groq gpt-oss-120b · TinyFish web search';
       } catch {
-        synthesizedResult = null;
+        completion = await groq.chat.completions.create({
+          model: GROQ_FALLBACK,
+          messages,
+          stream: false,
+          temperature: 0.25,
+          max_tokens: 2048,
+        });
+        providerUsed = 'Groq gpt-oss-20b · TinyFish web search';
       }
+
+      fullText = completion.choices[0]?.message?.content || '';
+    } catch (err) {
+      console.warn('Groq unavailable, falling back to TinyFish:', err);
     }
 
-    // 3. High-speed synthesis fallback from real-time web intelligence
-    if (!synthesizedResult) {
-      providerUsed = 'RIL Intelligence Engine (Live Web Search)';
-      synthesizedResult = buildAnswerFromTinyFish(trimmedQuery, webHits);
+    // If Groq returned nothing, use TinyFish-only answer
+    if (!fullText) {
+      const fallback = buildAnswerFromTinyFish(trimmedQuery, webHits);
+      return NextResponse.json({
+        success: true,
+        answer: fallback,
+        provider: 'TinyFish Live Search (Groq fallback)',
+        webSearchUsed,
+        timestamp: new Date().toISOString(),
+      });
     }
 
+    const synthesized = parseToSynthesized(fullText, trimmedQuery, searchHits, webHits);
     return NextResponse.json({
       success: true,
-      answer: synthesizedResult,
+      answer: synthesized,
       provider: providerUsed,
-      timestamp: new Date().toISOString()
+      webSearchUsed,
+      timestamp: new Date().toISOString(),
     });
   } catch (err: unknown) {
-    console.error('Fatal error in /api/ai/copilot route:', err);
+    console.error('Fatal error in /api/ai/copilot:', err);
     return NextResponse.json(
-      { error: 'Failed to synthesize AI copilot response.', details: err instanceof Error ? err.message : String(err) },
+      {
+        error: 'Failed to synthesize AI response.',
+        details: err instanceof Error ? err.message : String(err),
+      },
       { status: 500 }
     );
   }
