@@ -15,7 +15,8 @@ import {
   Zap,
   Brain,
   Layers,
-  ChevronRight
+  ChevronRight,
+  Database
 } from 'lucide-react';
 
 interface NavItem {
@@ -44,6 +45,12 @@ const NAV_ITEMS: NavItem[] = [
     name: 'Price Monitor',
     href: '/market',
     icon: BarChart2,
+  },
+  {
+    id: 'feedstock-tracker',
+    name: 'Feedstock Tracker',
+    href: '/feedstock-tracker',
+    icon: Database,
   },
   {
     id: 'supply-chain',

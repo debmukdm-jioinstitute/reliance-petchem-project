@@ -27,6 +27,7 @@ const PATH_TITLES: Record<string, string> = {
   '/optimization': 'LP Feedstock Optimizer',
   '/risk-sentinel': 'Energy Price Risk & Shock Sentinel',
   '/market': 'Market Intelligence & Spreads',
+  '/feedstock-tracker': 'O2C Feedstock & Petrochemical Tracker',
   '/operations': 'Cracker Logistics & VLEC Fleet',
   '/scenarios': 'Dual Simulation & Monte Carlo',
   '/forecasts': 'Price Forecasts & TimesFM',
