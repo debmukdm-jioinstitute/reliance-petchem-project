@@ -11,10 +11,10 @@ export const maxDuration = 60;
 // ─── Groq client ────────────────────────────────────────────────────────────
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
 
-// Primary: compound-beta has built-in web search tool-use
-const GROQ_PRIMARY   = 'compound-beta';
-// Fallback: best open-source reasoning model on Groq
-const GROQ_FALLBACK  = 'llama-3.3-70b-versatile';
+// Primary: 120B flagship model on this Groq key
+const GROQ_PRIMARY   = 'openai/gpt-oss-120b';
+// Fallback: fast 20B model
+const GROQ_FALLBACK  = 'openai/gpt-oss-20b';
 
 // ─── Request body ────────────────────────────────────────────────────────────
 interface CopilotRequestBody {
@@ -258,7 +258,7 @@ export async function POST(req: Request) {
                 temperature: 0.25,
                 max_tokens: 2048,
               });
-              providerUsed = 'Groq compound-beta · TinyFish web search';
+              providerUsed = 'Groq gpt-oss-120b · TinyFish web search';
             } catch {
               // Fallback to llama-3.3-70b
               stream = await groq.chat.completions.create({
@@ -268,7 +268,7 @@ export async function POST(req: Request) {
                 temperature: 0.25,
                 max_tokens: 2048,
               });
-              providerUsed = 'Groq llama-3.3-70b · TinyFish web search';
+              providerUsed = 'Groq gpt-oss-20b · TinyFish web search';
             }
 
             for await (const chunk of stream) {
@@ -330,10 +330,7 @@ export async function POST(req: Request) {
           temperature: 0.25,
           max_tokens: 2048,
         });
-        providerUsed = 'Groq compound-beta · TinyFish web search';
-        // compound-beta may attach .sources
-        const any = completion as unknown as { sources?: unknown[] };
-        if (any.sources?.length) providerUsed = 'Groq compound-beta (web search active) · TinyFish';
+        providerUsed = 'Groq gpt-oss-120b · TinyFish web search';
       } catch {
         completion = await groq.chat.completions.create({
           model: GROQ_FALLBACK,
@@ -342,7 +339,7 @@ export async function POST(req: Request) {
           temperature: 0.25,
           max_tokens: 2048,
         });
-        providerUsed = 'Groq llama-3.3-70b · TinyFish web search';
+        providerUsed = 'Groq gpt-oss-20b · TinyFish web search';
       }
 
       fullText = completion.choices[0]?.message?.content || '';

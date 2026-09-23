@@ -580,8 +580,8 @@ function AICopilotContent() {
             <span className="text-[10px] font-mono uppercase text-cyan-300 font-bold">AI Engine Stack</span>
             <div className="space-y-1.5">
               {[
-                { name: 'Groq compound-beta', sub: 'Primary · built-in web search', color: 'border-violet-500/30', dot: 'text-violet-400' },
-                { name: 'llama-3.3-70b-versatile', sub: 'Fallback · deep reasoning', color: 'border-cyan-500/20', dot: 'text-cyan-400' },
+            { name: 'Groq gpt-oss-120b', sub: 'Primary · 120B flagship model', color: 'border-violet-500/30', dot: 'text-violet-400' },
+                { name: 'Groq gpt-oss-20b', sub: 'Fallback · fast 20B model', color: 'border-cyan-500/20', dot: 'text-cyan-400' },
                 { name: 'TinyFish Search', sub: 'Live web intel · LRU cached', color: 'border-emerald-500/20', dot: 'text-emerald-400' },
                 { name: 'Internal RAG', sub: 'RIL docs · hybrid search', color: 'border-amber-500/20', dot: 'text-amber-400' },
               ].map((item, i) => (
