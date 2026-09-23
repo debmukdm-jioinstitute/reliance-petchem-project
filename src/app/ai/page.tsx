@@ -252,7 +252,7 @@ function RelianceIntelligenceContent() {
 
   /* ─────────────────────────────── RENDER ─────────────────────────────────── */
   return (
-    <div className="relative min-h-[calc(100vh-6rem)] overflow-hidden bg-gradient-to-br from-[#FAF8F5] via-[#FFFDF9] to-[#F5F0E8] animate-fadeIn">
+    <div className="relative h-[calc(100vh-7.5rem)] sm:h-[calc(100vh-8.5rem)] rounded-3xl overflow-hidden bg-gradient-to-br from-[#FAF8F5] via-[#FFFDF9] to-[#F5F0E8] animate-fadeIn border border-black/[0.03] shadow-sm">
       
       {/* Decorative Blur Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[50%] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
