@@ -32,7 +32,7 @@ const PATH_TITLES: Record<string, string> = {
   '/forecasts': 'Price Forecasts & TimesFM',
   '/settings': 'System Settings',
   '/ai': 'AI Copilot Studio',
-  '/alerts': 'Active System Alerts',
+  '/alerts': 'Market Shock Playbook',
   '/financial': 'Financial Realization',
   '/competitive-intelligence': 'Peer & Competitive Radar',
 };
